@@ -1,0 +1,79 @@
+body{
+	border:none;
+	margin: 0;
+	font-family: 微软雅黑;
+	font-size: 12px;
+
+}
+
+.foot{
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+	text-shadow: 2px 2px 2px #CCCCCC;
+	color:#FFFFFF;
+	background-color: #1b9af7;
+}
+
+.top-bar{
+	height: 30px;
+	background-color: #1b9af7;
+	overflow: hidden;
+}
+
+.top-bar .info{
+	color:#FFFFFF;
+	text-align: left;
+	float: left;
+	height: 30px;
+	line-height: 30px;
+	width: 30%;
+	text-shadow: 5px 5px 5px #CCCCCC;
+}
+
+.top-bar .info b{
+	margin-left: 10px;
+}
+
+.top-bar .action{
+	text-align: right;
+	float: left;
+	width: 70%;
+}
+
+.top-bar ul{
+	list-style:none;
+	float: right;
+	margin:0;
+}
+
+.top-bar ul li{
+	float: left;
+	margin: 0 20px;
+	height:30px;
+	line-height: 30px;
+}
+
+.top-bar ul li a{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+
+.top-menu{
+	overflow: hidden;
+}
+
+.top-menu button {
+	margin: 15px 20px 0px 20px;
+	font-size: 30px;
+	line-height: 0px;
+}
+
+.welcome-panel button{
+	font-size: 40px;
+	line-height: 0px;
+	width: 80px !important;
+	height: 80px;
+}

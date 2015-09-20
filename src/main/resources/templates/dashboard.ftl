@@ -1,0 +1,26 @@
+<#assign spring=JspTaglibs["/WEB-INF/tld/spring.tld"] />
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>财务系统</title>
+    <#include "common/css.ftl"/>
+	<#include "common/js.ftl"/>
+  </head>
+  <body class="easyui-layout" >
+	<div data-options="region:'north'" style="height:130px;overflow: hidden;">
+		<#include "common/header.ftl" />
+	</div>
+	<div data-options="region:'south'" style="height:30px;overflow: hidden;">
+		<#include "common/copyright.ftl" />
+	</div>
+	<div data-options="region:'east',split:true" style="width:20%;">
+		<#include "common/east.ftl" />
+	</div>
+	<div data-options="region:'center',iconCls:'icon-ok'">
+		<#include "common/center.ftl" />
+	</div>
+  </body>
+</html>
