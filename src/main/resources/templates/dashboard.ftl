@@ -5,9 +5,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>财务系统</title>
+    <title><@spring.message code="app.title"/></title>
+
     <#include "common/css.ftl"/>
-	<#include "common/js.ftl"/>
+
+	<#include "common/jslib.ftl"/>
+
   </head>
   <body class="easyui-layout" >
 	<div data-options="region:'north'" style="height:130px;overflow: hidden;">
@@ -22,5 +25,8 @@
 	<div data-options="region:'center',iconCls:'icon-ok'">
 		<#include "common/center.ftl" />
 	</div>
-  </body>
+
+	<#include "common/jsbiz.ftl"/>
+
+	</body>
 </html>

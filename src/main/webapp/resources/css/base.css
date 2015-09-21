@@ -1,11 +1,15 @@
+/* Body CSS */
 body{
 	border:none;
-	margin: 0;
+	margin:0 auto;
+	padding:0;
 	font-family: 微软雅黑;
 	font-size: 12px;
-
 }
 
+body,html{height: 100%;}
+
+/* 底部CSS */
 .foot{
 	text-align: center;
 	height: 30px;
@@ -16,6 +20,7 @@ body{
 	background-color: #1b9af7;
 }
 
+/* 顶部CSS */
 .top-bar{
 	height: 30px;
 	background-color: #1b9af7;
@@ -68,12 +73,38 @@ body{
 .top-menu button {
 	margin: 15px 20px 0px 20px;
 	font-size: 30px;
-	line-height: 0px;
+	line-height: 10px;
 }
 
-.welcome-panel button{
+/* 欢迎页面CSS */
+.welcome-panel{
+	margin:0 auto;
+	text-align: center;
+}
+
+.welcome-panel .welcome-tb button{
 	font-size: 40px;
-	line-height: 0px;
+	line-height: 10px;
 	width: 80px !important;
 	height: 80px;
 }
+
+table.welcome-tb {
+	width: 80%;
+	text-align: center;
+	margin: 0px auto;
+	margin-top: 30px;
+}
+
+table.welcome-tb td{
+	height: 120px;
+}
+
+.chart-btn-tb{
+	width: 90%;
+	text-align: center;
+	margin: 0px auto;
+	margin-top: 100px;
+}
+
+

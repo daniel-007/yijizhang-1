@@ -1,0 +1,1 @@
+<script src="resources/js/welcome.js"></script>

@@ -25,6 +25,6 @@ public class VoucherController extends BaseController{
 	public String voucher(Map<String, Object> model) {
 
 
-		return view("main");
+		return view("voucher");
 	}
 }

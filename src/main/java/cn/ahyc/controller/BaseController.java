@@ -18,6 +18,16 @@ public abstract class BaseController {
 	 * @return
 	 */
 	String view(String viewName){
+		return view(this.pathPrefix, viewName);
+	}
+
+	/**
+	 * 根据路径前缀获取视图路径
+	 * @param pathPrefix
+	 * @param viewName
+	 * @return
+	 */
+	String view(String pathPrefix, String viewName){
 		return pathPrefix+viewName;
 	}
 

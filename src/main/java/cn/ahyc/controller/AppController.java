@@ -20,10 +20,18 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+/**
+ * AppController
+ * @author sanlai_lee@qq.com
+ */
 @Controller
-public class AppController {
+public class AppController{
 
+	/**
+	 * 跳转到Dashboard视图.
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/")
 	public String dashboard(Map<String, Object> model) {
 
