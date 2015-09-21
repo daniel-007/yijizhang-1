@@ -12,21 +12,21 @@
 	<#include "common/jslib.ftl"/>
 
   </head>
-  <body class="easyui-layout" >
-	<div data-options="region:'north'" style="height:130px;overflow: hidden;">
+  <body class="easyui-layout">˝
+	<div data-options="region:'north',border:false" style="height:130px;overflow: hidden;">
 		<#include "common/header.ftl" />
 	</div>
-	<div data-options="region:'south'" style="height:30px;overflow: hidden;">
+	<div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
 		<#include "common/copyright.ftl" />
 	</div>
-	<div data-options="region:'east',split:true" style="width:20%;">
+	<div data-options="region:'east',border:false,split:true" style="width:20%;">
 		<#include "common/east.ftl" />
 	</div>
-	<div data-options="region:'center',iconCls:'icon-ok'">
+	<div data-options="region:'center',border:false,iconCls:'icon-ok'">
 		<#include "common/center.ftl" />
 	</div>
 
 	<#include "common/jsbiz.ftl"/>
 
-	</body>
+  </body>
 </html>
