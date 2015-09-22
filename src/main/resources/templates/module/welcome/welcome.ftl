@@ -1,56 +1,36 @@
 <div class="welcome-panel">
-
-	<table class="welcome-tb">
-		<tr>
-			<td>
+	<div class="jtk-surface welcome-tb" id="canvas" style="height:400px;">
+				<div class="jtk-node" id="flowchartWindow1">
 				<button id="btn_kjkm" class="button button-action button-box button-jumbo">
 					<div><i class="fa fa-list-alt"></i></div>
 					<div><small style="font-size:12px;">会计科目</small></div>
 				</button>
-			</td>
-			<td>
-
-			</td>
-			<td>
-				<button id="btn_jzsy" class="button button-action button-box button-jumbo">
-					<div><i class="fa fa-area-chart"></i></div>
-					<div><small style="font-size:12px;">结转损益</small></div>
-				</button>
-			</td>
-		</tr>
-		<tr>
-			<td>
-
-			</td>
-			<td>
+				</div>
+				<div class="jtk-node" id="flowchartWindow2">
 				<button id="btn_jiz" class="button button-action button-box button-jumbo">
 					<div><i class="fa fa-pencil-square-o"></i></div>
 					<div><small style="font-size:12px;">记账</small></div>
 				</button>
-			</td>
-			<td>
-
-			</td>
-		</tr>
-		<tr>
-			<td>
+				</div>
+				<div class="jtk-node" id="flowchartWindow3">
+				<button id="btn_jzsy" class="button button-action button-box button-jumbo">
+					<div><i class="fa fa-area-chart"></i></div>
+					<div><small style="font-size:12px;">结转损益</small></div>
+				</button>
+				</div>
+				<div class="jtk-node" id="flowchartWindow4">
 				<button id="btn_cssj" class="button button-action button-box button-jumbo">
 					<div><i class="fa fa-laptop"></i></div>
 					<div><small style="font-size:12px;">初始数据</small></div>
 				</button>
-			</td>
-			<td>
-
-			</td>
-			<td>
+				</div>
+				<div class="jtk-node" id="flowchartWindow5">
 				<button id="btn_jiez" class="button button-action button-box button-jumbo">
 					<div><i class="fa fa-calendar"></i></div>
 					<div><small style="font-size:12px;">结账</small></div>
 				</button>
-			</td>
-		</tr>
-
-	</table>
+				</div>
+	</div>
 
 	<table class="chart-btn-tb">
 		<tr>
@@ -67,3 +47,9 @@
 	</table>
 
 </div>
+
+<script src="resources/public/jsPlumb/jquery.validate.js"></script>
+<script src="resources/public/jsPlumb/jsPlumb-1.7.10.js"></script>
+<script src="resources/public/jsPlumb/additional-methods.js"></script>
+<link rel="stylesheet" href="resources/public/jsPlumb/jsPlumbToolkit-defaults.css">
+<link rel="stylesheet" href="resources/public/jsPlumb/app.css">
