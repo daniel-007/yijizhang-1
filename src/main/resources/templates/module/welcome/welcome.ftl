@@ -48,8 +48,6 @@
 
 </div>
 
-<script src="resources/public/jsPlumb/jquery.validate.js"></script>
-<script src="resources/public/jsPlumb/jsPlumb-1.7.10.js"></script>
-<script src="resources/public/jsPlumb/additional-methods.js"></script>
-<link rel="stylesheet" href="resources/public/jsPlumb/jsPlumbToolkit-defaults.css">
-<link rel="stylesheet" href="resources/public/jsPlumb/app.css">
+
+
+

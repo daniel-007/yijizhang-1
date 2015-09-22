@@ -19,7 +19,7 @@
 	<div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
 		<#include "common/copyright.ftl" />
 	</div>
-	<div data-options="region:'east',border:false,split:true" style="width:20%;">
+	<div data-options="region:'east',border:false, split:true" style="width:25%;overflow: hidden;">
 		<#include "common/east.ftl" />
 	</div>
 	<div data-options="region:'center',border:false,iconCls:'icon-ok'">
