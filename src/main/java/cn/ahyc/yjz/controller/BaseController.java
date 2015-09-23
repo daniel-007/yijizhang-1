@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2015, AnHui Xin Hua She Group. All rights reserved.
  */
-package cn.ahyc.controller;
+package cn.ahyc.yjz.controller;
 
 /**
  * BaseController

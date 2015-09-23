@@ -5,6 +5,6 @@
   <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="resources/public/js/jquery.min.js"></script>
 <script src="resources/public/easyui/jquery.easyui.min.js"></script>
 <script src="resources/js/common.js"></script>

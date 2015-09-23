@@ -1,4 +1,4 @@
-package cn.ahyc.controller;
+package cn.ahyc.yjz.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
