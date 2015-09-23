@@ -28,6 +28,8 @@
     </div>
 </div>
 
+<div id="account_subject_eidt_win"></div>
+
 <script>
 
     $(function () {
@@ -53,7 +55,7 @@
                 var category_id = account_subject.specific_subject.category_id;
                 var subject_id = account_subject.specific_subject.account_subject_id;
 
-                $("<div></div>").window({
+                $("#account_subject_eidt_win").window({
                     title: '新增会计科目',
                     iconCls: 'icon-add',
                     width: 500,

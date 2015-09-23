@@ -4,9 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +60,7 @@ public class AccountSubjectController extends BaseController {
         return view("accountSubject/main");
     }
 
+
     /**
      * 新增 修改页面入口.
      *
@@ -81,6 +80,30 @@ public class AccountSubjectController extends BaseController {
         model.addAttribute("categories", fakeData);
 
         return view("accountSubject/edit");
+    }
+
+
+    /**
+     * 会计小分类.
+     *
+     * @return
+     */
+    @RequestMapping("/category/detail")
+    @ResponseBody
+    public List<Map<String, Object>> getCategoryDetail() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        map1.put("id", 1);
+        map1.put("text", "流动资产");
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        map2.put("id", 2);
+        map2.put("text", "长期资产");
+
+        list.add(map1);
+        list.add(map2);
+
+        return list;
     }
 
 
