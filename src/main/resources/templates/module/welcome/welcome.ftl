@@ -1,4 +1,5 @@
 <div class="welcome-panel">
+
 	<div class="jtk-surface welcome-tb" id="canvas" style="height:400px;">
 		<div class="jtk-node" id="flowchartWindow1">
 			<button id="btn_kjkm" class="button button-action button-box button-jumbo">
@@ -45,8 +46,9 @@
 			</td>
 		</tr>
 	</table>
-
 </div>
+
+<div id="default_win"></div>
 
 
 
