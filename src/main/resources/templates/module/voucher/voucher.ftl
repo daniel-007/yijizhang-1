@@ -1,72 +1,68 @@
-	<h2>记账凭证</h2>
-	<div style="margin:20px 0;"></div>
-    <table id="tg" class="easyui-treegrid" title="Editable TreeGrid" style="width:700px;height:250px"
-            data-options="
-                iconCls: 'icon-ok',
-                rownumbers: true,
-                animate: true,
-                collapsible: true,
-                fitColumns: true,
-                url: 'voucher/kjkm.json',
-                method: 'get',
-                idField: 'id',
-                treeField: 'name',
-                showFooter: true
-            ">
-        <thead>
-            <tr>
-                <th data-options="field:'name',width:180,editor:'text'">摘要</th>
-                <th data-options="field:'persons',width:60,align:'right',editor:'numberbox'">科目代码</th>
-                <th data-options="field:'begin',width:80,editor:'datebox'">借方金额</th>
-                <th data-options="field:'end',width:80,editor:'datebox'">贷方金额</th>
-            </tr>
-        </thead>
-    </table>
-    <script type="text/javascript">
-        function formatProgress(value){
-            if (value){
-                var s = '<div style="width:100%;border:1px solid #ccc">' +
-                        '<div style="width:' + value + '%;background:#cc0000;color:#fff">' + value + '%' + '</div>'
-                        '</div>';
-                return s;
-            } else {
-                return '';
-            }
-        }
-        var editingId;
-        function edit(){
-            if (editingId != undefined){
-                $('#tg').treegrid('select', editingId);
-                return;
-            }
-            var row = $('#tg').treegrid('getSelected');
-            if (row){
-                editingId = row.id
-                $('#tg').treegrid('beginEdit', editingId);
-            }
-        }
-        function save(){
-            if (editingId != undefined){
-                var t = $('#tg');
-                t.treegrid('endEdit', editingId);
-                editingId = undefined;
-                var persons = 0;
-                var rows = t.treegrid('getChildren');
-                for(var i=0; i<rows.length; i++){
-                    var p = parseInt(rows[i].persons);
-                    if (!isNaN(p)){
-                        persons += p;
-                    }
-                }
-                var frow = t.treegrid('getFooterRows')[0];
-                frow.persons = persons;
-                t.treegrid('reloadFooter');
-            }
-        }
-        function cancel(){
-            if (editingId != undefined){
-                $('#tg').treegrid('cancelEdit', editingId);
-                editingId = undefined;
-            }
-        }
-    </script>
+<h2>记账凭证</h2>
+<div style="margin:20px 0;"></div>
+<table id="dg">
+    <thead>
+        <tr>
+            <th data-options="field:'productid',width:200,editor:'textbox'" rowspan="2">摘要</th>
+            <th data-options="field:'productid',width:200,editor:'textbox'" rowspan="2">科目代码</th>
+            <th colspan="11">借方金额</th>
+            <th colspan="11">贷方金额</th>
+        </tr>
+        <tr>
+            <th data-options="field:'listprice',width:18,align:'center',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">亿</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">千</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">百</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">十</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">万</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">千</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">百</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">十</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">元</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">角</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">分</th>
+            <th data-options="field:'listprice1',width:18,align:'center',editor:'textbox'">亿</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">千</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">百</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">十</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">万</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">千</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">百</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">十</th>
+            <th data-options="field:'unitcost',width:18,align:'center',editor:'textbox'">元</th>
+            <th data-options="field:'attr1',width:18,align:'center',editor:'textbox'">角</th>
+            <th data-options="field:'status',width:18,align:'center',editor:'textbox'">分</th>
+        </tr>
+    </thead>
+</table>
+
+<div id="tb" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append()">Append</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeit()">Remove</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="accept()">Accept</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject()">Reject</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		$('#dg').datagrid({
+			width:900,
+			height:250,
+			singleSelect:true,
+			toolbar: '#tb',
+			onClickCell:onClickCell,
+			url:'voucher/voucher.json',
+			method:'get',
+			onLoadSuccess:function(data){
+				if(data&&data.total>=4){
+					console.log('not null');
+				} else {
+					var len = data&&data.total>0?4-data.total:4;
+					for (i=0;i<len;i++){
+						appendFirst();
+					}
+				}
+			}
+		});
+	});
+</script>
