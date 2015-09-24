@@ -1,7 +1,6 @@
 <body class="easyui-layout" data-options="fit:true">
 <div data-options="region:'north',border:false">
     <button id="btn_xjzt" class="button button-highlight button-large button-longshadow-right" style="width:100%;"><i class="fa fa-plus"></i>&#8194;新建帐套
-    </button>
 </div>
 <div data-options="region:'center',border:false" style="width:100%;height: 46%;">
     <div class="easyui-panel" title="最新余额" style="padding: 10px;"
