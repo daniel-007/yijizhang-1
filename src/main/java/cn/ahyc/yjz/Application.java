@@ -32,7 +32,6 @@ public class Application {
             applicationContext = new SpringApplicationBuilder()
                     .showBanner(false)
                     .sources(Application.class)
-                    .profiles("local")
                     .run(args);
       }
 
