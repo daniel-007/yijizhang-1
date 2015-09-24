@@ -1,6 +1,4 @@
-package cn.ahyc.yjz.config;/**
- * Created by sanlli on 15/9/24.
- */
+package cn.ahyc.yjz.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
