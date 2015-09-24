@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * VoucherController
- * @author sanlai_lee@qq.com
  *
+ * @author sanlai_lee@qq.com
  */
 @Controller
 @RequestMapping("/voucher")
-public class VoucherController extends BaseController{
+public class VoucherController extends BaseController {
 
-	public VoucherController() {
-		this.pathPrefix="module/voucher/";
-	}
+      public VoucherController() {
+            this.pathPrefix = "module/voucher/";
+      }
 
-	@RequestMapping("/main")
-	public String voucher(Map<String, Object> model) {
+      @RequestMapping("/main")
+      public String voucher(Map<String, Object> model) {
 
 
-		return view("voucher");
-	}
+            return view("voucher");
+      }
 }

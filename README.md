@@ -46,6 +46,13 @@
 ##### 1.MyBatis配置文件分位base和extend两个路径，其中base目录是用来存放自动生成的基础code，而extend用来存放业务扩展code
 
 
+## UrlRewrite说明
+#### 1.UrlRewrite官网： <http://cdn.rawgit.com/paultuckey/urlrewritefilter/master/src/doc/manual/4.0/index.html>
+
+#### 2.对业务路径进行重写，模拟静态路径，配置文件路径：/WEB-INF/urlrewrite.xml
+
+
+
 
 
 
