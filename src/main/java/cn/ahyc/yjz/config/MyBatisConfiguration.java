@@ -1,8 +1,10 @@
 package cn.ahyc.yjz.config;
 
+import cn.ahyc.yjz.util.PasswordUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -10,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -30,6 +34,7 @@ public class MyBatisConfiguration {
 
       private static final Logger LOGGER = LoggerFactory.getLogger(MyBatisConfiguration.class);
 
+
       @Value("${mybatis.configLocation}")
       private String configLocation;
 
@@ -37,7 +42,23 @@ public class MyBatisConfiguration {
       private String mapperLocations;
 
       @Autowired
-      private DataSource dataSource;
+      private DataSourceProperties dataSourceProperties;
+
+      /**
+       * DataSource
+       * @return
+       */
+      @Bean
+      public DataSource dataSource(){
+            DataSource dataSource = DataSourceBuilder
+                    .create()
+                    .driverClassName(this.dataSourceProperties.getDriverClassName())
+                    .url(this.dataSourceProperties.getUrl())
+                    .username(PasswordUtil.decrypt(this.dataSourceProperties.getUsername()))
+                    .password(PasswordUtil.decrypt(this.dataSourceProperties.getPassword()))
+                    .build();
+            return  dataSource;
+      }
 
       /**
        * DataSourceTransactionManager.
@@ -46,8 +67,8 @@ public class MyBatisConfiguration {
        */
       @Bean
       public DataSourceTransactionManager dataSourceTransactionManager() {
-            LOGGER.info("Initialize DataSourceTransactionManager with datasource '{}'", this.dataSource);
-            return new DataSourceTransactionManager(this.dataSource);
+            LOGGER.info("Initialize DataSourceTransactionManager with datasource '{}'", dataSource());
+            return new DataSourceTransactionManager(dataSource());
       }
 
 
@@ -63,10 +84,7 @@ public class MyBatisConfiguration {
             SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
             //设置数据源 datasource
-            if (dataSource == null) {
-                  LOGGER.error("Create SqlSessionFactory failed. Datasource is required and can not be NULL.");
-            }
-            sqlSessionFactoryBean.setDataSource(dataSource);
+            sqlSessionFactoryBean.setDataSource(dataSource());
 
             PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
             //设置 configLocation
