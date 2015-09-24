@@ -22,7 +22,8 @@
     <div data-options="region:'center',border:false">
         <div id="accountSubject_tabs" class="easyui-tabs" data-options="fit:true,border:false">
         <#list categories as category>
-            <div id="category_${category.id}" title="${category.title?default('')}"></div>
+            <div id="category_${category.id}" title="${category.subjectName?default('')}"
+                 style="overflow-x: hidden;"></div>
         </#list>
         </div>
     </div>
@@ -40,7 +41,7 @@
         var account_subject = {
             specific_subject: {
                 category_id: null,
-                account_subject_id: null
+                account_subject_id: -1
             },
             init: function (container) {
                 container.find(".close").click(function () {
@@ -80,23 +81,22 @@
                 var category_id = id.replace("category_", "");
 
                 account_subject.specific_subject.category_id = category_id;
-                account_subject.specific_subject.account_subject_id = null;
+                account_subject.specific_subject.account_subject_id = -1;
 
                 $("#" + id).html("<table style='width: 100%;'></table>");
                 $("#" + id + " table").treegrid({
                     url: 'account/subject/category/' + category_id + '/subjects',
-                    idField: 'id',
-                    treeField: 'id',
-                    lines: false,
+                    idField: 'subject_code',
+                    treeField: 'subject_code',
                     fitColumns: true,
                     columns: [
                         [
-                            {title: '编码', field: 'id', width: 200},
-                            {title: '名称', field: 'text', width: 300}
+                            {title: '编码', field: 'subject_code', width: 200},
+                            {title: '名称', field: 'subject_name', width: 300}
                         ]
                     ],
                     onClickRow: function (row) {
-                        account_subject.specific_subject.account_subject_id = row.code;
+                        account_subject.specific_subject.account_subject_id = row.id;
                     },
                     onDblClickRow: function (row) {
                     }

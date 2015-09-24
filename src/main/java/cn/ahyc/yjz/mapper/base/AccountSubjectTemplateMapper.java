@@ -2,7 +2,9 @@ package cn.ahyc.yjz.mapper.base;
 
 import cn.ahyc.yjz.model.AccountSubjectTemplate;
 import cn.ahyc.yjz.model.AccountSubjectTemplateExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface AccountSubjectTemplateMapper {

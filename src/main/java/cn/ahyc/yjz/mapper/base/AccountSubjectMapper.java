@@ -2,8 +2,10 @@ package cn.ahyc.yjz.mapper.base;
 
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.AccountSubjectExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface AccountSubjectMapper {
     /**
@@ -93,4 +95,20 @@ public interface AccountSubjectMapper {
      * @mbggenerated Wed Sep 23 16:59:46 CST 2015
      */
     int updateByPrimaryKey(AccountSubject record);
+
+    /**
+     * 根据大分类获取所有会计科目.
+     *
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> getSubjectsByCategoryId(Map<String, Object> param);
+
+    /**
+     * 根据父级id获取所有子级.
+     *
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> getChildrenSubjectsByCategoryId(Map<String, Object> param);
 }
