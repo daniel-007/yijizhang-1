@@ -63,7 +63,7 @@
                     modal: true,
                     collapsible: false,
                     shadow: true,
-                    href: 'accountSubject/edit/category/' + category_id + "?subjectId=" + subject_id
+                    href: 'account/subject/edit/category/' + category_id + "?subjectId=" + subject_id
                 });
 
             },
@@ -84,7 +84,7 @@
 
                 $("#" + id).html("<table style='width: 100%;'></table>");
                 $("#" + id + " table").treegrid({
-                    url: 'accountSubject/category/' + category_id + '/subjects',
+                    url: 'account/subject/category/' + category_id + '/subjects',
                     idField: 'id',
                     treeField: 'id',
                     lines: false,

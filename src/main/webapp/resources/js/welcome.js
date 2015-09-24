@@ -13,7 +13,7 @@ $(function () {
             modal: true,
             collapsible: false,
             shadow: true,
-            href: 'accountSubject/main',
+            href: 'account/subject/main',
             onLoad: function () {
             }
         });

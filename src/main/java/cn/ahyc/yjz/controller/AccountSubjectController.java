@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Joey Yan on 15-9-22.
  */
 @Controller
-@RequestMapping("/accountSubject")
+@RequestMapping("/account/subject")
 public class AccountSubjectController extends BaseController {
 
     /**
