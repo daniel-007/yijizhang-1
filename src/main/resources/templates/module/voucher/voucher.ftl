@@ -8,15 +8,15 @@
 <h2>记账凭证</h2>
 
 <form id="fm" method="post">
-<input type="hidden" id="id" name="id" value="${id?default('')}"/>
-<input type="hidden" id="periodId" name="periodId" value="${periodId?default('')}"/>
+<input type="hidden" id="id" name="id" value="${voucher.id?default('')}"/>
+<input type="hidden" id="periodId" name="periodId" value="${voucher.periodId?default('')}"/>
 
-<div style="padding:15px;">
-	<select class="easyui-combobox" id="voucherWord" name="voucherWord" style="width:100px;"></select>字
-	<input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucherNo?default('')}" data-options="min:1">号
-	日期：
-	第${period?default('')}期
-	附单据<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${billNum?default('0')}" data-options="min:0">张
+<div style="padding:10px;">
+	<select id="voucherWord" name="voucherWord" style="width:100px;"></select>字
+	<input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucher.voucherNo?default(voucherNo)}" data-options="min:1">号
+	日期：<input class="easyui-datebox" id="voucherTime " name="voucherTime" value="${voucher.voucherTime?default(voucherTime)}" data-options="formatter:Voucher.myformatter,parser:Voucher.myparser"></input>
+	第${voucher.period?default(period)}期
+	附单据<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${voucher.billNum?default('0')}" data-options="min:0">张
 </div>
 
 <table id="dg">

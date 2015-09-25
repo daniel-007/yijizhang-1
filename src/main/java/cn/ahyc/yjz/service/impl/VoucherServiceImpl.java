@@ -11,11 +11,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
 import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
 import cn.ahyc.yjz.mapper.base.VoucherMapper;
+import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.CompanyCommonValueExample;
 import cn.ahyc.yjz.model.CompanyCommonValueExample.Criteria;
@@ -31,26 +31,45 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherMapper voucherMapper;
 
     @Autowired
+    private VoucherExtendMapper voucherExtendMapper;
+
+    @Autowired
     private VoucherDetailMapper voucherDetailMapper;
 
     @Autowired
     private CompanyCommonValueMapper companyCommonValueMapper;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    // @Transactional(rollbackFor = Exception.class)
     public void save(Voucher voucher, List<VoucherDetail> details) {
+        long voucherId;
+        int voucherNo;
+        /** 新增、更新记账凭证 **/
         if (voucher != null && voucher.getId() != null) {
+            voucherId = voucher.getId();
+            voucherNo = voucher.getVoucherNo();
             voucherMapper.updateByPrimaryKeySelective(voucher);
+            /** 删除凭证明细 **/
+            VoucherDetailExample example = new VoucherDetailExample();
+            cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
+            criteria.andVoucherIdEqualTo(voucherId);
+            voucherDetailMapper.deleteByExample(example);
         } else {
-            voucherMapper.insertSelective(voucher);
+            voucherNo = queryNextVoucherNo(voucher.getPeriodId());
+            voucher.setVoucherNo(voucherNo);
+            voucherExtendMapper.insertSelectiveReturnId(voucher);
+            voucherId = voucher.getId();
         }
+        /** 新增凭证明细 **/
         for (VoucherDetail detail : details) {
-            if (voucher != null && voucher.getId() != null) {
-                voucherDetailMapper.updateByPrimaryKeySelective(detail);
-            } else {
-                voucherDetailMapper.insertSelective(detail);
-            }
+            detail.setVoucherId(voucherId);
+            voucherDetailMapper.insertSelective(detail);
         }
+    }
+
+    @Override
+    public int queryNextVoucherNo(Long periodId) {
+        return voucherExtendMapper.selectMaxVoucherNo(periodId) + 1;
     }
 
     @Override
@@ -67,5 +86,10 @@ public class VoucherServiceImpl implements VoucherService {
         cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
         criteria.andVoucherIdEqualTo(voucherId);
         return voucherDetailMapper.selectByExample(example);
+    }
+
+    @Override
+    public Voucher queryVoucher(Long voucherId) {
+        return voucherMapper.selectByPrimaryKey(voucherId);
     }
 }

@@ -36,4 +36,20 @@ public interface VoucherService {
      */
     List<VoucherDetail> queryVoucherDetailList(Long voucherId);
 
+    /**
+     * 查询记账凭证
+     * 
+     * @param voucherId
+     * @return
+     */
+    Voucher queryVoucher(Long voucherId);
+
+    /**
+     * 获取下一个凭证号
+     * 
+     * @param periodId
+     * @return
+     */
+    int queryNextVoucherNo(Long periodId);
+
 }

@@ -1,10 +1,12 @@
 package cn.ahyc.yjz.config;
 
-import cn.ahyc.yjz.util.PasswordUtil;
+import java.io.IOException;
+
+import javax.sql.DataSource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -20,8 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
-import javax.sql.DataSource;
-import java.io.IOException;
+import cn.ahyc.yjz.util.PasswordUtil;
 
 /**
  * MyBatisConfiguration
@@ -66,7 +67,7 @@ public class MyBatisConfiguration {
        * @return
        */
       @Bean
-      public DataSourceTransactionManager dataSourceTransactionManager() {
+    public DataSourceTransactionManager transactionManager() {
             LOGGER.info("Initialize DataSourceTransactionManager with datasource '{}'", dataSource());
             return new DataSourceTransactionManager(dataSource());
       }
@@ -125,8 +126,8 @@ public class MyBatisConfiguration {
             try {
                   SqlSessionFactory sqlSessionFactory = sqlSessionFactory();
                   LOGGER.info("Initialize SqlSessionTemplate bean with sqlSessionFactory '{}'", sqlSessionFactory);
-                  //默认采用Batch方式提交事务
-                  SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
+            // 默认采用REUSE方式提交事务
+            SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory, ExecutorType.REUSE);
                   return sqlSessionTemplate;
             } catch (Exception e) {
                   LOGGER.error("Fail to create bean SqlSessionTemplate. Caused by {}", e.getMessage());

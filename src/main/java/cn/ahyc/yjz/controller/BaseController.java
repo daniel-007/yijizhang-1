@@ -3,6 +3,13 @@
  */
 package cn.ahyc.yjz.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+
 /**
  * BaseController
  * @author sanlai_lee@qq.com
@@ -30,5 +37,11 @@ public abstract class BaseController {
 	String view(String pathPrefix, String viewName){
 		return pathPrefix+viewName;
 	}
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
 }
