@@ -23,7 +23,7 @@
         <div data-options="region:'east',border:false, split:true" style="width:25%;overflow: hidden;">
             <#include "common/east.ftl" />
         </div>
-        <div data-options="region:'center',border:false,iconCls:'icon-ok'">
+        <div data-options="region:'center',border:false">
             <#include "common/center.ftl" />
         </div>
 

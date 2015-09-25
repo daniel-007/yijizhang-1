@@ -20,22 +20,36 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
+
 /**
  * AppController
+ *
  * @author sanlai_lee@qq.com
  */
 @Controller
-public class AppController{
-
-	/**
-	 * 跳转到Dashboard视图.
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/")
-	public String dashboard(Map<String, Object> model) {
+public class AppController {
 
 
-		return "dashboard";
-	}
+      /**
+       * 跳转到登陆页面.
+       * @return
+       */
+      @RequestMapping("/login")
+      public String login(){
+            return "login";
+      }
+
+
+      /**
+       * 跳转到Dashboard视图.
+       *
+       * @param model
+       * @return
+       */
+      @RequestMapping("/")
+      public String dashboard(Map<String, Object> model) {
+
+
+            return "dashboard";
+      }
 }
