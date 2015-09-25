@@ -9,14 +9,15 @@ Voucher=function(){
 	var editIndex = undefined;
 	
 	return {
-		init : function() {
+		init:function(id) {
 			$('#dg').datagrid({
 				width:900,
 				height:300,
 				singleSelect:true,
 				//toolbar: '#tb',
 				onClickCell:Voucher.onClickCell,
-				url:'voucher/voucher.json',
+				url:'voucher/voucherDetailList',
+				queryParams:{voucherId:id},
 				method:'get',
 				onLoadSuccess:function(data){
 					if(data&&data.total>=5){
@@ -28,6 +29,15 @@ Voucher=function(){
 				        }
 					}
 				}
+			});
+			
+			$('#voucherWord').combobox({
+			    url:'voucher/voucherWordList',
+			    valueField:'showValue',
+			    textField:'showValue',
+			    onLoadSuccess:function(){
+			    	$('#voucherWord').combobox('setValue', '记');
+			    }
 			});
         },
 		
@@ -77,12 +87,10 @@ Voucher=function(){
 		save:function(){
 			if (Voucher.endEditing()){
 				var rows = $('#dg').datagrid('getChanges');
-				var params = rows[0];
-				for(i=1;i<rows.length;i++){
+				var params;
+				for(i=0;i<rows.length;i++){
 					params = Voucher.extend(params, rows[i]);
-					console.log(rows[i]);
 				}
-				console.log(params);
 		        $('#fm').form('submit', {
 		        	url:'voucher/save',
 		        	queryParams:params,
@@ -96,7 +104,7 @@ Voucher=function(){
 		            success: function(data){
 		            	var data = eval('(' + data + ')');  // change the JSON string to javascript object
 		                if (data.success){
-		                    alert(data.message)
+		                    alert(data.message);
 		                } else {
 		                	alert("error");
 		                }
@@ -104,27 +112,14 @@ Voucher=function(){
 		        });
 		    }
 		},
-		extend:function(destination, source) { 
-		    for (var property in source) 
-	    		destination[property] = destination[property]+','+source[property]; 
+		extend:function(destination, source) {
+			if(destination){
+				for (var property in source) 
+					destination[property] = destination[property]+','+source[property]; 
+			} else {
+				destination=$.extend({},source);
+			}
 		    return destination; 
-		},
-        setTextName : function(){
-            var texts = $(':text', document.fm);
-            for (i=1;i<texts.length;) {
-                texts.get(i).name="name";
-                i++;
-                texts.get(i).name="unit";
-                i++;
-                texts.get(i).name="amount";
-                i++;
-                texts.get(i).name="unit_price";
-                i++;
-                texts.get(i).name="money";
-                i++;                    
-                texts.get(i).name="uses";
-                i++;
-            }
-        }
+		}
 	};
 }();

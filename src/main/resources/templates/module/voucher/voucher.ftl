@@ -3,12 +3,22 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="Voucher.append()">插入行</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="Voucher.removeit()">删除行</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="Voucher.reject()">取消修改</a>
-</>
-<h2>记账凭证</h2>
-<form id="fm" method="post">
-<div style="margin:20px 0;">
-
 </div>
+
+<h2>记账凭证</h2>
+
+<form id="fm" method="post">
+<input type="hidden" id="id" name="id" value="${id?default('')}"/>
+<input type="hidden" id="periodId" name="periodId" value="${periodId?default('')}"/>
+
+<div style="padding:15px;">
+	<select class="easyui-combobox" id="voucherWord" name="voucherWord" style="width:100px;"></select>字
+	<input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucherNo?default('')}" data-options="min:1">号
+	日期：
+	第${period?default('')}期
+	附单据<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${billNum?default('0')}" data-options="min:0">张
+</div>
+
 <table id="dg">
     <thead>
         <tr>
@@ -46,9 +56,6 @@
 
 </form>
 
-<div id="tb" style="height:auto">
-</div>
-
 <div id="mm" style="width:100px;">
     <div onclick="Voucher.save()">保存</div>
     <div>保存并新增</div>
@@ -57,6 +64,6 @@
 
 <script type="text/javascript">
 	$(function () {
-		Voucher.init();
+		Voucher.init('${id?default('')}');
 	});
 </script>
