@@ -5,7 +5,7 @@
             <tr>
                 <td style="width: 80px;">父级科目:</td>
                 <td>
-                    <input id="parent_subject" style="width: 100%;"/>
+                    <input id="parent_subject" style="width: 100%;" value="${subjectId}"/>
                 </td>
             </tr>
             <tr>
@@ -27,8 +27,8 @@
             <tr>
                 <td>科目类别:</td>
                 <td>
-                    <input class="easyui-combobox"
-                           data-options="url:'/accountSubject/category/detail',required:true"/>
+                    <input id="category_detail" class="easyui-combobox"
+                           data-options="url:'/account/subject/category/detail', valueField: 'id',textField: 'subjectName',required:true"/>
                 </td>
             </tr>
             <tr>
@@ -62,26 +62,48 @@
 
         var $parent_subject = $("#parent_subject");
         var $subject_code = $("#subject_code");
+        var $category_detail = $("#category_detail");
+        var subjectId = "${subjectId}";
+
+
+        var checkCategoryDetail = function (subjectId, category_detail_id, subject_code, next_level_lenght) {
+
+            $category_detail.val(12);
+            var is_readonly = true;
+
+            if (subjectId == -1) {
+                is_readonly = false;
+                category_detail_id = "";
+                next_level_lenght = 3;
+                subject_code = 1;
+            }
+
+            var mask_len = "";
+            for (var i = 0; i < next_level_lenght; i++) {
+                mask_len += "n";
+            }
+
+            $subject_code.val("").attr("readonly", false);
+            $subject_code.mask(subject_code + mask_len).focus();
+            $category_detail.val(category_detail_id);
+            $category_detail.attr("readonly", is_readonly);
+        }
+
+        checkCategoryDetail(subjectId);
 
         $parent_subject.combotree({
-            url: '/accountSubject/category/1/subjects',
+            url: '/account/subject/category/${categoryId}/subjects',
             required: true,
             panelMaxHeight: 200,
-            onChange: function (newValue, oldValue) {
+            onClick: function (node) {
+                var code = node.subject_code;
+                var next_level_lenght = node.next_level_length;
+                var subject_id = node.subject_id;
+                var category_detail_id = node.category_detail_id;
 
-                $subject_code.val("").attr("readonly", false);
-                $subject_code.mask(newValue + "nn").focus();
-
+                checkCategoryDetail(subject_id, category_detail_id, code, next_level_lenght);
             }
         });
     })
 
-    $.extend($.fn.validatebox.defaults.rules, {
-        maxLength: {
-            validator: function (value, param) {
-                return value.length == param[0];
-            },
-            message: '此級科目代码限制 {0} 位数。'
-        }
-    });
 </script>

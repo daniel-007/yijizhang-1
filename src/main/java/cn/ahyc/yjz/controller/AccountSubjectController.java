@@ -1,13 +1,16 @@
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.AccountSubjectVo;
+import cn.ahyc.yjz.service.AccountSubjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +22,12 @@ import java.util.Map;
 @RequestMapping("/account/subject")
 public class AccountSubjectController extends BaseController {
 
+    private final Integer category_subject_code = -1;
+    private final Integer category_detail_subject_code = 0;
+
+    @Resource
+    private AccountSubjectService accountSubjectService;
+
     /**
      * 会计科目管理页面入口.
      *
@@ -28,35 +37,10 @@ public class AccountSubjectController extends BaseController {
     @RequestMapping(value = ("/main"))
     public String main(Model model) {
 
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code);
 
-        Map<String, Object> map1 = new HashMap<String, Object>();
-        map1.put("id", 1);
-        map1.put("title", "资产");
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        map2.put("id", 2);
-        map2.put("title", "负债");
-        Map<String, Object> map3 = new HashMap<String, Object>();
-        map3.put("id", 3);
-        map3.put("title", "共同");
-        Map<String, Object> map4 = new HashMap<String, Object>();
-        map4.put("id", 4);
-        map4.put("title", "权益");
-        Map<String, Object> map5 = new HashMap<String, Object>();
-        map5.put("id", 5);
-        map5.put("title", "成本");
-        Map<String, Object> map6 = new HashMap<String, Object>();
-        map6.put("id", 6);
-        map6.put("title", "损益");
+        model.addAttribute("categories", templates);
 
-        list.add(map1);
-        list.add(map2);
-        list.add(map3);
-        list.add(map4);
-        list.add(map5);
-        list.add(map6);
-
-        model.addAttribute("categories", list);
         return view("accountSubject/main");
     }
 
@@ -75,9 +59,8 @@ public class AccountSubjectController extends BaseController {
             , String subjectId
             , Model model) {
 
-        List<Map<String, Object>> fakeData = this.fakeData(categoryId.toString());
-
-        model.addAttribute("categories", fakeData);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("subjectId", subjectId);
 
         return view("accountSubject/edit");
     }
@@ -90,60 +73,26 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/detail")
     @ResponseBody
-    public List<Map<String, Object>> getCategoryDetail() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        Map<String, Object> map1 = new HashMap<String, Object>();
-        map1.put("id", 1);
-        map1.put("text", "流动资产");
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        map2.put("id", 2);
-        map2.put("text", "长期资产");
-
-        list.add(map1);
-        list.add(map2);
-
-        return list;
+    public List<AccountSubject> getCategoryDetail() {
+        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCode(0);
+        return categoryDetails;
     }
 
 
     /**
-     * 会计大分类列表.
+     * 会计分类列表.
      *
      * @param categoryId
      * @return
      */
     @RequestMapping("/category/{id}/subjects")
     @ResponseBody
-    public List<Map<String, Object>> getSubject(@PathVariable("id") Integer categoryId) {
+    public List<Map<String,Object>> getSubject(@PathVariable("id") Integer categoryId) {
 
-        String prex = categoryId.toString();
+        Long bookId = 1l;
 
-        return this.fakeData(prex);
+        return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
     }
 
 
-    private List<Map<String, Object>> fakeData(String prex) {
-
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", prex.concat("001"));
-        map.put("text", "现金");
-        list.add(map);
-
-        Map<String, Object> map1 = new HashMap<String, Object>();
-        map1.put("id", prex.concat("009"));
-        map1.put("text", "其他货币资金");
-
-        List<Map<String, Object>> list11 = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map11 = new HashMap<String, Object>();
-        map11.put("id", prex.concat("00901"));
-        map11.put("text", "外埠存款");
-        list11.add(map11);
-
-        map1.put("children", list11);
-        list.add(map1);
-
-        return list;
-    }
 }

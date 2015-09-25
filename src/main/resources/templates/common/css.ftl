@@ -4,7 +4,7 @@
 <!-- buttons -->
 <link rel="stylesheet" type="text/css" href="resources/public/css/buttons.css">
 <!-- font-awesome -->
-<link rel="stylesheet" href="resources/public/font-awesome-4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="resources/public/font-awesome/css/font-awesome.min.css">
 <!-- jsPlumb -->
 <link rel="stylesheet" href="resources/public/jsPlumb/jsPlumbToolkit-defaults.css">
 <link rel="stylesheet" href="resources/public/jsPlumb/app.css">

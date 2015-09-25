@@ -19,8 +19,10 @@ package cn.ahyc.yjz;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
+/**
+ *  Application 程序运行入口.
+ */
 @SpringBootApplication
 public class Application {
 
@@ -30,15 +32,15 @@ public class Application {
             applicationContext = new SpringApplicationBuilder()
                     .showBanner(false)
                     .sources(Application.class)
-                    .profiles("development")
                     .run(args);
       }
 
       /**
        * 获取ApplicationContext.
+       *
        * @return
        */
-      public static ApplicationContext applicationContext(){
+      public static ApplicationContext applicationContext() {
             return applicationContext;
       }
 

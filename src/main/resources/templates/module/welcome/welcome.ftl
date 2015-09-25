@@ -4,7 +4,7 @@
 		<div class="jtk-node" id="flowchartWindow1">
 			<button id="btn_kjkm" class="button button-action button-box button-jumbo">
 				<div><i class="fa fa-list-alt"></i></div>
-				<div><small style="font-size:12px;"><@spring.message code="welcome.kjkm"/></small></small></div>
+				<div><small style="font-size:12px;"><@spring.message code="welcome.kjkm"/></small></div>
 			</button>
 		</div>
 		<div class="jtk-node" id="flowchartWindow2">

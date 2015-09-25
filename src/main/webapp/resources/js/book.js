@@ -4,7 +4,6 @@
 $(function () {
 
     var $btn_xjzt = $("#btn_xjzt");
-    
     $btn_xjzt.click(function () {
         $("#default_win").window({
             title: '<i class="fa fa-list-alt"></i>新建账套',
@@ -13,7 +12,7 @@ $(function () {
             modal: true,
             collapsible: false,
             shadow: true,
-            href: 'accountBook/main',
+            href: 'account/book/main',
             onLoad: function () {
             }
         });

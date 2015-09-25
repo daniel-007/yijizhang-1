@@ -14,6 +14,8 @@
 		<mysql.version>5.1.36</mysql.version>
 		<mybatis.version>3.3.0</mybatis.version>
 		<mybatis.spring.version>1.2.3</mybatis.spring.version>
+		<urlrewrite.version>4.0.3</urlrewrite.version>
+		<jasypt.version>1.9.2</jasypt.version>
 	</properties>
 	<build>
 		<plugins>
@@ -124,6 +126,21 @@
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<version>${urlrewrite.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+			<version>${jasypt.version}</version>
 		</dependency>
 	</dependencies>
 </project>

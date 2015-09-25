@@ -24,8 +24,8 @@ import cn.ahyc.yjz.service.VoucherService;
 
 /**
  * VoucherController
- * @author sanlai_lee@qq.com
  *
+ * @author sanlai_lee@qq.com
  */
 @Controller
 @RequestMapping("/voucher")
@@ -40,10 +40,9 @@ public class VoucherController extends BaseController{
 
 	@RequestMapping("/main")
     public String voucher(Model model) {
-
-		return view("voucher");
+	    return view("voucher");
 	}
-
+	
     @RequestMapping("/voucherDetailList")
     @ResponseBody
     public Map<String, Object> voucherDetailList(Long voucherId) {
