@@ -69,6 +69,7 @@
 							data-options="onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" />
 					</div>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>
 			</div>
 
