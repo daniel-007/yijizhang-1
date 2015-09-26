@@ -15,23 +15,35 @@ import cn.ahyc.yjz.model.DictValue;
  */
 public interface AccountBookService {
 
-      /**
-       * 创建账套
-       * @param accountBook
-       * @throws Exception 
-       */
-	  String createAccountBook(AccountBook accountBook,int... level) throws Exception;
-      /**
-       * 根据ID查询账套.
-       * @param id
-       * @return
-       */
-      AccountBook selectAccountBookById(Long id);
-      /**
-       * 查询科目体系数据
-       * @param id
-       * @return
-       */
-      List<DictValue> selectSubjectSystem();
-       
+		/**
+		 * 创建账套
+		 *
+		 * @param accountBook
+		 * @throws Exception
+		 */
+		int createAccountBook(AccountBook accountBook, int... level);
+
+		/**
+		 * 根据ID查询账套.
+		 *
+		 * @param id
+		 * @return
+		 */
+		AccountBook selectAccountBookById(Long id);
+
+		/**
+		 * 根据账套名称查询账套.
+		 * @param name
+		 * @param companyName
+		 * @return
+		 */
+		List<AccountBook> selectAccountBookByName(String name, String companyName);
+
+		/**
+		 * 查询科目体系数据
+		 *
+		 * @return
+		 */
+		List<DictValue> selectSubjectSystem();
+
 }

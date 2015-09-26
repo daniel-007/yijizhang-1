@@ -36,9 +36,6 @@ public class SecurityConfiguration{
       protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
             @Autowired
-            private SecurityProperties security;
-
-            @Autowired
             private DataSource dataSource;
 
             @Override

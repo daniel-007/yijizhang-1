@@ -19,8 +19,8 @@
 							<legend>
 								<font size="2" color="blue">请选择科目体系</font>
 							</legend>
-							<#list categories as category> <br /> <input name="dictValueId"
-								value="${category.id}" type="radio" />${category.showValue?default('')}
+							<#list categories as category> <br />
+								<input name="dictValueId" value="${category.id}" type="radio" />${category.showValue?default('')}
 							</#list>
 						</fieldset>
 						<br />
@@ -153,14 +153,30 @@
 									$.messager.alert("提示信息", "账套名称与公司名称均不能为空!");
 									return;
 								}
-								//显示对应页面与按钮
-								$('#firstJsp').css('display', 'none');
-								$('#sencondJsp').css('display', '');
-								$('#thirdJsp').css('display', 'none');
-								$('#bookInfo').css('display', '');
-								$('#beforeLink').css('display', '');
-								//设置标志
-								$('input[name=status]').val('sencondJsp');
+                                //检查账套名称是否已经存在
+                                $.ajax({
+                                    url: "account/book/is/exist",
+                                    async:false,
+                                    data:{
+                                        'name':$('#book_name').val().trim(),
+                                        'companyName':$('#company_name').val().trim()
+                                    },
+                                    success: function(result){
+                                        if(result){
+                                            $.messager.alert("提示信息", "账套名称已经存在，请重新命名账套!");
+                                            return;
+                                        }else{
+                                            //显示对应页面与按钮
+                                            $('#firstJsp').css('display', 'none');
+                                            $('#sencondJsp').css('display', '');
+                                            $('#thirdJsp').css('display', 'none');
+                                            $('#bookInfo').css('display', '');
+                                            $('#beforeLink').css('display', '');
+                                            //设置标志
+                                            $('input[name=status]').val('sencondJsp');
+                                        }
+                                    }
+                                });
 							} else {
 								//secondJsp页面需选择科目体系
 								if ($('input:radio[name="dictValueId"]:checked')
@@ -196,12 +212,12 @@
 			$('#create_book').form('submit', {
 				url : 'account/book/complete',
 				success : function(data) {
-					var data = eval('(' + data + ')');  
-					if(data.flag=="1"){
-						$.messager.alert("提示信息", "操作成功!");
+                    data = $.parseJSON(data);
+                    if(data.result){
+						$.messager.alert("提示信息", "新建账套成功!");
 						$("#default_win").window('close');
 					}else{
-						$.messager.alert("提示信息", "操作失败!");
+						$.messager.alert("提示信息", "操作失败，请联系管理员!");
 					}
 				}
 			});
