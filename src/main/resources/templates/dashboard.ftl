@@ -1,4 +1,5 @@
 <#import "./lib/spring.ftl" as spring/>
+<#assign security=JspTaglibs["/WEB-INF/tld/security.tld"] />
 
 <!DOCTYPE html>
 <html lang="zh-CN">

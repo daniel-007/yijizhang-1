@@ -65,7 +65,7 @@ public class MyBatisConfiguration {
        * @return
        */
       @Bean
-      public DataSourceTransactionManager dataSourceTransactionManager() {
+      public DataSourceTransactionManager transactionManager() {
             LOGGER.info("Initialize DataSourceTransactionManager with datasource '{}'", dataSource());
             return new DataSourceTransactionManager(dataSource());
       }
@@ -125,7 +125,8 @@ public class MyBatisConfiguration {
                   SqlSessionFactory sqlSessionFactory = sqlSessionFactory();
                   LOGGER.info("Initialize SqlSessionTemplate bean with sqlSessionFactory '{}'", sqlSessionFactory);
                   //默认采用Batch方式提交事务
-                  SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
+                  //SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
+                  SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory, ExecutorType.REUSE);
                   return sqlSessionTemplate;
             } catch (Exception e) {
                   LOGGER.error("Fail to create bean SqlSessionTemplate. Caused by {}", e.getMessage());
