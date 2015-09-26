@@ -55,9 +55,9 @@ public class MyBatisConfiguration {
                     .create()
                     .driverClassName(this.dataSourceProperties.getDriverClassName())
                     .url(this.dataSourceProperties.getUrl())
-                    .username(this.dataSourceProperties.getUsername())
-                    .password(this.dataSourceProperties.getPassword())
-                    .build();
+                    .username(PasswordUtil.decrypt(this.dataSourceProperties.getUsername()))
+                    .password(PasswordUtil.decrypt(this.dataSourceProperties.getPassword()))
+                          .build();
             return  dataSource;
       }
 
