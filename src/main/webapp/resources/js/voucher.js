@@ -1,7 +1,7 @@
 /**
  * 记账凭证的JS脚本文件。
  */
-$(function () {
+$(document).ready(function () {
 	
 });
 

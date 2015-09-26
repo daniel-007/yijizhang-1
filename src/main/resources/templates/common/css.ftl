@@ -1,4 +1,3 @@
-<!-- EasyUI -->
 <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
 <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/icon.css">
 <!-- buttons -->

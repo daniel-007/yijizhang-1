@@ -56,6 +56,8 @@ public abstract class BaseController {
 		 */
 		@ModelAttribute
 		public void setVaryResponseHeader(HttpServletResponse response) {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html");
 				response.setHeader("X-Frame-Options", "SAMEORIGIN");
 		}
 

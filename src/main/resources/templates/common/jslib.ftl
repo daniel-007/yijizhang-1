@@ -4,8 +4,11 @@
   <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
   <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-<script src="resources/public/js/jquery.min.js"></script>
-<script src="resources/public/easyui/jquery.easyui.min.js"></script>
-<script src="resources/js/common.js"></script>
-<script src="resources/js/book.js"></script>
+<!-- EasyUI -->
+<script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
+<script type="text/javascript" src="resources/public/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="resources/public/jsPlumb/jquery.validate.js"></script>
+<script type="text/javascript" src="resources/public/jsPlumb/jsPlumb-1.7.10.js"></script>
+<script type="text/javascript" src="resources/public/jsPlumb/additional-methods.js"></script>
+<script type="text/javascript" src="resources/js/common.js"></script>
+<script type="text/javascript" src="resources/js/book.js"></script>

@@ -14,8 +14,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -25,38 +23,38 @@ import javax.sql.DataSource;
  * Created by sanlli on 15/9/25.
  */
 @Configuration
-public class SecurityConfiguration{
+public class SecurityConfiguration {
 
-      @Bean
-      public ApplicationSecurity applicationSecurity() {
-            return new ApplicationSecurity();
-      }
+		@Bean
+		public ApplicationSecurity applicationSecurity() {
+				return new ApplicationSecurity();
+		}
 
-      @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-      protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+		@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+		protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
-            @Autowired
-            private DataSource dataSource;
+				@Autowired
+				private DataSource dataSource;
 
-            @Override
-            protected void configure(HttpSecurity http) throws Exception {
-                  http.csrf().csrfTokenRepository(csrfTokenRepository());
-                  http.authorizeRequests().antMatchers("/resources/**").permitAll()
-                          .anyRequest().fullyAuthenticated()
-                          .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
-                          .and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll();
-            }
+				@Override
+				protected void configure(HttpSecurity http) throws Exception {
+						http.csrf().csrfTokenRepository(csrfTokenRepository());
+						http.authorizeRequests().antMatchers("/resources/**").permitAll()
+									.anyRequest().fullyAuthenticated()
+									.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
+									.and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll()
+									.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");
+				}
 
-            @Override
-            public void configure(AuthenticationManagerBuilder auth) throws Exception {
-                  auth.jdbcAuthentication().dataSource(this.dataSource);
-            }
+				@Override
+				public void configure(AuthenticationManagerBuilder auth) throws Exception {
+						auth.jdbcAuthentication().dataSource(this.dataSource);
+				}
 
-            private CsrfTokenRepository csrfTokenRepository()
-            {
-                  HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-                  repository.setSessionAttributeName("_csrf");
-                  return repository;
-            }
-      }
+				private CsrfTokenRepository csrfTokenRepository() {
+						HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+						repository.setSessionAttributeName("_csrf");
+						return repository;
+				}
+		}
 }

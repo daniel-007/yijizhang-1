@@ -209,18 +209,19 @@
 		});
 		//完成按钮
 		$('#completeLink').bind('click', function() {
-			$('#create_book').form('submit', {
-				url : 'account/book/complete',
-				success : function(data) {
-                    data = $.parseJSON(data);
+
+            $.ajax({
+                url: "account/book/complete",
+                data:$("#create_book").serialize(),
+                success: function(data){
                     if(data.result){
-						$.messager.alert("提示信息", "新建账套成功!");
-						$("#default_win").window('close');
-					}else{
-						$.messager.alert("提示信息", "操作失败，请联系管理员!");
-					}
-				}
-			});
+                        $.messager.alert("提示信息", "新建账套成功!");
+                        $("#default_win").window('close');
+                    }else{
+                        $.messager.alert("提示信息", "操作失败，请联系管理员!");
+                    }
+                }
+            });
 		});
 	});
 </script>

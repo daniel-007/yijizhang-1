@@ -9,10 +9,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><@spring.message code="app.title" /></title>
 
+        <#include "common/css.ftl"/>
         <#include "common/jslib.ftl"/>
 
-        <#include "common/css.ftl"/>
-
+        <#include "common/jsbiz.ftl"/>
     </head>
     <body class="easyui-layout">˝
         <div data-options="region:'north',border:false" style="height:130px;overflow: hidden;">
@@ -27,8 +27,6 @@
         <div data-options="region:'center',border:false">
             <#include "common/center.ftl" />
         </div>
-
-        <#include "common/jsbiz.ftl"/>
 
     </body>
 </html>

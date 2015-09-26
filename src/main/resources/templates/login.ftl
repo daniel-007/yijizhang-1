@@ -45,10 +45,6 @@
                                data-options="required:true,missingMessage:'请输入登录密码',prompt:'密码',iconCls:'icon-lock',iconWidth:38">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     </div>
-                    <#--<div style="margin-bottom:20px">-->
-                        <#--<input type="checkbox" checked="checked">-->
-                        <#--<span>记住我</span>-->
-                    <#--</div>-->
                     <div>
                         <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
                             <span style="font-size:14px;">登&#8194;&#8194;录</span>

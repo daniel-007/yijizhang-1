@@ -1,7 +1,7 @@
 /**
  * Application通用函数集合
  */
-$(function(){
+$(document).ready(function(){
 	$TC = $('#tabContainer');
 });
 
