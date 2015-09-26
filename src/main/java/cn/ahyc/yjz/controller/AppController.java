@@ -49,7 +49,7 @@ public class AppController {
        * @param model
        * @return
        */
-      @RequestMapping("/login")
+//      @RequestMapping("/login")
       public String login(Map<String, Object> model) {
 
 

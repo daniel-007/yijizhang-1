@@ -1,7 +1,6 @@
 package cn.ahyc.yjz.service;
 
 import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.AccountSubjectVo;
 
 import java.util.List;
 import java.util.Map;
@@ -14,5 +13,13 @@ public interface AccountSubjectService {
 
     List<AccountSubject> getCategoriesByCode(Integer subjectCode);
 
-    List<Map<String,Object>> getSubjectsByCategoryId(Integer categoryId, Long bookId);
+    List<Map<String, Object>> getSubjectsByCategoryId(Integer categoryId, Long bookId);
+
+    AccountSubject getSubjectById(Integer subjectId);
+
+    void editAccountSubject(AccountSubject accountSubject, Integer parentSubjectIdBack) throws Exception;
+
+    List<AccountSubject> getCategoriesByCategoryId(Integer categoryId);
+
+    void delete(Long subjectId) throws Exception;
 }

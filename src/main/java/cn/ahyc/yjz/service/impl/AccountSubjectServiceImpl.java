@@ -1,16 +1,13 @@
 package cn.ahyc.yjz.service.impl;
 
-import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
-import cn.ahyc.yjz.mapper.base.AccountSubjectTemplateMapper;
-import cn.ahyc.yjz.model.*;
+import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
+import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.AccountSubjectExample;
 import cn.ahyc.yjz.service.AccountSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Joey Yan on 15-9-24.
@@ -19,7 +16,9 @@ import java.util.Map;
 public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Autowired
-    private AccountSubjectMapper accountSubjectMapper;
+    private AccountSubjectExtendMapper accountSubjectMapper;
+
+    private final int first_level_subject_len = 4;
 
     @Override
     public List<AccountSubject> getCategoriesByCode(Integer subjectCode) {
@@ -41,7 +40,57 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         List<Map<String, Object>> subjects = accountSubjectMapper.getSubjectsByCategoryId(map);
         subjects = this.setChildrenSubject(subjects, map, "", "");
 
-        return subjects;
+        List<Map<String, Object>> new_subjects = new ArrayList<Map<String, Object>>();
+        map.put("id", -1);
+        map.put("text", "首级");
+        map.put("next_level_length", first_level_subject_len - 1);
+        map.put("subject_name", "首级");
+        map.put("subject_code", subjects.get(0).get("subject_code").toString().substring(0, 1));
+        new_subjects.add(map);
+        new_subjects.addAll(subjects);
+
+        return new_subjects;
+    }
+
+    @Override
+    public AccountSubject getSubjectById(Integer subjectId) {
+        return accountSubjectMapper.selectByPrimaryKey(subjectId.longValue());
+    }
+
+    @Override
+    public void editAccountSubject(AccountSubject accountSubject, Integer parentSubjectIdBack) throws Exception {
+        Long id = accountSubject.getId();
+        Integer parentId = accountSubject.getParentSubjectId();
+
+        if (parentId == -1) {
+            accountSubject.setParentSubjectId(parentSubjectIdBack);
+        }
+
+        accountSubject.setBaseFlag(1);
+        Date now = new Date();
+        accountSubject.setModifyTime(now);
+
+        if (id == -1) {
+            accountSubject.setId(null);
+            accountSubjectMapper.insertSelective(accountSubject);
+        } else {
+            accountSubject.setCreateTime(now);
+            accountSubjectMapper.updateByPrimaryKeySelective(accountSubject);
+        }
+
+    }
+
+    @Override
+    public List<AccountSubject> getCategoriesByCategoryId(Integer categoryId) {
+        AccountSubjectExample example = new AccountSubjectExample();
+        AccountSubjectExample.Criteria criteria = example.createCriteria();
+        criteria.andParentSubjectIdEqualTo(categoryId);
+        return accountSubjectMapper.selectByExample(example);
+    }
+
+    @Override
+    public void delete(Long subjectId) throws Exception {
+        this.accountSubjectMapper.deleteByPrimaryKey(subjectId);
     }
 
     /**
