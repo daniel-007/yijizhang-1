@@ -8,10 +8,14 @@ Login = function(){
 
     return {
 
+        /**
+         * 登录表单提交.
+         */
         submit:function(){
-
+            if ($('#username').val() == '' || $('#password').val() == '') {
+                return;
+            }
             $('#loginForm').submit();
-
         }
 
     }
@@ -20,6 +24,14 @@ Login = function(){
 
 $(function(){
 
+    $('#loginSubmit').click(function(){
+        Login.submit();
+    });
 
+    $('#loginForm').keypress(function(e){
+        if(e.which==13) {
+            Login.submit();
+        }
+    });
 
 });

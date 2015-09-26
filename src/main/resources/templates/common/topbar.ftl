@@ -1,6 +1,6 @@
 <div class="top-bar">
 	<div class="info">
-		<b><@spring.message code="app.title" /> - 【欢迎: &#8194;<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER"><@security.authentication property="name"/></@security.authorize>】</b>
+		<b><@spring.message code="app.title" /> - 【欢迎<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">&#8194;:&#8194;<@security.authentication property="name"/></@security.authorize>】</b>
 	</div>
 	<div class="action">
 		<ul>

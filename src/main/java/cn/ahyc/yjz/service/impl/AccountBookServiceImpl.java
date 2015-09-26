@@ -105,7 +105,6 @@ public class AccountBookServiceImpl implements AccountBookService {
       }
       /**
        * 查询科目体系数据
-       * @param id
        * @return
        */
       @Override
