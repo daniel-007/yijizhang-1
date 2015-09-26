@@ -16,6 +16,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -23,12 +25,7 @@ import javax.sql.DataSource;
  * Created by sanlli on 15/9/25.
  */
 @Configuration
-public class SecurityConfiguration extends WebMvcConfigurerAdapter {
-
-      @Override
-      public void addViewControllers(ViewControllerRegistry registry) {
-            registry.addViewController("/login").setViewName("login");
-      }
+public class SecurityConfiguration{
 
       @Bean
       public ApplicationSecurity applicationSecurity() {
@@ -46,10 +43,11 @@ public class SecurityConfiguration extends WebMvcConfigurerAdapter {
 
             @Override
             protected void configure(HttpSecurity http) throws Exception {
+                  http.csrf().csrfTokenRepository(csrfTokenRepository());
                   http.authorizeRequests().antMatchers("/resources/**").permitAll()
                           .anyRequest().fullyAuthenticated()
-                          .and().formLogin().loginPage("/login")
-                          .failureUrl("/login?error").permitAll();
+                          .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
+                          .and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll();
             }
 
             @Override
@@ -57,7 +55,11 @@ public class SecurityConfiguration extends WebMvcConfigurerAdapter {
                   auth.jdbcAuthentication().dataSource(this.dataSource);
             }
 
+            private CsrfTokenRepository csrfTokenRepository()
+            {
+                  HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+                  repository.setSessionAttributeName("_csrf");
+                  return repository;
+            }
       }
-
-
 }

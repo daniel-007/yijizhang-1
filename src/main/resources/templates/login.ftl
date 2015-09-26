@@ -34,13 +34,14 @@
             <#include "./common/copyright.ftl" />
         </div>
         <div data-options="region:'center',border:false">
-            <form name="loginForm" id='loginForm' action="/j_spring_security_check" method='POST'>
+            <form name="loginForm" id='loginForm' action="/login" method="POST">
                 <div style="width:400px;margin:0 auto;padding:30px 70px 20px 70px">
                     <div style="margin-bottom:10px">
-                        <input name="j_username" class="easyui-textbox" style="width:100%;height:40px;padding:12px" data-options="prompt:'账号',iconCls:'icon-man',iconWidth:38">
+                        <input name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px" data-options="prompt:'账号',iconCls:'icon-man',iconWidth:38">
                     </div>
                     <div style="margin-bottom:20px">
-                        <input name="j_password" class="easyui-textbox" type="password" style="width:100%;height:40px;padding:12px" data-options="prompt:'密码',iconCls:'icon-lock',iconWidth:38">
+                        <input name="password" class="easyui-textbox" type="password" style="width:100%;height:40px;padding:12px" data-options="prompt:'密码',iconCls:'icon-lock',iconWidth:38">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     </div>
                     <div style="margin-bottom:20px">
                         <input type="checkbox" checked="checked">

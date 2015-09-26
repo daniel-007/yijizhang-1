@@ -16,6 +16,7 @@
 
 package cn.ahyc.yjz.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,7 +29,6 @@ import java.util.Map;
  */
 @Controller
 public class AppController {
-
 
       /**
        * 跳转到登陆页面.
@@ -51,5 +51,29 @@ public class AppController {
 
 
             return "dashboard";
+      }
+
+
+      /**
+       * 跳转到登录页面.
+       * @param model
+       * @return
+       */
+      @RequestMapping("/login")
+      public String login(Map<String, Object> model) {
+
+
+            return "login";
+      }
+
+      /**
+       * 注销.
+       * @param model
+       * @return
+       */
+      @RequestMapping("/logout")
+      public String logout(Map<String, Object> model) {
+            SecurityContextHolder.clearContext();
+            return "login";
       }
 }
