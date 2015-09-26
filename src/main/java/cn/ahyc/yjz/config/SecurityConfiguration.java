@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 /**
  * Created by sanlli on 15/9/25.
  */
-@Configuration
+//@Configuration
 public class SecurityConfiguration{
 
       @Bean
@@ -35,16 +35,19 @@ public class SecurityConfiguration{
       @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
       protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
-            @Autowired
+//            @Autowired
+            private SecurityProperties security;
+
+//            @Autowired
             private DataSource dataSource;
 
             @Override
             protected void configure(HttpSecurity http) throws Exception {
                   http.csrf().csrfTokenRepository(csrfTokenRepository());
-                  http.authorizeRequests().antMatchers("/resources/**").permitAll()
-                          .anyRequest().fullyAuthenticated()
-                          .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
-                          .and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll();
+//                  http.authorizeRequests().antMatchers("/resources/**").permitAll()
+//                          .anyRequest().fullyAuthenticated()
+//                          .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
+//                          .and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll();
             }
 
             @Override
