@@ -1,8 +1,9 @@
 package cn.ahyc.yjz.mapper.extend;
 
+import cn.ahyc.yjz.mapper.base.VoucherMapper;
 import cn.ahyc.yjz.model.Voucher;
 
-public interface VoucherExtendMapper {
+public interface VoucherExtendMapper extends VoucherMapper{
 
     /**
      * 保存记账凭证，返回主键

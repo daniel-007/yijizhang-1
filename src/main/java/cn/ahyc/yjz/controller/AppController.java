@@ -31,16 +31,6 @@ import java.util.Map;
 public class AppController {
 
       /**
-       * 跳转到登陆页面.
-       * @return
-       */
-      @RequestMapping("/login")
-      public String login(){
-            return "login";
-      }
-
-
-      /**
        * 跳转到Dashboard视图.
        *
        * @param model
