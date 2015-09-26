@@ -29,7 +29,7 @@ $(function () {
                 $("#account_subject_eidt_win").window({
                     title: "科目说明",
                     iconCls: "icon-tip",
-                    width: 550,
+                    width: 560,
                     height: 400,
                     modal: true,
                     href: "account/subject/tip"
