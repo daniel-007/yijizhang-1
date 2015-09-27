@@ -1,6 +1,8 @@
 package cn.ahyc.yjz.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.service.VoucherService;
 
@@ -20,7 +23,11 @@ public class CarryOverController  extends BaseController {
 	
 	@Autowired
 	private VoucherService voucherService;
-	// 结转损益页面
+	/**
+	 * 初始化页面.
+	 *
+	 * @return
+	 */
 	@RequestMapping(value = ("/main"))
 	public String main(Model model) {
 		return view("carryOver/main");
@@ -30,11 +37,24 @@ public class CarryOverController  extends BaseController {
 	 *
 	 * @return
 	 */
-    @RequestMapping("/category/detail")
+    @RequestMapping(value = ("/category/detail"))
     @ResponseBody
     public List<CompanyCommonValue> getCategoryDetail() {
     	List<CompanyCommonValue> categoryDetails=voucherService.queryVoucherWordList();
         return categoryDetails;
     }
-
+    /**
+	 * 结转损益.
+	 *
+	 * @return
+	 */
+    @RequestMapping(value = ("/complete"))
+	@ResponseBody
+	public Map complete( String summary, String voucherWord) {
+			Map map = new HashMap();
+			//保存业务数据
+			int result = 1;
+			map.put("result", result > 0 ? true : false);
+			return map;
+	}
 }

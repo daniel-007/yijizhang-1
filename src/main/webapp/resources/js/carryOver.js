@@ -17,3 +17,26 @@ $(function () {
         });
     });
 });
+
+
+CarryOver=function(){
+	return {
+		cancel:function(){
+			$("#default_win").window("close");
+		},
+		complete:function(){
+			$('#carry_over').form('submit', {
+				url : 'account/carryOver/complete',
+				success : function(data) {
+                    data = $.parseJSON(data);
+                    if(data.result){
+						$.messager.alert("提示信息", "新建账套成功!");
+						$("#default_win").window('close');
+					}else{
+						$.messager.alert("提示信息", "操作失败，请联系管理员!");
+					}
+				}
+			});
+		}
+	};
+}();

@@ -6,7 +6,7 @@
 			<div data-options="region:'west'"
 				style="width: 180px; background-image: url('resources/public/img/jianzhang.png')"></div>
 			<div data-options="region:'center'" style="padding: 25px;line-height: 220%;">
-				<form id="create_book" action="#" method="post">
+				<form id="carry_over" action="#" method="post">
 					<div id="firstJsp">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<font size="2">
@@ -20,7 +20,9 @@
 							<br/>
 							凭证字:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input id="category_detail" name="voucherWord" class="easyui-combobox"
-					                 data-options="url:'/account/carryOver/category/detail', valueField: 'id',textField: 'showValue',required:true" style="width: 42%;" />
+					                 data-options="url:'/account/carryOver/category/detail', valueField: 'id',textField: 'showValue',required:true,
+					                 onLoadSuccess:function(){var data = $('#category_detail').combobox('getData'); if (data.length > 0) {
+					                 $('#category_detail').combobox('select', data[0].value);}}" style="width: 42%;" />
 						</font>
 					</div>
 				</form>
@@ -31,9 +33,9 @@
 	</div>
 	<div data-options="region:'south'"
 		style="height: 50px; text-align: right;">
-		<a id="completeLink" href="javascript:void(0)" class="button button-primary button-small" >
+		<a id="completeLink" href="javascript:void(0)"    onclick="CarryOver.complete()" class="button button-primary button-small" >
 			<i class="fa fa-check-circle"></i>完成
-		</a> <a id="cancelLink" href="javascript:void(0)" class="button button-primary button-small"> 
+		</a> <a id="cancelLink" href="javascript:void(0)" onclick="CarryOver.cancel()" class="button button-primary button-small"> 
 			<i class="fa fa-power-off"></i>取消
 		</a>
 	</div>
