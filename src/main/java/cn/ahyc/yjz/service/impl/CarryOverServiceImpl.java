@@ -26,7 +26,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 	@Override
 	public int CarryoverSubmit(String summary, String voucherWord) {
 		Voucher voucher=new Voucher();
-		
+		   
 		List<VoucherDetail> details=new ArrayList<VoucherDetail>();
 		voucherService.save(voucher, details);
 		return 1;
