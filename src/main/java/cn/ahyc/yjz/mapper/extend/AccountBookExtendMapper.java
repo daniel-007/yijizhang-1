@@ -8,7 +8,6 @@ package cn.ahyc.yjz.mapper.extend;
 
 import cn.ahyc.yjz.mapper.base.AccountBookMapper;
 import cn.ahyc.yjz.model.AccountBook;
-import cn.ahyc.yjz.model.AccountBookExample;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,20 @@ public interface AccountBookExtendMapper extends AccountBookMapper {
 		 * @param map
 		 * @return
 		 */
-		List<AccountBook> selectByName(Map map);
+		List selectByName(Map map);
+
+
+		/**
+		 * 查询账套列表.
+		 * @return
+		 */
+		List selectAll();
+
+		/**
+		 * 查询最新的账套.
+		 *
+		 * @return
+		 */
+		AccountBook selectLatestAccountBook();
 
 }

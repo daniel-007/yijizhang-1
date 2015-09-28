@@ -3,6 +3,14 @@
  */
 $(document).ready(function(){
 	$TC = $('#tabContainer');
+
+
+	/** 所有的ajax请求都自动提交_csrf头信息，否则POST方式调用REST会报403. */
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+		xhr.setRequestHeader(header, token);
+	});
 });
 
 App=function(){

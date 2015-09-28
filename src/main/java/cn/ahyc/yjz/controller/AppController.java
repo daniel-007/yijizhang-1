@@ -16,10 +16,15 @@
 
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.util.Constant;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -50,9 +55,22 @@ public class AppController {
        * @return
        */
       @RequestMapping("/login")
-      public String login(Map<String, Object> model) {
+      public String login(Map<String, Object> model,HttpServletRequest request) {
+            if(request.getSession().getAttribute(Constant.SPRING_SECURITY_CONTEXT)!=null){
+                  return "redirect:/";
+            }
 
-
+            Object o = request.getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION);
+            o = o==null?request.getSession().getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION):o;
+            if (o!=null){
+                  if(o instanceof BadCredentialsException || o instanceof UsernameNotFoundException){
+                        model.put("failureMsg", "用户名或者密码错误，请重试！");
+                  }else if (o instanceof CredentialsExpiredException) {
+                        model.put("failureMsg", "登录会话过期,请重新登录！");
+                  }
+            }else{
+                  model.remove("failureMsg");
+            }
             return "login";
       }
 

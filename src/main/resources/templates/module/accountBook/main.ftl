@@ -158,8 +158,7 @@
                                     url: "account/book/is/exist",
                                     async:false,
                                     data:{
-                                        'name':$('#book_name').val().trim(),
-                                        'companyName':$('#company_name').val().trim()
+                                        'name':$('#book_name').val().trim()
                                     },
                                     success: function(result){
                                         if(result){
