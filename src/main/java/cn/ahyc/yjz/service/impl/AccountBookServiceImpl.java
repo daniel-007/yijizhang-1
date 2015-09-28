@@ -113,10 +113,10 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List selectAccountBookByName(String name) {
-				Map map = new HashMap<String,String>();
+		public List<AccountBook> selectAccountBookByName(String name) {
+				Map<String,String> map = new HashMap<String,String>();
 				map.put("name",name);
-				List accountBooks = accountBookMapper.selectByName(map);
+				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
 		}
 
@@ -126,7 +126,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List selectAllAccountBook() {
+		public List<AccountBook> selectAllAccountBook() {
 				return accountBookMapper.selectAll();
 		}
 

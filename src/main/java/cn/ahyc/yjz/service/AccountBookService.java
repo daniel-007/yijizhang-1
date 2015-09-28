@@ -37,14 +37,14 @@ public interface AccountBookService {
 		 * @param name
 		 * @return
 		 */
-		List selectAccountBookByName(String name);
+		List<AccountBook> selectAccountBookByName(String name);
 
 		/**
 		 * 查询账套列表.
 		 *
 		 * @return
 		 */
-		List selectAllAccountBook();
+		List<AccountBook> selectAllAccountBook();
 
 		/**
 		 * 查询科目体系数据

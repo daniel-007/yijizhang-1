@@ -22,14 +22,14 @@ public interface AccountBookExtendMapper extends AccountBookMapper {
 		 * @param map
 		 * @return
 		 */
-		List selectByName(Map map);
+		List<AccountBook> selectByName(Map map);
 
 
 		/**
 		 * 查询账套列表.
 		 * @return
 		 */
-		List selectAll();
+		List<AccountBook> selectAll();
 
 		/**
 		 * 查询最新的账套.

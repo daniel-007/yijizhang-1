@@ -60,7 +60,7 @@ public class AccountBookController extends BaseController {
 		 */
 		@RequestMapping("/list")
 		@ResponseBody
-		public List listAccountBooks(){
+		public List<AccountBook> listAccountBooks(){
 			return accountBookService.selectAllAccountBook();
 		}
 
@@ -74,8 +74,8 @@ public class AccountBookController extends BaseController {
 		 */
 		@RequestMapping(value = ("/complete"))
 		@ResponseBody
-		public Map complete(AccountBook accountBook, int level2, int level3, int level4, int level5) {
-				Map map = new HashMap();
+		public Map<String,Object> complete(AccountBook accountBook, int level2, int level3, int level4, int level5) {
+				Map<String,Object> map = new HashMap<String,Object>();
 				int level1 = 4;
 				//保存业务数据
 				int result = accountBookService.createAccountBook(accountBook, level1, level2, level3, level4, level5);
