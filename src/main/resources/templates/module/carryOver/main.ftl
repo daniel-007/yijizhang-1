@@ -22,6 +22,7 @@
 							<input id="category_detail" name="voucherWord" style="width: 42%;"/>
 						</font>
 					</div>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>
 			</div>
 

@@ -40,18 +40,18 @@ CarryOver=function(){
 			$("#default_win").window("close");
 		},
 		complete:function(){
-			$('#carry_over').form('submit', {
-				url : 'account/carryOver/complete',
-				success : function(data) {
-                    data = $.parseJSON(data);
+		   $.ajax({
+                url: "account/carryOver/complete",
+                data:$("#carry_over").serialize(),
+                success: function(data){
                     if(data.result){
-						$.messager.alert("提示信息", "新建账套成功!");
-						$("#default_win").window('close');
-					}else{
-						$.messager.alert("提示信息", "操作失败，请联系管理员!");
-					}
-				}
-			});
+                        $.messager.alert("提示信息", "结转损益成功!");
+                        $("#default_win").window('close');
+                    }else{
+                        $.messager.alert("提示信息", "操作失败，请联系管理员!");
+                    }
+                }
+            });
 		}
 	};
 }();

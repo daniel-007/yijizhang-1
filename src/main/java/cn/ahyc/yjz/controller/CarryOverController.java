@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.service.VoucherService;
 
@@ -21,6 +20,10 @@ import cn.ahyc.yjz.service.VoucherService;
 @RequestMapping("/account/carryOver")
 public class CarryOverController  extends BaseController {
 	
+	public CarryOverController() {
+		this.pathPrefix = this.pathPrefix + "carryOver/";
+	}
+
 	@Autowired
 	private VoucherService voucherService;
 	/**
@@ -50,9 +53,10 @@ public class CarryOverController  extends BaseController {
 	 */
     @RequestMapping(value = ("/complete"))
 	@ResponseBody
-	public Map complete( String summary, String voucherWord) {
-			Map map = new HashMap();
+	public Map<String, Boolean> complete( String summary, String voucherWord) {
+			Map<String, Boolean> map = new HashMap<String, Boolean>();
 			//保存业务数据
+			
 			int result = 1;
 			map.put("result", result > 0 ? true : false);
 			return map;
