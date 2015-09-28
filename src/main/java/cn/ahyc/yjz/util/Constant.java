@@ -13,6 +13,7 @@ public abstract class Constant {
 
 		public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 		public static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
-		public static final String ACCOUNT_BOOK_ID = "ACCOUNT_BOOK_ID";
+		public static final String CURRENT_ACCOUNT_BOOK = "CURRENT_ACCOUNT_BOOK";
+		public static final String CURRENT_PERIOD = "CURRENT_PERIOD";
 
 }

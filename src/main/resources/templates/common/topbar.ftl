@@ -2,6 +2,8 @@
 	<div class="info">
 		<b><@spring.message code="app.title" /> - 【欢迎<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">&#8194;:&#8194;<@security.authentication property="name"/></@security.authorize>】</b>
 		<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
+			<#if CURRENT_ACCOUNT_BOOK??>${CURRENT_ACCOUNT_BOOK.bookName}</#if>
+
 			<input id="accountBookList" style="border-radius: 0px;" class="easyui-combobox" data-options="
 			valueField: 'id',
 			textField: 'bookName',
