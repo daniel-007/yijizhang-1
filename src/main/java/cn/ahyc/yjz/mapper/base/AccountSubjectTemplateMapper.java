@@ -3,6 +3,8 @@ package cn.ahyc.yjz.mapper.base;
 import cn.ahyc.yjz.model.AccountSubjectTemplate;
 import cn.ahyc.yjz.model.AccountSubjectTemplateExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface AccountSubjectTemplateMapper {
@@ -93,4 +95,11 @@ public interface AccountSubjectTemplateMapper {
      * @mbggenerated Mon Sep 28 10:26:40 CST 2015
      */
     int updateByPrimaryKey(AccountSubjectTemplate record);
+    /**
+     * copy 会计科目模板表数据到会计科目表
+     *
+     * @mbggenerated Wed Sep 23 16:59:46 CST 2015
+     */
+    int copyAccountSubject(Map<String, Object> param);
+
 }
