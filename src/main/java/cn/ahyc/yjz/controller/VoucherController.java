@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
@@ -68,6 +69,12 @@ public class VoucherController extends BaseController{
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("total", list != null && list.size() > 0 ? list.size() : 0);
         map.put("rows", list);
+        List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
+        Map<String, Object> footermap = new HashMap<String, Object>();
+        footermap.put("bHundredMillion", "11");
+        footermap.put("summary", "总计");
+        footerlist.add(footermap);
+        map.put("footer", footerlist);
         return map;
     }
 
@@ -82,17 +89,15 @@ public class VoucherController extends BaseController{
     @ResponseBody
     public Map<String, Object> save(Model model, HttpServletRequest request, Voucher voucher) {
 
-        String summarys = request.getParameter("summary");
-        String subjectCodes = request.getParameter("subjectCode");
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             // TODO "1L"
             voucher.setPeriodId(1L);
             /** 组织凭证明细数据 **/
             List<VoucherDetail> details = new ArrayList<VoucherDetail>();
-            if (StringUtils.isNoneBlank(subjectCodes)) {
-                String[] summaryArr = StringUtils.split(summarys, ",");
-                String[] subjectCodeArr = StringUtils.split(subjectCodes, ",");
+            String[] summaryArr = request.getParameterValues("summary");
+            String[] subjectCodeArr = request.getParameterValues("subjectCode");
+            if (StringUtils.isNoneBlank(subjectCodeArr)) {
                 VoucherDetail voucherDetail;
                 for (int i = 0; i < subjectCodeArr.length; i++) {
                     voucherDetail = new VoucherDetail();
@@ -103,12 +108,21 @@ public class VoucherController extends BaseController{
             }
             /** 保存 **/
             voucherService.save(voucher, details);
-            map.put("success", "success");
+            map.put("result", "success");
             map.put("message", "保存成功");
         } catch (Exception e) {
             e.printStackTrace();
             map.put("message", "系统异常！");
         }
         return map;
+    }
+
+    @RequestMapping("/accountSubjectList")
+    @ResponseBody
+    public List<AccountSubject> accountSubjectList() {
+        // TODO 30L
+        long bookId = 30L;
+        List<AccountSubject> list = voucherService.queryAccountSubjectList(bookId);
+        return list;
     }
 }

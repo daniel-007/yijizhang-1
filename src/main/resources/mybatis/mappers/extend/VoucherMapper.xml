@@ -82,7 +82,7 @@
     </trim>
   </insert>
   <select id="selectMaxVoucherNo" parameterType="java.lang.Long" resultType="java.lang.Integer">
-    select max(voucher_no)
+    select ifnull(max(voucher_no),0)
     from voucher
     where period_id = #{period_id,jdbcType=BIGINT}
   </select>

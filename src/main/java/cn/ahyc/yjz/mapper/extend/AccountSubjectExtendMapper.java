@@ -1,9 +1,10 @@
 package cn.ahyc.yjz.mapper.extend;
 
-import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
-
 import java.util.List;
 import java.util.Map;
+
+import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
+import cn.ahyc.yjz.model.AccountSubject;
 
 public interface AccountSubjectExtendMapper extends AccountSubjectMapper{
 
@@ -22,4 +23,12 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper{
      * @return
      */
     List<Map<String, Object>> getChildrenSubjectsByCategoryId(Map<String, Object> param);
+
+    /**
+     * 查询所有末节点
+     * 
+     * @param bookId
+     * @return
+     */
+    List<AccountSubject> selectLastChildSubject(Long bookId);
 }
