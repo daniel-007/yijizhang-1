@@ -10,6 +10,7 @@ import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.LoginHistory;
 import cn.ahyc.yjz.service.AccountBookService;
 import cn.ahyc.yjz.service.LoginHistoryService;
+import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.util.Constant;
 import cn.ahyc.yjz.util.NetworkUtil;
 import org.springframework.security.core.Authentication;
@@ -31,12 +32,9 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
 		private AccountBookService accountBookService;
 
-		public LoginSuccessHandler() {
-		}
+		private PeriodService periodService;
 
-		public LoginSuccessHandler(LoginHistoryService loginHistoryService, AccountBookService accountBookService) {
-				this.loginHistoryService = loginHistoryService;
-				this.accountBookService = accountBookService;
+		public LoginSuccessHandler() {
 		}
 
 		@Override
@@ -51,7 +49,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 						accountBookId = accountBook==null?accountBookId:accountBook.getId();
 				}
 				//把上次操作的账套ID放到Session里面，登录的时候，默认操作的账套ID是上次操作的账套
-				request.getSession().setAttribute(Constant.ACCOUNT_BOOK_ID,accountBookId);
+				request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBookService.selectAccountBookById(accountBookId));
+				request.getSession().setAttribute(Constant.CURRENT_PERIOD,periodService.selectCurrentPeriod(accountBookId));
 
 				//保存本次的登录历史
 				LoginHistory loginHistory = new LoginHistory();
@@ -72,5 +71,9 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
 		public void setAccountBookService(AccountBookService accountBookService) {
 				this.accountBookService = accountBookService;
+		}
+
+		public void setPeriodService(PeriodService periodService) {
+				this.periodService = periodService;
 		}
 }

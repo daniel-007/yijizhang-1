@@ -10,6 +10,7 @@ import cn.ahyc.yjz.security.LoginFailureHandler;
 import cn.ahyc.yjz.security.LoginSuccessHandler;
 import cn.ahyc.yjz.service.AccountBookService;
 import cn.ahyc.yjz.service.LoginHistoryService;
+import cn.ahyc.yjz.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +40,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		@Autowired
 		private AccountBookService accountBookService;
 
+		@Autowired
+		private PeriodService periodService;
+
 		@Bean
 		public LoginSuccessHandler loginSuccessHandler(){
 				LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler();
 				loginSuccessHandler.setLoginHistoryService(loginHistoryService);
 				loginSuccessHandler.setAccountBookService(accountBookService);
+				loginSuccessHandler.setPeriodService(periodService);
 				return loginSuccessHandler;
 		}
 
