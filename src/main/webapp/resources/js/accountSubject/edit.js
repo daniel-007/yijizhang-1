@@ -74,7 +74,7 @@ $(function () {
 
         $category_detail.combobox({
                 url: '/account/subject/category/detail?category_id=' + category_id,
-                valueField: 'parentSubjectCode',
+                valueField: 'subjectCode',
                 textField: 'subjectName',
                 required: true,
                 editable: false,

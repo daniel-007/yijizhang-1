@@ -17,7 +17,7 @@ public interface AccountSubjectService {
 
     AccountSubject getSubjectById(Long subjectId);
 
-    void editAccountSubject(AccountSubject accountSubject, Long parentSubjectIdBack, Long parentSubjectId) throws Exception;
+    void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception;
 
     List<AccountSubject> getCategoriesByCategoryId(Long categoryId);
 

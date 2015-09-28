@@ -6,7 +6,6 @@ package cn.ahyc.yjz.service.impl;/**
  * @date: 15/9/23
  */
 
-import cn.ahyc.yjz.mapper.base.AccountSubjectTemplateMapper;
 import cn.ahyc.yjz.mapper.base.DictValueMapper;
 import cn.ahyc.yjz.mapper.base.PeriodMapper;
 import cn.ahyc.yjz.mapper.base.SubjectLengthMapper;
@@ -67,7 +66,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 						subjectLengthMapper.insertSelective(subjectLength);
 				}
 				//复制科目体系对应的会计科目数据
-				Map<String, Object> map = new HashMap<String, Object>();
+				Map<String, Object> map = new HashMap();
 				map.put("dictValueId", accountBook.getDictValueId());
 				map.put("bookId", accountBook.getId());
 				accountSubjectTemplateExtendMapper.copyAccountSubject(map);
@@ -113,21 +112,12 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List<AccountBook> selectAccountBookByName(String name) {
-				Map<String,String> map = new HashMap<String,String>();
+		public List<AccountBook> selectAccountBookByName(String name, String companyName) {
+				Map map = new HashMap();
 				map.put("name",name);
+				map.put("companyName",companyName);
 				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
-		}
-
-		/**
-		 * 查询账套列表.
-		 *
-		 * @return
-		 */
-		@Override
-		public List<AccountBook> selectAllAccountBook() {
-				return accountBookMapper.selectAll();
 		}
 
 		/**
@@ -141,15 +131,5 @@ public class AccountBookServiceImpl implements AccountBookService {
 				Criteria criteria = example.createCriteria();
 				criteria.andDictTypeIdEqualTo(1L);
 				return dictValueMapper.selectByExample(example);
-		}
-
-		/**
-		 * 查询最新的账套.
-		 *
-		 * @return
-		 */
-		@Override
-		public AccountBook selectLatestAccountBook() {
-				return accountBookMapper.selectLatestAccountBook();
 		}
 }

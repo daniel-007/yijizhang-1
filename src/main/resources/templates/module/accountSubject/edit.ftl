@@ -6,7 +6,7 @@
         <input id="opt" type="hidden" value="${opt}">
         <input id="account_subject_direction" type="hidden" value="${accountSubject.direction?default(1)}">
 
-        <input type="hidden" name="id" value="${subjectId}">
+        <input type="hidden" name="id" value="${subjectId?c}">
         <input type="hidden" name="level" value="${level}">
         <input type="hidden" name="bookId" value="${accountSubject.bookId?default(null)}">
 
@@ -14,7 +14,8 @@
             <tr>
                 <td style="width: 80px;">父级科目:</td>
                 <td>
-                    <input id="parent_subject" name="parentSubjectId" style="width: 100%;" value="${parentSubjectCode}"/>
+                    <input id="parent_subject" name="parent_subject_code" style="width: 100%;"
+                           value="${parentSubjectCode?c}"/>
                 </td>
             </tr>
             <tr>
@@ -37,7 +38,7 @@
             <tr>
                 <td>科目类别:</td>
                 <td>
-                    <input id="category_detail" name="parent_subject_id_back"/>
+                    <input id="category_detail" name="parent_subject_code_back"/>
                 </td>
             </tr>
             <tr>

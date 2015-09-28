@@ -5,7 +5,7 @@
     <select id="getSubjectsByCategoryId" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
             t2.*, t1.id AS category_detail_id,
-            t1.parent_subject_code AS category_datail_parent_subject_code,
+            t1.subject_code AS category_datail_parent_subject_code,
             IFNULL(
                 (
                     SELECT

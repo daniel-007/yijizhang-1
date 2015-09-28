@@ -113,13 +113,14 @@ $(function () {
         border: false,
         onSelect: function (title) {
             var id = $accountSubject_tabs.tabs('getSelected').panel('options').id;
-            var category_id = id.replace("category_", "");
+            var category_id = id.replace("category_", "").replace(",", "");
 
             account_subject.specific_subject.category_id = category_id;
-            account_subject.specific_subject.account_subject_id = -1;
+            account_subject.specific_subject.account_subject_id = -1
 
-            $("#" + id).html("<table style='width: 100%;'></table>");
-            account_subject_current_table = $("#" + id + " table").treegrid({
+            var table_id = category_id + "_table";
+            $accountSubject_tabs.tabs('getSelected').html("<table id='" + table_id + "' style='width: 100%;'></table>");
+            account_subject_current_table = $("#" + table_id).treegrid({
                 url: 'account/subject/category/' + category_id + '/subjects',
                 idField: 'subject_code',
                 treeField: 'subject_code',
@@ -131,7 +132,7 @@ $(function () {
                     ]
                 ],
                 onClickRow: function (row) {
-                    account_subject.specific_subject.account_subject_id = row.id;
+                    account_subject.specific_subject.account_subject_id = row.id_back;
                     account_subject_selected_row = row;
                 },
                 onDblClickRow: function (row) {

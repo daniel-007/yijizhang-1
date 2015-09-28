@@ -22,161 +22,164 @@ import java.util.Map;
 @RequestMapping("/account/subject")
 public class AccountSubjectController extends BaseController {
 
-		private final Long category_subject_code = -9999l;
-		private final Long category_detail_subject_code = 0l;
-		Long bookId = 30l;
+    private final Long category_subject_code = -9999l;
+    private final Long category_detail_subject_code = 0l;
+    Long bookId = 32l;
 
 
-		@Resource
-		private AccountSubjectService accountSubjectService;
+    @Resource
+    private AccountSubjectService accountSubjectService;
 
-		/**
-		 * 跳转到科目说明页面.
-		 *
-		 * @return
-		 */
-		@RequestMapping("/tip")
-		public String tip() {
-				return view("accountSubject/tip");
-		}
-
-
-		/**
-		 * @param subjectId
-		 * @return
-		 */
-		@RequestMapping("/delete/{subjectId}")
-		@ResponseBody
-		public Map<String, Object> delete(@PathVariable("subjectId") Long subjectId) {
-
-				Map<String, Object> result = new HashMap<String, Object>();
-				result.put("success", true);
-
-				try {
-						accountSubjectService.delete(subjectId);
-				} catch (Exception e) {
-						e.printStackTrace();
-						result.put("success", false);
-						result.put("msg", e.getMessage());
-				}
-				return result;
-		}
+    /**
+     * 跳转到科目说明页面.
+     *
+     * @return
+     */
+    @RequestMapping("/tip")
+    public String tip() {
+        return view("accountSubject/tip");
+    }
 
 
-		/**
-		 * 会计科目新增、修改统一入口.
-		 *
-		 * @param accountSubject
-		 * @param parentSubjectIdBack 添加首级科目需要.
-		 * @return
-		 */
-		@RequestMapping(value = ("/edit"))
-		@ResponseBody
-		public Map<String, Object> edit(AccountSubject accountSubject
-					, @RequestParam("parent_subject_id_back") Long parentSubjectIdBack
-					, @RequestParam("parent_subject_id") Long parentSubjectId
-		) {
+    /**
+     * @param subjectId
+     * @return
+     */
+    @RequestMapping("/delete/{subjectId}")
+    @ResponseBody
+    public Map<String, Object> delete(@PathVariable("subjectId") Long subjectId) {
 
-				Map<String, Object> result = new HashMap<String, Object>();
-				result.put("success", true);
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
 
-				try {
-						accountSubjectService.editAccountSubject(accountSubject, parentSubjectIdBack, parentSubjectId);
-				} catch (Exception e) {
-						e.printStackTrace();
-						result.put("success", false);
-						result.put("msg", e.getMessage());
-				}
-				return result;
-		}
+        try {
+            accountSubjectService.delete(subjectId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("msg", e.getMessage());
+        }
+        return result;
+    }
 
 
-		/**
-		 * 会计科目管理页面入口.
-		 *
-		 * @param model
-		 * @return
-		 */
-		@RequestMapping(value = ("/main"))
-		public String main(Model model) {
+    /**
+     * 会计科目新增、修改统一入口.
+     *
+     * @param accountSubject
+     * @param parentSubjectCodeBack
+     * @param parentSubjectCode
+     * @return
+     */
+    @RequestMapping(value = ("/edit"))
+    @ResponseBody
+    public Map<String, Object> edit(AccountSubject accountSubject
+            , @RequestParam("parent_subject_code_back") Long parentSubjectCodeBack
+            , @RequestParam("parent_subject_code") Long parentSubjectCode
+    ) {
 
-				List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code);
-				model.addAttribute("categories", templates);
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
 
-				return view("accountSubject/main");
-		}
-
-
-		/**
-		 * 新增 修改页面入口.
-		 *
-		 * @param categoryId
-		 * @param subjectId
-		 * @param model
-		 * @return
-		 */
-		@RequestMapping("/opt/{opt}/category/{categoryId}")
-		public String editPage(
-					@PathVariable("opt") String opt
-					, @PathVariable("categoryId") Long categoryId
-					, Long subjectId
-					, Model model) {
-
-				AccountSubject subject = new AccountSubject();
-				subject.setBookId(bookId);
-				int level = 1;
-
-				model.addAttribute("opt", opt);
-				model.addAttribute("categoryId", categoryId);
-				model.addAttribute("parentSubjectCode", subjectId);
-				model.addAttribute("subjectId", subjectId);
-				model.addAttribute("accountSubject", subject);
-
-				if (subjectId != -1) {
-						subject = accountSubjectService.getSubjectById(subjectId);
-						Long parentSubjectCode = subject.getParentSubjectCode();
-						model.addAttribute("subjectId", subject.getId());
-
-						if ("edit".equals(opt)) {
-								level = subject.getLevel();
-								model.addAttribute("accountSubject", subject);
-								model.addAttribute("parentSubjectCode", level == 1 ? -1 : parentSubjectCode);
-						} else {
-								model.addAttribute("parentSubjectCode", -1);
-								level = subject.getLevel() + 1;
-						}
-				}
-
-				model.addAttribute("level", level);
-
-				return view("accountSubject/edit");
-		}
+        try {
+            accountSubjectService.editAccountSubject(accountSubject, parentSubjectCodeBack, parentSubjectCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("msg", e.getMessage());
+        }
+        return result;
+    }
 
 
-		/**
-		 * 会计小分类.
-		 *
-		 * @return
-		 */
-		@RequestMapping("/category/detail")
-		@ResponseBody
-		public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
-				List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId);
-				return categoryDetails;
-		}
+    /**
+     * 会计科目管理页面入口.
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = ("/main"))
+    public String main(Model model) {
+
+        List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code);
+        model.addAttribute("categories", templates);
+
+        return view("accountSubject/main");
+    }
 
 
-		/**
-		 * 会计分类列表.
-		 *
-		 * @param categoryId
-		 * @return
-		 */
-		@RequestMapping("/category/{id}/subjects")
-		@ResponseBody
-		public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId) {
+    /**
+     * 新增 修改页面入口.
+     *
+     * @param categoryId
+     * @param subjectId
+     * @param model
+     * @return
+     */
+    @RequestMapping("/opt/{opt}/category/{categoryId}")
+    public String editPage(
+            @PathVariable("opt") String opt
+            , @PathVariable("categoryId") Long categoryId
+            , Long subjectId
+            , Model model) {
 
-				return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
-		}
+        AccountSubject subject = new AccountSubject();
+        subject.setBookId(bookId);
+        int level = 1;
+
+        model.addAttribute("opt", opt);
+        model.addAttribute("categoryId", categoryId.toString());
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("accountSubject", subject);
+        model.addAttribute("parentSubjectCode", -1);
+
+        if (subjectId != -1) {
+            subject = accountSubjectService.getSubjectById(subjectId);
+            Long subjectCode = subject.getSubjectCode();
+            model.addAttribute("subjectId", subject.getId());
+
+            if ("edit".equals(opt)) {
+                level = subject.getLevel();
+                model.addAttribute("accountSubject", subject);
+                model.addAttribute("parentSubjectCode", level == 1 ? -1 : subject.getParentSubjectCode());
+            } else {
+                level = subject.getLevel() + 1;
+                model.addAttribute("subjectId", -1);
+                model.addAttribute("parentSubjectCode", level == 1 ? -1 : subjectCode);
+            }
+
+        }
+
+        model.addAttribute("level", level);
+
+        return view("accountSubject/edit");
+    }
+
+
+    /**
+     * 会计小分类.
+     *
+     * @return
+     */
+    @RequestMapping("/category/detail")
+    @ResponseBody
+    public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
+        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId);
+        return categoryDetails;
+    }
+
+
+    /**
+     * 会计分类列表.
+     *
+     * @param categoryId
+     * @return
+     */
+    @RequestMapping("/category/{id}/subjects")
+    @ResponseBody
+    public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId) {
+
+        return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
+    }
 
 }
