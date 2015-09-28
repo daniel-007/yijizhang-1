@@ -112,12 +112,21 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List<AccountBook> selectAccountBookByName(String name, String companyName) {
+		public List<AccountBook> selectAccountBookByName(String name) {
 				Map map = new HashMap();
 				map.put("name",name);
-				map.put("companyName",companyName);
 				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
+		}
+
+		/**
+		 * 查询账套列表.
+		 *
+		 * @return
+		 */
+		@Override
+		public List<AccountBook> selectAllAccountBook() {
+				return accountBookMapper.selectAll();
 		}
 
 		/**
@@ -131,5 +140,15 @@ public class AccountBookServiceImpl implements AccountBookService {
 				Criteria criteria = example.createCriteria();
 				criteria.andDictTypeIdEqualTo(1L);
 				return dictValueMapper.selectByExample(example);
+		}
+
+		/**
+		 * 查询最新的账套.
+		 *
+		 * @return
+		 */
+		@Override
+		public AccountBook selectLatestAccountBook() {
+				return accountBookMapper.selectLatestAccountBook();
 		}
 }
