@@ -5,7 +5,7 @@
     <select id="getSubjectsByCategoryId" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
             t2.*, t1.id AS category_detail_id,
-            t1.parent_subject_id AS category_datail_parent_subject_id,
+            t1.parent_subject_code AS category_datail_parent_subject_code,
             IFNULL(
                 (
                     SELECT
@@ -21,8 +21,8 @@
             account_subject t1,
             account_subject t2
         WHERE
-            t1.parent_subject_id = #{categoryId}
-        AND t2.parent_subject_id = t1.id
+            t1.parent_subject_code = #{parent_subject_code}
+        AND t2.parent_subject_code = t1.subject_code
         AND t1.book_id = #{bookId}
         ORDER BY
             t2.subject_code
@@ -44,7 +44,7 @@
         FROM
             account_subject t
         WHERE
-            t.parent_subject_id = #{parentSubjectId}
+            t.parent_subject_code = #{parent_subject_code}
         AND t.book_id = #{bookId}
         ORDER BY
             t.subject_code

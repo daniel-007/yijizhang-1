@@ -89,7 +89,7 @@ $(function () {
         openEditWin: function (opt, title, icon) {
             var category_id = account_subject.specific_subject.category_id;
             var subject_id = account_subject.specific_subject.account_subject_id;
-            var href = 'account/subject/edit/' + opt + '/category/' + category_id + "?subjectId=" + subject_id;
+            var href = 'account/subject/opt/' + opt + '/category/' + category_id + "?subjectId=" + subject_id;
 
             $("#account_subject_eidt_win").window({
                 title: title,
