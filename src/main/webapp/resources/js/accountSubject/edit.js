@@ -77,6 +77,7 @@ $(function () {
                 valueField: 'id',
                 textField: 'subjectName',
                 required: true,
+                editable: false,
                 readonly: is_readonly,
                 onLoadSuccess: function () {
                     $category_detail.combobox('setValue', category_detail_id);

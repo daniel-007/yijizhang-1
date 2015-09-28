@@ -61,6 +61,7 @@ $(function () {
                     $.post("account/subject/delete/" + subject_id, function (data) {
                         if (data.success) {
                             $.messager.alert("提示", "删除成功。", "info", function () {
+                                account_subject.specific_subject.account_subject_id = -1;
                                 account_subject_current_table.treegrid("reload");
                             });
                         } else {
