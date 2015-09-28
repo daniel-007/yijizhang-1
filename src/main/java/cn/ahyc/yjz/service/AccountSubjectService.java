@@ -11,15 +11,15 @@ import java.util.Map;
 public interface AccountSubjectService {
 
 
-    List<AccountSubject> getCategoriesByCode(Integer subjectCode);
+    List<AccountSubject> getCategoriesByCode(Long subjectCode);
 
-    List<Map<String, Object>> getSubjectsByCategoryId(Integer categoryId, Long bookId);
+    List<Map<String, Object>> getSubjectsByCategoryId(Long categoryId, Long bookId);
 
-    AccountSubject getSubjectById(Integer subjectId);
+    AccountSubject getSubjectById(Long subjectId);
 
-    void editAccountSubject(AccountSubject accountSubject, Integer parentSubjectIdBack) throws Exception;
+    void editAccountSubject(AccountSubject accountSubject, Long parentSubjectIdBack, Long parentSubjectId) throws Exception;
 
-    List<AccountSubject> getCategoriesByCategoryId(Integer categoryId);
+    List<AccountSubject> getCategoriesByCategoryId(Long categoryId);
 
     void delete(Long subjectId) throws Exception;
 }

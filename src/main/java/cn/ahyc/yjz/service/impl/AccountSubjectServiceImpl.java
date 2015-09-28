@@ -21,20 +21,23 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     private final int first_level_subject_len = 4;
 
     @Override
-    public List<AccountSubject> getCategoriesByCode(Integer subjectCode) {
+    public List<AccountSubject> getCategoriesByCode(Long subjectCode) {
         AccountSubjectExample example = new AccountSubjectExample();
 
         AccountSubjectExample.Criteria criteria = example.createCriteria();
-        criteria.andSubjectCodeEqualTo(subjectCode);
+        criteria.andParentSubjectCodeEqualTo(subjectCode);
 
         return accountSubjectMapper.selectByExample(example);
     }
 
     @Override
-    public List<Map<String, Object>> getSubjectsByCategoryId(Integer categoryId, Long bookId) {
+    public List<Map<String, Object>> getSubjectsByCategoryId(Long categoryId, Long bookId) {
+
+        //获取父级.
+        AccountSubject parentSubject = accountSubjectMapper.selectByPrimaryKey(categoryId);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("categoryId", categoryId);
+        map.put("parent_subject_code", parentSubject.getSubjectCode());
         map.put("bookId", bookId);
 
         List<Map<String, Object>> subjects = accountSubjectMapper.getSubjectsByCategoryId(map);
@@ -53,17 +56,20 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public AccountSubject getSubjectById(Integer subjectId) {
+    public AccountSubject getSubjectById(Long subjectId) {
         return accountSubjectMapper.selectByPrimaryKey(subjectId.longValue());
     }
 
     @Override
-    public void editAccountSubject(AccountSubject accountSubject, Integer parentSubjectIdBack) throws Exception {
+    public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectIdBack, Long parentSubjectId) throws Exception {
         Long id = accountSubject.getId();
-        Integer parentId = accountSubject.getParentSubjectId();
+        Long parentSubjectCode = accountSubject.getParentSubjectCode();
 
-        if (parentId == -1) {
-            accountSubject.setParentSubjectId(parentSubjectIdBack);
+        if (parentSubjectCode == -1) {
+            accountSubject.setParentSubjectCode(parentSubjectIdBack);
+        } else {
+            AccountSubject subject = accountSubjectMapper.selectByPrimaryKey(parentSubjectId);
+            accountSubject.setParentSubjectCode(subject.getSubjectCode());
         }
 
         accountSubject.setBaseFlag(1);
@@ -81,10 +87,13 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubject> getCategoriesByCategoryId(Integer categoryId) {
+    public List<AccountSubject> getCategoriesByCategoryId(Long categoryId) {
+
+        AccountSubject parent_accountSubject = accountSubjectMapper.selectByPrimaryKey(categoryId);
+
         AccountSubjectExample example = new AccountSubjectExample();
         AccountSubjectExample.Criteria criteria = example.createCriteria();
-        criteria.andParentSubjectIdEqualTo(categoryId);
+        criteria.andParentSubjectCodeEqualTo(parent_accountSubject.getSubjectCode());
         return accountSubjectMapper.selectByExample(example);
     }
 
@@ -99,33 +108,33 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @param subjects
      * @param map
      * @param category_detail_id
-     * @param category_datail_parent_subject_id
+     * @param category_datail_parent_subject_code
      * @return
      */
     private List<Map<String, Object>> setChildrenSubject(
             List<Map<String, Object>> subjects
             , Map<String, Object> map
             , String category_detail_id
-            , String category_datail_parent_subject_id) {
+            , String category_datail_parent_subject_code) {
 
         for (Map<String, Object> sub : subjects) {
 
             category_detail_id = sub.getOrDefault("category_detail_id", category_detail_id).toString();
-            category_datail_parent_subject_id = sub.getOrDefault("category_datail_parent_subject_id", category_datail_parent_subject_id).toString();
+            category_datail_parent_subject_code = sub.getOrDefault("category_datail_parent_subject_code", category_datail_parent_subject_code).toString();
+
+            Long subject_code = (Long) sub.get("subject_code");
 
             sub.put("state", "open");
             sub.put("text", sub.get("subject_name"));
             sub.put("category_detail_id", category_detail_id);
-            sub.put("category_datail_parent_subject_id", category_datail_parent_subject_id);
+            sub.put("category_datail_parent_subject_code", category_datail_parent_subject_code);
 
-
-            Long id = (Long) sub.get("id");
-            map.put("parentSubjectId", id);
+            map.put("parent_subject_code", subject_code);
             List<Map<String, Object>> children = accountSubjectMapper.getChildrenSubjectsByCategoryId(map);
             if (!children.isEmpty()) {
                 sub.put("state", "closed");
                 sub.put("children", children);
-                this.setChildrenSubject(children, map, category_detail_id, category_datail_parent_subject_id);
+                this.setChildrenSubject(children, map, category_detail_id, category_datail_parent_subject_code);
             }
         }
 

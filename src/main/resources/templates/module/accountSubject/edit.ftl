@@ -14,7 +14,7 @@
             <tr>
                 <td style="width: 80px;">父级科目:</td>
                 <td>
-                    <input id="parent_subject" name="parentSubjectId" style="width: 100%;" value="${parentId}"/>
+                    <input id="parent_subject" name="parentSubjectId" style="width: 100%;" value="${parentSubjectCode}"/>
                 </td>
             </tr>
             <tr>
