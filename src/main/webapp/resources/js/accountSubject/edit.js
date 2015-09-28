@@ -47,7 +47,7 @@ $(function () {
         var id = record.id;
         var subject_len = record.next_level_length;
         var subject_code = record.subject_code;
-        var category_detail_id = record.category_detail_id;
+        var category_detail_id = record.category_datail_parent_subject_code;
         var is_readonly = true;
         var total_len = (subject_code + "").length + parseInt(subject_len);
 
@@ -74,9 +74,10 @@ $(function () {
 
         $category_detail.combobox({
                 url: '/account/subject/category/detail?category_id=' + category_id,
-                valueField: 'id',
+                valueField: 'subjectCode',
                 textField: 'subjectName',
                 required: true,
+                editable: false,
                 readonly: is_readonly,
                 onLoadSuccess: function () {
                     $category_detail.combobox('setValue', category_detail_id);

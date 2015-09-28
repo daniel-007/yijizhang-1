@@ -22,9 +22,9 @@ import java.util.Map;
 @RequestMapping("/account/subject")
 public class AccountSubjectController extends BaseController {
 
-    private final Integer category_subject_code = -1;
-    private final Integer category_detail_subject_code = 0;
-    Long bookId = 1l;
+    private final Long category_subject_code = -9999l;
+    private final Long category_detail_subject_code = 0l;
+    Long bookId = 32l;
 
 
     @Resource
@@ -42,7 +42,6 @@ public class AccountSubjectController extends BaseController {
 
 
     /**
-     * 
      * @param subjectId
      * @return
      */
@@ -68,18 +67,22 @@ public class AccountSubjectController extends BaseController {
      * 会计科目新增、修改统一入口.
      *
      * @param accountSubject
-     * @param parentSubjectIdBack 添加首级科目需要.
+     * @param parentSubjectCodeBack
+     * @param parentSubjectCode
      * @return
      */
     @RequestMapping(value = ("/edit"))
     @ResponseBody
-    public Map<String, Object> edit(AccountSubject accountSubject, @RequestParam("parent_subject_id_back") Integer parentSubjectIdBack) {
+    public Map<String, Object> edit(AccountSubject accountSubject
+            , @RequestParam("parent_subject_code_back") Long parentSubjectCodeBack
+            , @RequestParam("parent_subject_code") Long parentSubjectCode
+    ) {
 
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("success", true);
 
         try {
-            accountSubjectService.editAccountSubject(accountSubject, parentSubjectIdBack);
+            accountSubjectService.editAccountSubject(accountSubject, parentSubjectCodeBack, parentSubjectCode);
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
@@ -99,7 +102,6 @@ public class AccountSubjectController extends BaseController {
     public String main(Model model) {
 
         List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code);
-
         model.addAttribute("categories", templates);
 
         return view("accountSubject/main");
@@ -114,11 +116,11 @@ public class AccountSubjectController extends BaseController {
      * @param model
      * @return
      */
-    @RequestMapping("/edit/{opt}/category/{categoryId}")
+    @RequestMapping("/opt/{opt}/category/{categoryId}")
     public String editPage(
             @PathVariable("opt") String opt
-            , @PathVariable("categoryId") Integer categoryId
-            , Integer subjectId
+            , @PathVariable("categoryId") Long categoryId
+            , Long subjectId
             , Model model) {
 
         AccountSubject subject = new AccountSubject();
@@ -126,24 +128,26 @@ public class AccountSubjectController extends BaseController {
         int level = 1;
 
         model.addAttribute("opt", opt);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("parentId", subjectId);
+        model.addAttribute("categoryId", categoryId.toString());
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("accountSubject", subject);
+        model.addAttribute("parentSubjectCode", -1);
 
         if (subjectId != -1) {
             subject = accountSubjectService.getSubjectById(subjectId);
-            Integer parentId = subject.getParentSubjectId();
+            Long subjectCode = subject.getSubjectCode();
             model.addAttribute("subjectId", subject.getId());
 
             if ("edit".equals(opt)) {
                 level = subject.getLevel();
                 model.addAttribute("accountSubject", subject);
-                model.addAttribute("parentId", level == 1 ? -1 : parentId);
+                model.addAttribute("parentSubjectCode", level == 1 ? -1 : subject.getParentSubjectCode());
             } else {
-                model.addAttribute("subjectId", -1);
                 level = subject.getLevel() + 1;
+                model.addAttribute("subjectId", -1);
+                model.addAttribute("parentSubjectCode", level == 1 ? -1 : subjectCode);
             }
+
         }
 
         model.addAttribute("level", level);
@@ -159,7 +163,7 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/detail")
     @ResponseBody
-    public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Integer categoryId) {
+    public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
         List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId);
         return categoryDetails;
     }
@@ -173,10 +177,9 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/{id}/subjects")
     @ResponseBody
-    public List<Map<String, Object>> getSubject(@PathVariable("id") Integer categoryId) {
+    public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId) {
 
         return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
     }
-
 
 }

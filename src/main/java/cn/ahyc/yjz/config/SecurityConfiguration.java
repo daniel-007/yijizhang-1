@@ -6,14 +6,18 @@ package cn.ahyc.yjz.config;
  * @date: 15/9/25
  */
 
+import cn.ahyc.yjz.security.LoginFailureHandler;
+import cn.ahyc.yjz.security.LoginSuccessHandler;
+import cn.ahyc.yjz.service.AccountBookService;
+import cn.ahyc.yjz.service.LoginHistoryService;
+import cn.ahyc.yjz.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -23,38 +27,57 @@ import javax.sql.DataSource;
  * Created by sanlli on 15/9/25.
  */
 @Configuration
-public class SecurityConfiguration {
+@EnableWebMvcSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+
+		@Autowired
+		private DataSource dataSource;
+
+		@Autowired
+		private LoginHistoryService loginHistoryService;
+
+		@Autowired
+		private AccountBookService accountBookService;
+
+		@Autowired
+		private PeriodService periodService;
 
 		@Bean
-		public ApplicationSecurity applicationSecurity() {
-				return new ApplicationSecurity();
+		public LoginSuccessHandler loginSuccessHandler(){
+				LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler();
+				loginSuccessHandler.setLoginHistoryService(loginHistoryService);
+				loginSuccessHandler.setAccountBookService(accountBookService);
+				loginSuccessHandler.setPeriodService(periodService);
+				return loginSuccessHandler;
 		}
 
-		@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-		protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+		@Bean
+		public LoginFailureHandler loginFailureHandler(){
+				return  new LoginFailureHandler();
+		}
 
-				@Autowired
-				private DataSource dataSource;
 
-				@Override
-				protected void configure(HttpSecurity http) throws Exception {
-						http.csrf().csrfTokenRepository(csrfTokenRepository());
-						http.authorizeRequests().antMatchers("/resources/**").permitAll()
-									.anyRequest().fullyAuthenticated()
-									.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
-									.and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll()
-									.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");
-				}
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+				http.csrf().csrfTokenRepository(csrfTokenRepository());
+				http.authorizeRequests().antMatchers("/resources/**").permitAll()
+							.anyRequest().fullyAuthenticated()
+							.and().formLogin()
+							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())
+							.failureUrl("/login?error").failureHandler(loginFailureHandler())
+							.loginPage("/login").permitAll()
+							.and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll()
+							.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");
+		}
 
-				@Override
-				public void configure(AuthenticationManagerBuilder auth) throws Exception {
-						auth.jdbcAuthentication().dataSource(this.dataSource);
-				}
+		@Autowired
+		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+				auth.jdbcAuthentication().dataSource(this.dataSource);
+		}
 
-				private CsrfTokenRepository csrfTokenRepository() {
-						HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-						repository.setSessionAttributeName("_csrf");
-						return repository;
-				}
+		private CsrfTokenRepository csrfTokenRepository() {
+				HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+				repository.setSessionAttributeName("_csrf");
+				return repository;
 		}
 }

@@ -18,8 +18,8 @@
 
 
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-		                connectionURL="jdbc:mysql://localhost:3306/yijizhang?useUnicode=true&amp;characterEncoding=UTF-8"
-		                userId="root" password="1120">
+		                connectionURL="jdbc:mysql://55b7258dcfdba.sh.cdb.myqcloud.com:4350/yijizhang?useUnicode=true&amp;characterEncoding=UTF-8"
+		                userId="root" password="abcd@1234">
 		</jdbcConnection>
 
 		<!-- java类型处理器，默认的就这么一个处理器可以用，可以自己写，具体的请参考官方文档http://code.google.com/p/mybatis/wiki/Generator -->
@@ -48,18 +48,18 @@
 		</javaClientGenerator>
 
 		<!-- 指定要生成的表名和对应形成的POJO类名 -->
-		<table tableName="account_book" domainObjectName="AccountBook" />
-		<table tableName="account_subject" domainObjectName="AccountSubject" />
-		<table tableName="account_subject_template" domainObjectName="AccountSubjectTemplate" />
-		<table tableName="company_common_type" domainObjectName="CompanyCommonType" />
-		<table tableName="company_common_value" domainObjectName="CompanyCommonValue" />
-		<table tableName="dict_type" domainObjectName="DictType" />
-		<table tableName="dict_value" domainObjectName="DictValue" />
-		<table tableName="period" domainObjectName="Period" />
-		<table tableName="subject_length" domainObjectName="SubjectLength" />
-		<table tableName="voucher" domainObjectName="Voucher" />
-		<table tableName="voucher_detail" domainObjectName="VoucherDetail" />
-		<table tableName="voucher_template" domainObjectName="VoucherTemplate" />
-		<table tableName="voucher_template_detail" domainObjectName="VoucherTemplateDetail" />
+        <table tableName="account_subject" domainObjectName="AccountSubject" />
+        <table tableName="account_subject_template" domainObjectName="AccountSubjectTemplate" />
+        <!--<table tableName="account_book" domainObjectName="AccountBook" />-->
+		<!--<table tableName="company_common_type" domainObjectName="CompanyCommonType" />-->
+		<!--<table tableName="company_common_value" domainObjectName="CompanyCommonValue" />-->
+		<!--<table tableName="dict_type" domainObjectName="DictType" />-->
+		<!--<table tableName="dict_value" domainObjectName="DictValue" />-->
+		<!--<table tableName="period" domainObjectName="Period" />-->
+		<!--<table tableName="subject_length" domainObjectName="SubjectLength" />-->
+		<!--<table tableName="voucher" domainObjectName="Voucher" />-->
+		<!--<table tableName="voucher_detail" domainObjectName="VoucherDetail" />-->
+		<!--<table tableName="voucher_template" domainObjectName="VoucherTemplate" />-->
+		<!--<table tableName="voucher_template_detail" domainObjectName="VoucherTemplateDetail" />-->
 	</context>
 </generatorConfiguration>

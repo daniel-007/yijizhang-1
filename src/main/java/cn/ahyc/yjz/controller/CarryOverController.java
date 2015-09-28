@@ -1,6 +1,8 @@
 package cn.ahyc.yjz.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,9 +20,17 @@ import cn.ahyc.yjz.service.VoucherService;
 @RequestMapping("/account/carryOver")
 public class CarryOverController  extends BaseController {
 	
+	public CarryOverController() {
+		this.pathPrefix = this.pathPrefix + "carryOver/";
+	}
+
 	@Autowired
 	private VoucherService voucherService;
-	// 结转损益页面
+	/**
+	 * 初始化页面.
+	 *
+	 * @return
+	 */
 	@RequestMapping(value = ("/main"))
 	public String main(Model model) {
 		return view("carryOver/main");
@@ -30,11 +40,25 @@ public class CarryOverController  extends BaseController {
 	 *
 	 * @return
 	 */
-    @RequestMapping("/category/detail")
+    @RequestMapping(value = ("/category/detail"))
     @ResponseBody
     public List<CompanyCommonValue> getCategoryDetail() {
     	List<CompanyCommonValue> categoryDetails=voucherService.queryVoucherWordList();
         return categoryDetails;
     }
-
+    /**
+	 * 结转损益.
+	 *
+	 * @return
+	 */
+    @RequestMapping(value = ("/complete"))
+	@ResponseBody
+	public Map<String, Boolean> complete( String summary, String voucherWord) {
+			Map<String, Boolean> map = new HashMap<String, Boolean>();
+			//保存业务数据
+			
+			int result = 1;
+			map.put("result", result > 0 ? true : false);
+			return map;
+	}
 }

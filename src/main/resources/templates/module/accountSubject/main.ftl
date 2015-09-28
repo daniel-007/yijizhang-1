@@ -22,7 +22,7 @@
     <div data-options="region:'center',border:false">
         <div id="accountSubject_tabs" class="easyui-tabs" data-options="fit:true,border:false">
         <#list categories as category>
-            <div id="category_${category.id}" title="${category.subjectName?default('')}"
+            <div id="category_${category.id?c}" title="${category.subjectName?default('')}"
                  style="overflow-x: hidden;"></div>
         </#list>
         </div>

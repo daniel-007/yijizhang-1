@@ -6,27 +6,24 @@ package cn.ahyc.yjz.service.impl;/**
  * @date: 15/9/23
  */
 
-import cn.ahyc.yjz.mapper.base.AccountBookMapper;
-import cn.ahyc.yjz.mapper.base.AccountSubjectTemplateMapper;
 import cn.ahyc.yjz.mapper.base.DictValueMapper;
 import cn.ahyc.yjz.mapper.base.PeriodMapper;
 import cn.ahyc.yjz.mapper.base.SubjectLengthMapper;
 import cn.ahyc.yjz.mapper.extend.AccountBookExtendMapper;
+import cn.ahyc.yjz.mapper.extend.AccountSubjectTemplateExtendMapper;
 import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.model.DictValueExample.Criteria;
 import cn.ahyc.yjz.service.AccountBookService;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,7 +39,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 		@Autowired
 		private SubjectLengthMapper subjectLengthMapper;
 		@Autowired
-		private AccountSubjectTemplateMapper accountSubjectTemplateMapper;
+		private AccountSubjectTemplateExtendMapper accountSubjectTemplateExtendMapper;
 		@Autowired
 		private PeriodMapper periodMapper;
 
@@ -69,10 +66,10 @@ public class AccountBookServiceImpl implements AccountBookService {
 						subjectLengthMapper.insertSelective(subjectLength);
 				}
 				//复制科目体系对应的会计科目数据
-				Map<String, Object> map = new HashMap<String, Object>();
+				Map<String, Object> map = new HashMap();
 				map.put("dictValueId", accountBook.getDictValueId());
 				map.put("bookId", accountBook.getId());
-				accountSubjectTemplateMapper.copyAccountSubject(map);
+				accountSubjectTemplateExtendMapper.copyAccountSubject(map);
 				//插入期表，当前期
 				Period period = new Period();
 				period.setStartTime(startTime);
@@ -115,12 +112,21 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List<AccountBook> selectAccountBookByName(String name, String companyName) {
-				Map map = new HashMap<>();
+		public List<AccountBook> selectAccountBookByName(String name) {
+				Map map = new HashMap();
 				map.put("name",name);
-				map.put("companyName",companyName);
 				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
+		}
+
+		/**
+		 * 查询账套列表.
+		 *
+		 * @return
+		 */
+		@Override
+		public List<AccountBook> selectAllAccountBook() {
+				return accountBookMapper.selectAll();
 		}
 
 		/**
@@ -134,5 +140,15 @@ public class AccountBookServiceImpl implements AccountBookService {
 				Criteria criteria = example.createCriteria();
 				criteria.andDictTypeIdEqualTo(1L);
 				return dictValueMapper.selectByExample(example);
+		}
+
+		/**
+		 * 查询最新的账套.
+		 *
+		 * @return
+		 */
+		@Override
+		public AccountBook selectLatestAccountBook() {
+				return accountBookMapper.selectLatestAccountBook();
 		}
 }

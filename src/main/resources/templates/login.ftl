@@ -7,6 +7,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="_csrf" content="${_csrf.token}"/>
+        <meta name="_csrf_header" content="${_csrf.headerName}"/>
         <title><@spring.message code="app.title" /></title>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -36,6 +38,7 @@
         <div data-options="region:'center',border:false">
             <form name="loginForm" id='loginForm' action="/login" method="POST">
                 <div style="width:400px;margin:0 auto;padding:30px 70px 20px 70px">
+                    <div style="margin-bottom:10px;color: #CC6600;"><#if failureMsg??><i class="fa fa-exclamation-circle"></i> ${failureMsg}</#if></div>
                     <div style="margin-bottom:10px">
                         <input id="username" name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px"
                                data-options="required:true,missingMessage:'请输入登录账号',prompt:'账号',iconCls:'icon-man',iconWidth:38">

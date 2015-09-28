@@ -34,8 +34,13 @@ body,html{height: 100%;}
 	float: left;
 	height: 30px;
 	line-height: 30px;
-	width: 30%;
+	width: 60%;
 	text-shadow: 5px 5px 5px #CCCCCC;
+}
+
+.top-bar .info .textbox{
+	border:none;
+	border-radius: 0px;
 }
 
 .top-bar .info b{
@@ -45,7 +50,7 @@ body,html{height: 100%;}
 .top-bar .action{
 	text-align: right;
 	float: left;
-	width: 70%;
+	width: 40%;
 }
 
 .top-bar ul{

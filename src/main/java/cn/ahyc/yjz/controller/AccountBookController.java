@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +49,19 @@ public class AccountBookController extends BaseController {
 		 */
 		@RequestMapping("/is/exist")
 		@ResponseBody
-		public boolean isExist(String name,String companyName) {
-				List<AccountBook> accountBooks = accountBookService.selectAccountBookByName(name,companyName);
+		public boolean isExist(String name) {
+				List<AccountBook> accountBooks = accountBookService.selectAccountBookByName(name);
 				return accountBooks.size()>0?true:false;
+		}
+
+		/**
+		 * 获取账套列表.
+		 * @return
+		 */
+		@RequestMapping("/list")
+		@ResponseBody
+		public List<AccountBook> listAccountBooks(){
+			return accountBookService.selectAllAccountBook();
 		}
 
 		/**
@@ -65,8 +74,8 @@ public class AccountBookController extends BaseController {
 		 */
 		@RequestMapping(value = ("/complete"))
 		@ResponseBody
-		public Map complete(AccountBook accountBook, int level2, int level3, int level4, int level5) {
-				Map map = new HashMap();
+		public Map<String,Object> complete(AccountBook accountBook, int level2, int level3, int level4, int level5) {
+				Map<String,Object> map = new HashMap<String,Object>();
 				int level1 = 4;
 				//保存业务数据
 				int result = accountBookService.createAccountBook(accountBook, level1, level2, level3, level4, level5);
