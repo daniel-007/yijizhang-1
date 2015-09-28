@@ -33,11 +33,18 @@ public interface AccountBookService {
 
 		/**
 		 * 根据账套名称查询账套.
+		 *
 		 * @param name
-		 * @param companyName
 		 * @return
 		 */
-		List<AccountBook> selectAccountBookByName(String name, String companyName);
+		List selectAccountBookByName(String name);
+
+		/**
+		 * 查询账套列表.
+		 *
+		 * @return
+		 */
+		List selectAllAccountBook();
 
 		/**
 		 * 查询科目体系数据
@@ -45,5 +52,12 @@ public interface AccountBookService {
 		 * @return
 		 */
 		List<DictValue> selectSubjectSystem();
+
+		/**
+		 * 查询最新的账套.
+		 *
+		 * @return
+		 */
+		AccountBook selectLatestAccountBook();
 
 }

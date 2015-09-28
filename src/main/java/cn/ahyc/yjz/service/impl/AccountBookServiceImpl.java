@@ -6,6 +6,7 @@ package cn.ahyc.yjz.service.impl;/**
  * @date: 15/9/23
  */
 
+import cn.ahyc.yjz.mapper.base.AccountSubjectTemplateMapper;
 import cn.ahyc.yjz.mapper.base.DictValueMapper;
 import cn.ahyc.yjz.mapper.base.PeriodMapper;
 import cn.ahyc.yjz.mapper.base.SubjectLengthMapper;
@@ -14,17 +15,16 @@ import cn.ahyc.yjz.mapper.extend.AccountSubjectTemplateExtendMapper;
 import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.model.DictValueExample.Criteria;
 import cn.ahyc.yjz.service.AccountBookService;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -113,12 +113,21 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 * @return
 		 */
 		@Override
-		public List<AccountBook> selectAccountBookByName(String name, String companyName) {
-				Map map = new HashMap<>();
+		public List selectAccountBookByName(String name) {
+				Map map = new HashMap<String,String>();
 				map.put("name",name);
-				map.put("companyName",companyName);
-				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
+				List accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
+		}
+
+		/**
+		 * 查询账套列表.
+		 *
+		 * @return
+		 */
+		@Override
+		public List selectAllAccountBook() {
+				return accountBookMapper.selectAll();
 		}
 
 		/**
@@ -132,5 +141,15 @@ public class AccountBookServiceImpl implements AccountBookService {
 				Criteria criteria = example.createCriteria();
 				criteria.andDictTypeIdEqualTo(1L);
 				return dictValueMapper.selectByExample(example);
+		}
+
+		/**
+		 * 查询最新的账套.
+		 *
+		 * @return
+		 */
+		@Override
+		public AccountBook selectLatestAccountBook() {
+				return accountBookMapper.selectLatestAccountBook();
 		}
 }
