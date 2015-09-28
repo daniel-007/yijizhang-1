@@ -31,7 +31,8 @@
 	WHERE a.voucher_id=b.id
 	AND   b.period_id=c.id
 	AND   c.book_id=1
-	AND   c.current_period=9
+	AND   c.current_period=1
+	
   </select>
   
 </mapper>
