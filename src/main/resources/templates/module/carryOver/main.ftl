@@ -19,10 +19,7 @@
 							<input type="text"	id="summary" name="summary" value="结转本期损益" style="width: 40%;" />
 							<br/>
 							凭证字:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input id="category_detail" name="voucherWord" class="easyui-combobox"
-					                 data-options="url:'/account/carryOver/category/detail', valueField: 'id',textField: 'showValue',required:true,
-					                 onLoadSuccess:function(){var data = $('#category_detail').combobox('getData'); if (data.length > 0) {
-					                 $('#category_detail').combobox('select', data[0].value);}}" style="width: 42%;" />
+							<input id="category_detail" name="voucherWord" style="width: 42%;"/>
 						</font>
 					</div>
 				</form>
@@ -40,3 +37,8 @@
 		</a>
 	</div>
 </div>
+<script type="text/javascript">
+	$(function () {
+		CarryOver.init();
+	});
+</script>
