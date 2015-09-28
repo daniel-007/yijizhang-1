@@ -6,18 +6,16 @@ package cn.ahyc.yjz.service.impl;/**
  * @date: 15/9/23
  */
 
-import cn.ahyc.yjz.mapper.base.AccountBookMapper;
-import cn.ahyc.yjz.mapper.base.AccountSubjectTemplateMapper;
 import cn.ahyc.yjz.mapper.base.DictValueMapper;
 import cn.ahyc.yjz.mapper.base.PeriodMapper;
 import cn.ahyc.yjz.mapper.base.SubjectLengthMapper;
 import cn.ahyc.yjz.mapper.extend.AccountBookExtendMapper;
+import cn.ahyc.yjz.mapper.extend.AccountSubjectTemplateExtendMapper;
 import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.model.DictValueExample.Criteria;
 import cn.ahyc.yjz.service.AccountBookService;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +40,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 		@Autowired
 		private SubjectLengthMapper subjectLengthMapper;
 		@Autowired
-		private AccountSubjectTemplateMapper accountSubjectTemplateMapper;
+		private AccountSubjectTemplateExtendMapper accountSubjectTemplateExtendMapper;
 		@Autowired
 		private PeriodMapper periodMapper;
 
@@ -72,7 +70,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("dictValueId", accountBook.getDictValueId());
 				map.put("bookId", accountBook.getId());
-				accountSubjectTemplateMapper.copyAccountSubject(map);
+				accountSubjectTemplateExtendMapper.copyAccountSubject(map);
 				//插入期表，当前期
 				Period period = new Period();
 				period.setStartTime(startTime);

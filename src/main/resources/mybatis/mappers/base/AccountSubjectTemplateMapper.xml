@@ -371,25 +371,4 @@
 	  #{bookId},0,0,NOW() FROM account_subject_template
 	WHERE dict_value_id = #{dictValueId}
   </insert>
-  <insert id="copyAccountSubject"  parameterType="java.util.Map" >
-	  INSERT INTO account_subject (
-	  subject_code,
-	  subject_name,
-	  parent_subject_code,
-	  LEVEL,
-	  direction,
-	  book_id,
-	  end_flag,
-	  base_flag,
-	  create_time
-	) 
-	SELECT 
-	  subject_code,
-	  subject_name,
-	  parent_subject_code,
-	  LEVEL,
-	  balance_direction,
-	  #{bookId},0,0,NOW() FROM account_subject_template
-	WHERE dict_value_id = #{dictValueId}
-  </insert>
 </mapper>
