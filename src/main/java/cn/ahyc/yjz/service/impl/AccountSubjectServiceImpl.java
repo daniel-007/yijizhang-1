@@ -21,12 +21,11 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     private final int first_level_subject_len = 4;
 
     @Override
-    public List<AccountSubject> getCategoriesByCode(Long subjectCode, Long bookId) {
+    public List<AccountSubject> getCategoriesByCode(Long subjectCode) {
         AccountSubjectExample example = new AccountSubjectExample();
 
         AccountSubjectExample.Criteria criteria = example.createCriteria();
         criteria.andParentSubjectCodeEqualTo(subjectCode);
-        criteria.andBookIdEqualTo(bookId);
 
         return accountSubjectMapper.selectByExample(example);
     }
@@ -89,20 +88,40 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubject> getCategoriesByCategoryId(Long categoryId, Long bookId) {
+    public List<AccountSubject> getCategoriesByCategoryId(Long categoryId) {
 
         AccountSubject parent_accountSubject = accountSubjectMapper.selectByPrimaryKey(categoryId);
 
         AccountSubjectExample example = new AccountSubjectExample();
         AccountSubjectExample.Criteria criteria = example.createCriteria();
         criteria.andParentSubjectCodeEqualTo(parent_accountSubject.getSubjectCode());
-        criteria.andBookIdEqualTo(bookId);
         return accountSubjectMapper.selectByExample(example);
     }
 
     @Override
     public void delete(Long subjectId) throws Exception {
         this.accountSubjectMapper.deleteByPrimaryKey(subjectId);
+    }
+
+    @Override
+    public List<AccountSubject> allSubjectTreeData (Long category_subject_code, Long bookId) {
+
+
+        AccountSubjectExample example =  new AccountSubjectExample();
+        AccountSubjectExample.Criteria criteria = example.createCriteria();
+
+        criteria.andBookIdEqualTo(bookId);
+        criteria.andSubjectCodeGreaterThan(0l);
+        return accountSubjectMapper.selectByExample(example);
+
+
+//        Map param = new HashMap();
+//        param.put("category_subject_code", category_subject_code);
+//        param.put("bookId", bookId);
+//
+//        List<Map<String, Object>> categories = accountSubjectMapper.getFirstLevelSubjectsByCode(param);
+//
+//        return this.setChildrenSubject(categories, param, "", "");
     }
 
     /**

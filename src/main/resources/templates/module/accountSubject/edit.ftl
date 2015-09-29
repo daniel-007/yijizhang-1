@@ -2,8 +2,6 @@
 
     <form method="post">
 
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-
         <input id="category_id" type="hidden" value="${categoryId}">
         <input id="opt" type="hidden" value="${opt}">
         <input id="account_subject_direction" type="hidden" value="${accountSubject.direction?default(1)}">

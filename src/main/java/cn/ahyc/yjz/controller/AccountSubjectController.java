@@ -23,12 +23,33 @@ import java.util.Map;
 public class AccountSubjectController extends BaseController {
 
     private final Long category_subject_code = -9999l;
-    private final Long category_detail_subject_code = 0l;
     Long bookId = 32l;
-
 
     @Resource
     private AccountSubjectService accountSubjectService;
+
+
+    /**
+     * 获取树形结构数据.
+     *
+     * @return
+     */
+    @RequestMapping("/initData/alldata")
+    @ResponseBody
+    public List<AccountSubject> allSubjectTreeData() {
+        return accountSubjectService.allSubjectTreeData(category_subject_code, bookId);
+    }
+
+
+    /**
+     * 初始化数据页面入口.
+     *
+     * @return
+     */
+    @RequestMapping("/initData/main")
+    public String initDataPage() {
+        return view("accountSubject/initData/main");
+    }
 
     /**
      * 跳转到科目说明页面.
@@ -164,7 +185,7 @@ public class AccountSubjectController extends BaseController {
     @RequestMapping("/category/detail")
     @ResponseBody
     public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
-        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId,bookId);
+        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId, bookId);
         return categoryDetails;
     }
 

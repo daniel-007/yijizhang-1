@@ -22,4 +22,6 @@ public interface AccountSubjectService {
     List<AccountSubject> getCategoriesByCategoryId(Long categoryId, Long bookId);
 
     void delete(Long subjectId) throws Exception;
+
+    List<AccountSubject> allSubjectTreeData(Long category_subject_code, Long bookId);
 }
