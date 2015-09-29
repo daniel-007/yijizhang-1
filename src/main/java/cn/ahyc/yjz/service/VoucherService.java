@@ -7,6 +7,7 @@ package cn.ahyc.yjz.service;/**
 
 import java.util.List;
 
+import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
@@ -51,5 +52,14 @@ public interface VoucherService {
      * @return
      */
     int queryNextVoucherNo(Long periodId);
+
+    /**
+     * 查询所有会计科目
+     * 
+     * @param bookId
+     * 
+     * @return
+     */
+    List<AccountSubject> queryAccountSubjectList(Long bookId);
 
 }

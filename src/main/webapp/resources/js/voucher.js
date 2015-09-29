@@ -7,18 +7,20 @@ $(document).ready(function () {
 
 Voucher=function(){
 	var editIndex = undefined;
+	var oldValue = undefined;
 	
 	return {
 		init:function(id) {
 			$('#dg').datagrid({
 				width:900,
-				height:300,
+				height:220,
 				singleSelect:true,
 				//toolbar: '#tb',
 				onClickCell:Voucher.onClickCell,
 				url:'voucher/voucherDetailList',
 				queryParams:{voucherId:id},
 				method:'get',
+				showFooter:true,
 				onLoadSuccess:function(data){
 					if(data&&data.total>=5){
 						console.log('not null');
@@ -28,13 +30,34 @@ Voucher=function(){
 				        	$('#dg').datagrid('appendRow',{});
 				        }
 					}
+					
+					$('#dg').datagrid('mergeCells', {
+						index: 0,
+						field: 'summary',
+						colspan: 2,
+						type: 'footer'
+					});
+					$('#dg').datagrid('mergeCells', {
+						index: 0,
+						field: 'bHundredMillion',
+						colspan: 11,
+						type: 'footer'
+					});
+					$('#dg').datagrid('mergeCells', {
+						index: 0,
+						field: 'lHundredMillion',
+						colspan: 11,
+						type: 'footer'
+					});
 				}
 			});
 			
 			$('#voucherWord').combobox({
 			    url:'voucher/voucherWordList',
+			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
+			    editable:false,
 			    onLoadSuccess:function(){
 			    	$('#voucherWord').combobox('setValue', '记');
 			    }
@@ -84,42 +107,52 @@ Voucher=function(){
 		    var rows = $('#dg').datagrid('getChanges');
 		    alert(rows.length+' rows are changed!');
 		},
-		save:function(){
+		save:function(isAdd){
 			if (Voucher.endEditing()){
-				var rows = $('#dg').datagrid('getChanges');
-				var params;
-				for(i=0;i<rows.length;i++){
-					params = Voucher.extend(params, rows[i]);
+				// 验证
+				if(!$('#fm').form('validate')){
+					return;
 				}
-		        $('#fm').form('submit', {
-		        	url:'voucher/save',
-		        	queryParams:params,
-		        	onSubmit: function(){
-		        		var isValid = $(this).form('validate');
-		        		if (isValid){
-		        			console.log("on submit valid true");
-		        		}
-		        		return isValid;
-		        	},
-		            success: function(data){
-		            	var data = eval('(' + data + ')');  // change the JSON string to javascript object
-		                if (data.success){
-		                    alert(data.message);
-		                } else {
-		                	alert(data.message);
-		                }
-		            }
-		        });
+				
+				// 表格数据
+				var rows = $('#dg').datagrid('getChanges');
+				var params="&";
+				for(i=0;i<rows.length;i++){
+					if(rows[i].subjectCode){
+						params = Voucher.extend(params, rows[i]);
+					}
+				}
+				if(params=="&"){
+					$.messager.alert("提示信息", "无凭证分录!");
+				}
+				return;
+				// 提交保存
+	            $.ajax({
+	                url: "voucher/save",
+	                type:'post',
+	                data:$("#fm").serialize()+params,
+	                success: function(data){
+	                    if(data.result){
+	                        $.messager.alert("提示信息", "记账凭证保存成功!");
+	                        if(isAdd){//新增
+	                        	Voucher.add();
+	                        }
+	                    }else{
+	                        $.messager.alert("提示信息", "操作失败，请联系管理员!");
+	                    }
+	                }
+	            });
 		    }
 		},
 		extend:function(destination, source) {
-			if(destination){
-				for (var property in source) 
-					destination[property] = destination[property]+','+source[property]; 
-			} else {
-				destination=$.extend({},source);
-			}
-		    return destination; 
+//			if(destination){
+//				for (var property in source) 
+//					destination[property] = destination[property]+','+source[property]; 
+//			} else {
+//				destination=$.extend({},source);
+//			}
+//		    return destination; 
+			return (destination+'&'+JSON.stringify(source)).replace(/{/,'').replace(/}/,'').replace(/","/g,'&').replace(/"/g,'').replace(/:/g,'=');
 		},
 		myformatter:function(date){
             var y = date.getFullYear();
@@ -138,6 +171,41 @@ Voucher=function(){
             } else {
                 return new Date();
             }
+        },
+        add:function(){
+        	var tab = $TC.tabs('getSelected');  // get selected panel
+        	tab.panel('refresh', 'voucher/main'+"?&time="+new Date().getTime());
+        },
+        cellkeyDown:function(newValue,oldValue,p){
+        	alert(this.value);
+        },
+        cellkeyDown:function(tthis){
+        	oldValue=tthis.value;
+        },
+        cellkeyUp:function(tthis){
+        	var rows = $('#dg').datagrid('getFooterRows');
+        	rows[0]['bHundredMillion']=rows[0]['bHundredMillion']+(tthis.value-oldValue)*;
         }
 	};
 }();
+
+$.extend($.fn.datagrid.defaults.editors, {
+    textMax: {
+        init: function(container, options){
+            var input = $('<input type="text" maxlength="1" onkeydown="Voucher.cellkeyDown(this,'+options. +')" onkeydown="Voucher.cellkeyUp(this)" class="datagrid-editable-input">').appendTo(container);
+            return input;
+        },
+        destroy: function(target){
+            $(target).remove();
+        },
+        getValue: function(target){
+            return $(target).val();
+        },
+        setValue: function(target, value){
+            $(target).val(value);
+        },
+        resize: function(target, width){
+            $(target)._outerWidth(width);
+        }
+    }
+});

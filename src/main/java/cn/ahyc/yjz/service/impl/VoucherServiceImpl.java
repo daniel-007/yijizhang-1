@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 
 import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
 import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
-import cn.ahyc.yjz.mapper.base.VoucherMapper;
+import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
+import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.CompanyCommonValueExample;
 import cn.ahyc.yjz.model.CompanyCommonValueExample.Criteria;
@@ -28,9 +29,6 @@ import cn.ahyc.yjz.service.VoucherService;
 public class VoucherServiceImpl implements VoucherService {
 
     @Autowired
-    private VoucherMapper voucherMapper;
-
-    @Autowired
     private VoucherExtendMapper voucherExtendMapper;
 
     @Autowired
@@ -38,6 +36,9 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Autowired
     private CompanyCommonValueMapper companyCommonValueMapper;
+
+    @Autowired
+    private AccountSubjectExtendMapper accountSubjectExtendMapper;
 
     @Override
     // @Transactional(rollbackFor = Exception.class)
@@ -48,7 +49,7 @@ public class VoucherServiceImpl implements VoucherService {
         if (voucher != null && voucher.getId() != null) {
             voucherId = voucher.getId();
             voucherNo = voucher.getVoucherNo();
-            voucherMapper.updateByPrimaryKeySelective(voucher);
+            voucherExtendMapper.updateByPrimaryKeySelective(voucher);
             /** 删除凭证明细 **/
             VoucherDetailExample example = new VoucherDetailExample();
             cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
@@ -90,6 +91,11 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public Voucher queryVoucher(Long voucherId) {
-        return voucherMapper.selectByPrimaryKey(voucherId);
+        return voucherExtendMapper.selectByPrimaryKey(voucherId);
+    }
+
+    @Override
+    public List<AccountSubject> queryAccountSubjectList(Long bookId) {
+        return accountSubjectExtendMapper.selectLastChildSubject(bookId);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ahyc.yjz.model.CompanyCommonValue;
+import cn.ahyc.yjz.service.CarryOverService;
 import cn.ahyc.yjz.service.VoucherService;
 
 /**
@@ -26,6 +27,8 @@ public class CarryOverController  extends BaseController {
 
 	@Autowired
 	private VoucherService voucherService;
+	@Autowired
+	private CarryOverService carryOverService;
 	/**
 	 * 初始化页面.
 	 *
@@ -33,7 +36,7 @@ public class CarryOverController  extends BaseController {
 	 */
 	@RequestMapping(value = ("/main"))
 	public String main(Model model) {
-		return view("carryOver/main");
+		return view("main");
 	}
 	/**
 	 * 凭证字.
@@ -56,8 +59,7 @@ public class CarryOverController  extends BaseController {
 	public Map<String, Boolean> complete( String summary, String voucherWord) {
 			Map<String, Boolean> map = new HashMap<String, Boolean>();
 			//保存业务数据
-			
-			int result = 1;
+			int result =carryOverService.CarryoverSubmit(summary, voucherWord);
 			map.put("result", result > 0 ? true : false);
 			return map;
 	}
