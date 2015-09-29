@@ -30,9 +30,9 @@
     SELECT a.id,a.subject_code,a.debit,a.credit,a.summary,a.voucher_id,a.create_time,a.modify_time FROM voucher_detail  a,voucher b,period c
 	WHERE a.voucher_id=b.id
 	AND   b.period_id=c.id
-	AND   c.book_id=1
-	AND   c.current_period=1
-	
+	AND   c.book_id=#{bookId,jdbcType=BIGINT}
+	AND   c.current_period=#{currentPeriod,jdbcType=INTEGER}
+	ORDER BY a.id ASC
   </select>
   
 </mapper>
