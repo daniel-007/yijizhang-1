@@ -38,6 +38,16 @@ body,html{height: 100%;}
 	text-shadow: 5px 5px 5px #CCCCCC;
 }
 
+.top-bar .info a{
+	color:#ffffff;
+	font-size: 10px;
+}
+
+.top-bar .info a:hover{
+	color:#CCCCCC;
+	font-size: 10px;
+}
+
 .top-bar .info .textbox{
 	border:none;
 	border-radius: 0px;

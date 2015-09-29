@@ -27,8 +27,18 @@ public class LoginHistoryServiceImpl implements LoginHistoryService {
 		 * @param loginHistory
 		 */
 		@Override
-		public void saveLoginHistory(LoginHistory loginHistory) {
-				loginHistoryExtendMapper.insert(loginHistory);
+		public int saveLoginHistory(LoginHistory loginHistory) {
+				return loginHistoryExtendMapper.insert(loginHistory);
+		}
+
+		/**
+		 * 更新登录历史.
+		 *
+		 * @param loginHistory
+		 */
+		@Override
+		public int updateLoginHistory(LoginHistory loginHistory) {
+				return loginHistoryExtendMapper.updateByPrimaryKey(loginHistory);
 		}
 
 		/**
