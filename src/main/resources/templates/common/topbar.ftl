@@ -11,8 +11,8 @@
                     &#8194;&#8194;&#8194;
 					<input id="accountBookList" style="border-radius: 0px;display: none;"/>
                     <a id="switchBtn" href="javascript:void(0);">切换</a>
-					<a id="confirmSwitchBtn" style="display: none; " href="javascript:void(0);">保存</a>&#8194;&#8194;
-					<a id="cancelSwitchBtn" style="display: none; " href="javascript:void(0);">取消</a>
+					<a id="confirmSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">保存</a>
+					<a id="cancelSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">取消</a>
 				</span>
 			】
 		</@security.authorize>
