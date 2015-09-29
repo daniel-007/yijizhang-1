@@ -21,11 +21,12 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     private final int first_level_subject_len = 4;
 
     @Override
-    public List<AccountSubject> getCategoriesByCode(Long subjectCode) {
+    public List<AccountSubject> getCategoriesByCode(Long subjectCode, Long bookId) {
         AccountSubjectExample example = new AccountSubjectExample();
 
         AccountSubjectExample.Criteria criteria = example.createCriteria();
         criteria.andParentSubjectCodeEqualTo(subjectCode);
+        criteria.andBookIdEqualTo(bookId);
 
         return accountSubjectMapper.selectByExample(example);
     }
@@ -88,13 +89,14 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubject> getCategoriesByCategoryId(Long categoryId) {
+    public List<AccountSubject> getCategoriesByCategoryId(Long categoryId, Long bookId) {
 
         AccountSubject parent_accountSubject = accountSubjectMapper.selectByPrimaryKey(categoryId);
 
         AccountSubjectExample example = new AccountSubjectExample();
         AccountSubjectExample.Criteria criteria = example.createCriteria();
         criteria.andParentSubjectCodeEqualTo(parent_accountSubject.getSubjectCode());
+        criteria.andBookIdEqualTo(bookId);
         return accountSubjectMapper.selectByExample(example);
     }
 
