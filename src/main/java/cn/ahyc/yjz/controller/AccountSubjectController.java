@@ -101,7 +101,7 @@ public class AccountSubjectController extends BaseController {
     @RequestMapping(value = ("/main"))
     public String main(Model model) {
 
-        List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code);
+        List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code, bookId);
         model.addAttribute("categories", templates);
 
         return view("accountSubject/main");
@@ -164,7 +164,7 @@ public class AccountSubjectController extends BaseController {
     @RequestMapping("/category/detail")
     @ResponseBody
     public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
-        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId);
+        List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId,bookId);
         return categoryDetails;
     }
 

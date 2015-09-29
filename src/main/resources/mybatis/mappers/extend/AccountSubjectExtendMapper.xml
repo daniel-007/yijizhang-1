@@ -14,6 +14,7 @@
                         subject_length t3
                     WHERE
                         t3.`level` = (t2.`level` + 1)
+                    AND t3.book_id = #{bookId}
                 ),
                 2
             ) AS next_level_length
@@ -24,6 +25,7 @@
             t1.parent_subject_code = #{parent_subject_code}
         AND t2.parent_subject_code = t1.subject_code
         AND t1.book_id = #{bookId}
+        AND t2.book_id = #{bookId}
         ORDER BY
             t2.subject_code
     </select>
@@ -38,6 +40,7 @@
                         subject_length t1
                     WHERE
                         t1.`level` = (t.`level` + 1)
+                    AND t1.book_id = #{bookId}
                 ),
                 2
             ) AS next_level_length

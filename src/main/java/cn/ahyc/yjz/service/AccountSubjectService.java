@@ -11,7 +11,7 @@ import java.util.Map;
 public interface AccountSubjectService {
 
 
-    List<AccountSubject> getCategoriesByCode(Long subjectCode);
+    List<AccountSubject> getCategoriesByCode(Long subjectCode, Long bookId);
 
     List<Map<String, Object>> getSubjectsByCategoryId(Long categoryId, Long bookId);
 
@@ -19,7 +19,7 @@ public interface AccountSubjectService {
 
     void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception;
 
-    List<AccountSubject> getCategoriesByCategoryId(Long categoryId);
+    List<AccountSubject> getCategoriesByCategoryId(Long categoryId, Long bookId);
 
     void delete(Long subjectId) throws Exception;
 }

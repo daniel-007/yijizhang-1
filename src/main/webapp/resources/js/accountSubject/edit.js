@@ -124,28 +124,21 @@ $(function () {
      * subject表单提交.
      */
     $subject_form_submit_button.click(function () {
-        $accountSubject_edit_from.form('submit', {
-            url: "account/subject/edit",
-            success: function (data) {
-                try {
-                    var data = $.toJSON(data);
-                    if (data.success) {
-                        closeAndRefreshCurTab();
-                        account_subject_current_table.treegrid("reload");
-                    } else {
-                        $.messager.alert("操作失败", data.msg, "error");
-                    }
-                } catch (e) {
-                    if (data.indexOf(true) < 0) {
-                        $.messager.alert("操作失败", "请求失败，稍后重试。", "warning");
-                    } else {
-                        closeAndRefreshCurTab();
-                        account_subject_current_table.treegrid("reload");
-                    }
-                }
 
+        $.ajax({
+            url: "account/subject/edit",
+            data: $accountSubject_edit_from.serialize(),
+            success: function (data) {
+                if (data.success) {
+                    closeAndRefreshCurTab();
+                    account_subject_current_table.treegrid("reload");
+                    account_subject_current_table.treegrid("unselectAll");
+                } else {
+                    $.messager.alert("操作失败", data.msg, "error");
+                }
             }
         });
+
     })
 
 })
