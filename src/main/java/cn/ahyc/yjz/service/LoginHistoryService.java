@@ -16,7 +16,13 @@ public interface LoginHistoryService {
 		 * 保存登录历史.
 		 * @param loginHistory
 		 */
-		void saveLoginHistory(LoginHistory loginHistory);
+		int saveLoginHistory(LoginHistory loginHistory);
+
+		/**
+		 * 更新登录历史.
+		 * @param loginHistory
+		 */
+		int updateLoginHistory(LoginHistory loginHistory);
 
 		/**
 		 * 根据Username查询上一次登录成功的历史记录.
