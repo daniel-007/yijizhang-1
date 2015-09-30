@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
 import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
@@ -41,8 +42,8 @@ public class VoucherServiceImpl implements VoucherService {
     private AccountSubjectExtendMapper accountSubjectExtendMapper;
 
     @Override
-    // @Transactional(rollbackFor = Exception.class)
-    public void save(Voucher voucher, List<VoucherDetail> details) {
+    @Transactional(rollbackFor = Exception.class)
+    public String save(Voucher voucher, List<VoucherDetail> details) {
         long voucherId;
         int voucherNo;
         /** 新增、更新记账凭证 **/
@@ -66,6 +67,8 @@ public class VoucherServiceImpl implements VoucherService {
             detail.setVoucherId(voucherId);
             voucherDetailMapper.insertSelective(detail);
         }
+
+        return voucher.getVoucherWord() + "字第" + voucherNo + "号";
     }
 
     @Override

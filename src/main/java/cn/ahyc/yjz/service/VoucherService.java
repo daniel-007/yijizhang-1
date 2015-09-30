@@ -20,7 +20,7 @@ public interface VoucherService {
      * @param voucher
      * @param details
      */
-    void save(Voucher voucher, List<VoucherDetail> details);
+    String save(Voucher voucher, List<VoucherDetail> details);
 
     /**
      * 获取凭证字列表

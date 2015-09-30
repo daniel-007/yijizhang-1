@@ -59,7 +59,7 @@
     </select>
 
     <select id="selectLastChildSubject" parameterType="java.lang.Long" resultMap="TextNameResultMap">
-        SELECT t.*, CONCAT(t.subject_code,t.subject_name) as subject_textname
+        SELECT t.*, CONCAT(t.subject_code,' ',t.subject_name) as subject_textname
         FROM account_subject t
         WHERE
             t.book_id = #{bookId}
