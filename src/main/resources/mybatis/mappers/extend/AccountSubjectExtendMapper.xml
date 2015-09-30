@@ -41,8 +41,8 @@
                     FROM
                         subject_length t3
                     WHERE
-                        t3.`level` = (t2.`level` + 1)
-                    AND t3.book_id = #{bookId}
+                        t3.book_id = #{bookId}
+                    AND t3.`level` = (t2.`level` + 1)
                 ),
                 2
             ) AS next_level_length
@@ -50,10 +50,10 @@
             account_subject t1,
             account_subject t2
         WHERE
-            t1.parent_subject_code = #{parent_subject_code}
+            t1.book_id = #{bookId}
+        AND t1.book_id = t2.book_id
+        AND t1.parent_subject_code = #{parent_subject_code}
         AND t2.parent_subject_code = t1.subject_code
-        AND t1.book_id = #{bookId}
-        AND t2.book_id = #{bookId}
         ORDER BY
             t2.subject_code
     </select>
@@ -67,16 +67,16 @@
                     FROM
                         subject_length t1
                     WHERE
-                        t1.`level` = (t.`level` + 1)
-                    AND t1.book_id = #{bookId}
+                        t1.book_id = #{bookId}
+                    AND t1.`level` = (t.`level` + 1)
                 ),
                 2
             ) AS next_level_length
         FROM
             account_subject t
         WHERE
-            t.parent_subject_code = #{parent_subject_code}
-        AND t.book_id = #{bookId}
+            t.book_id = #{bookId}
+        AND t.parent_subject_code = #{parent_subject_code}
         ORDER BY
             t.subject_code
     </select>
@@ -84,9 +84,10 @@
     <select id="selectLastChildSubject" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT * 
         FROM account_subject t
-        WHERE LEVEL > 0 
+        WHERE
+            t.book_id = #{bookId}
+        AND LEVEL > 0
         AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code)
-        AND t.book_id = #{bookId}
         ORDER BY
             t.subject_code
     </select>

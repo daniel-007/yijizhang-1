@@ -50,16 +50,18 @@
 		<!-- 指定要生成的表名和对应形成的POJO类名 -->
         <table tableName="account_subject" domainObjectName="AccountSubject" />
         <table tableName="account_subject_template" domainObjectName="AccountSubjectTemplate" />
-        <!--<table tableName="account_book" domainObjectName="AccountBook" />-->
-		<!--<table tableName="company_common_type" domainObjectName="CompanyCommonType" />-->
-		<!--<table tableName="company_common_value" domainObjectName="CompanyCommonValue" />-->
-		<!--<table tableName="dict_type" domainObjectName="DictType" />-->
-		<!--<table tableName="dict_value" domainObjectName="DictValue" />-->
-		<!--<table tableName="period" domainObjectName="Period" />-->
-		<!--<table tableName="subject_length" domainObjectName="SubjectLength" />-->
-		<!--<table tableName="voucher" domainObjectName="Voucher" />-->
-		<!--<table tableName="voucher_detail" domainObjectName="VoucherDetail" />-->
-		<!--<table tableName="voucher_template" domainObjectName="VoucherTemplate" />-->
-		<!--<table tableName="voucher_template_detail" domainObjectName="VoucherTemplateDetail" />-->
+        <table tableName="account_book" domainObjectName="AccountBook" />
+		<table tableName="company_common_type" domainObjectName="CompanyCommonType" />
+		<table tableName="company_common_value" domainObjectName="CompanyCommonValue" />
+		<table tableName="dict_type" domainObjectName="DictType" />
+		<table tableName="dict_value" domainObjectName="DictValue" />
+		<table tableName="period" domainObjectName="Period" />
+		<table tableName="subject_balance" domainObjectName="SubjectBalance" />
+		<table tableName="subject_length" domainObjectName="SubjectLength" />
+		<table tableName="voucher" domainObjectName="Voucher" />
+		<table tableName="voucher_detail" domainObjectName="VoucherDetail" />
+		<table tableName="voucher_template" domainObjectName="VoucherTemplate" />
+		<table tableName="voucher_template_detail" domainObjectName="VoucherTemplateDetail" />
+		<table tableName="login_history" domainObjectName="LoginHistory"/>
 	</context>
 </generatorConfiguration>

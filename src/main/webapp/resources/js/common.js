@@ -29,6 +29,9 @@ $(document).ready(function(){
 
 	$('#confirmSwitchBtn').click(function(){
 		var id = $('#accountBookList').combobox('getValue');
+		$(this).hide();
+		$('#cancelSwitchBtn').hide();
+		$('#busyIcon').show();
 		if(id != $('#currentAccountBookId').val()){
 			$.ajax({
 				url: "switch/to/book/" + id,
@@ -37,6 +40,9 @@ $(document).ready(function(){
 					if(data){
 						document.location.reload();
 					}else{
+						$('#busyIcon').hide();
+						$(this).show();
+						$('#cancelSwitchBtn').show();
 						$.messager.alert("提示信息", "切换账套失败，请稍候重试！","error");
 					}
 				}
