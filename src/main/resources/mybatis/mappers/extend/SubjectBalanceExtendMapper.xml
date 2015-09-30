@@ -35,14 +35,26 @@
   </sql>
   <select id="selectProfitAndLoss" parameterType="java.util.Map" resultMap="ResultMap">
     SELECT a.id, a.subject_code, a.initial_debit_balance, a.initial_credit_balance, a.period_debit_occur, 
-    a.period_credit_occur, a.year_debit_occur, a.year_credit_occur, a.terminal_debit_balance, 
-    a.terminal_credit_balance, a.book_id, a.period_id, b.direction
-    FROM subject_balance a,account_subject b
-    WHERE a.subject_code=b.subject_code
-    AND   a.book_id=b.book_id
-	AND   a.book_id=#{bookId,jdbcType=BIGINT}
-	AND   a.period_id=#{periodId,jdbcType=INTEGER}
-	ORDER BY a.id ASC
+	    a.period_credit_occur, a.year_debit_occur, a.year_credit_occur, a.terminal_debit_balance, 
+	    a.terminal_credit_balance, a.book_id, a.period_id, t.direction
+	FROM
+	  account_subject t,
+	  subject_balance a 
+	WHERE NOT EXISTS 
+	  (SELECT 
+	    * 
+	  FROM
+	    account_subject t1,
+	    account_subject t2 
+	  WHERE t1.subject_code = t2.parent_subject_code 
+	    AND t.subject_code = t1.subject_code) 
+	  AND t.subject_code = a.subject_code 
+	  AND t.book_id = a.book_id 
+	  AND a.book_id = #{bookId,jdbcType=BIGINT}
+	  AND a.period_id = #{periodId,jdbcType=BIGINT}
+	  AND t.subject_code LIKE #{startCode,jdbcType=VARCHAR}"%"
+	  AND (a.terminal_credit_balance>0 OR a.terminal_debit_balance>0)
+	  ORDER BY a.id
   </select>
 
 
