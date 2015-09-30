@@ -39,7 +39,7 @@
             <th data-options="field:'subjectCode',width:200,editor:{
                             type:'combobox',
                             options:{
-                                valueField:'subjectCode',
+                                valueField:'subjectTextName',
                                 textField:'subjectTextName',
                                 method:'get',
                                 url:'/voucher/accountSubjectList'
