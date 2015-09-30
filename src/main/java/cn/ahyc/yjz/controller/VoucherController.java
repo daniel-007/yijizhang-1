@@ -119,7 +119,7 @@ public class VoucherController extends BaseController{
                     }
                     voucherDetail = new VoucherDetail();
                     voucherDetail.setSummary(summaryArr[i]);
-                    voucherDetail.setSubjectCode(Integer.valueOf(subjectCodeArr[i]));
+                    voucherDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
                     if (StringUtils.isNotBlank(debitArr[i])) {
                         ebit = new BigDecimal(debitArr[i]);
                         debitSum = debitSum.add(ebit);
