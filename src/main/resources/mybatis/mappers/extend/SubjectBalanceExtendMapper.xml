@@ -9,7 +9,7 @@
     -->
     <constructor >
       <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="subject_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="subject_code" javaType="java.lang.Long" jdbcType="BIGINT" />
       <arg column="initial_debit_balance" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="initial_credit_balance" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="period_debit_occur" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />

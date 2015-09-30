@@ -45,8 +45,9 @@ CarryOver=function(){
                 data:$("#carry_over").serialize(),
                 success: function(data){
                     if(data.result){
-                        $.messager.alert("提示信息", "结转损益成功!");
-                        $("#default_win").window('close');
+                        $.messager.alert("提示信息", data.result,"info",function(){
+                        		 $("#default_win").window('close');
+                        });
                     }else{
                         $.messager.alert("提示信息", "操作失败，请联系管理员!");
                     }
