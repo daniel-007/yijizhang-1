@@ -13,6 +13,7 @@
                     <a id="switchBtn" href="javascript:void(0);">切换</a>
 					<a id="confirmSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">保存</a>
 					<a id="cancelSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">取消</a>
+					<i id="busyIcon" style="display: none;" class="fa fa-spinner fa-pulse"></i>
 				</span>
 			】
 		</@security.authorize>

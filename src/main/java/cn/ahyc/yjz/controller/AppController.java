@@ -22,6 +22,7 @@ import cn.ahyc.yjz.service.LoginHistoryService;
 import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,6 +60,7 @@ public class AppController {
        * @return
        */
       @RequestMapping("/")
+      @Secured({"ROLE_ADMIN","ROLE_USER"})
       public String dashboard(Map<String, Object> model) {
 
 
