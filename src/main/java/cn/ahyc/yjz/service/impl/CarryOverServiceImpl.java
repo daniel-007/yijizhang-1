@@ -116,13 +116,13 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		if(accountSubject.size()>0){
 			if(totalDebit.compareTo(new BigDecimal(0.00))==1){
 				VoucherDetail detailDebit=new VoucherDetail();
-				detailDebit.setSubjectCode(accountSubject.get(0).getSubjectCode().intValue());
+				detailDebit.setSubjectCode(accountSubject.get(0).getSubjectCode());
 				detailDebit.setDebit(totalDebit);
 				details.add(detailDebit);
 			}
 			if(totalCredit.compareTo(new BigDecimal(0.00))==1){
 				VoucherDetail detailCredit=new VoucherDetail();
-				detailCredit.setSubjectCode(accountSubject.get(0).getSubjectCode().intValue());
+				detailCredit.setSubjectCode(accountSubject.get(0).getSubjectCode());
 				detailCredit.setDebit(totalCredit);
 				details.add(detailCredit);
 			}
