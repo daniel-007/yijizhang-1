@@ -18,21 +18,23 @@ $(document).ready(function(){
 			},
 			onLoadSuccess:function(){
 				$('#accountBookList').combobox('setValue', $('#currentAccountBookId').val());
+				$('#busyIcon').hide();
+				$('#confirmSwitchBtn').show();
+				$('#cancelSwitchBtn').show();
 			}
 		});
 		$('.top-bar .info .textbox-text').css({'padding-top':'3px'});
 		$("#accountBookList + .combo").show();
 		$('#switchBtn').hide();
-		$('#confirmSwitchBtn').show();
-		$('#cancelSwitchBtn').show();
+		$('#busyIcon').show();
 	});
 
 	$('#confirmSwitchBtn').click(function(){
 		var id = $('#accountBookList').combobox('getValue');
-		$(this).hide();
-		$('#cancelSwitchBtn').hide();
-		$('#busyIcon').show();
 		if(id != $('#currentAccountBookId').val()){
+			$(this).hide();
+			$('#cancelSwitchBtn').hide();
+			$('#busyIcon').show();
 			$.ajax({
 				url: "switch/to/book/" + id,
 				context: document.body,
