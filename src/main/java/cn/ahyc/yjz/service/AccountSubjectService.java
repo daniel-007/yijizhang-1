@@ -24,4 +24,6 @@ public interface AccountSubjectService {
     void delete(Long subjectId) throws Exception;
 
     List<AccountSubject> allSubjectTreeData(Long category_subject_code, Long bookId);
+
+    void initDataEdit(AccountSubject accountSubject) throws Exception;
 }

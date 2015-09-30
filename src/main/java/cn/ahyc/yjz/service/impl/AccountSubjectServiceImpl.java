@@ -106,10 +106,10 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubject> allSubjectTreeData (Long category_subject_code, Long bookId) {
+    public List<AccountSubject> allSubjectTreeData(Long category_subject_code, Long bookId) {
 
 
-        AccountSubjectExample example =  new AccountSubjectExample();
+        AccountSubjectExample example = new AccountSubjectExample();
         AccountSubjectExample.Criteria criteria = example.createCriteria();
 
         criteria.andBookIdEqualTo(bookId);
@@ -124,6 +124,11 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 //        List<Map<String, Object>> categories = accountSubjectMapper.getFirstLevelSubjectsByCode(param);
 //
 //        return this.setChildrenSubject(categories, param, "", "");
+    }
+
+    @Override
+    public void initDataEdit(AccountSubject accountSubject) throws Exception {
+        accountSubjectMapper.updateByPrimaryKey(accountSubject);
     }
 
     /**

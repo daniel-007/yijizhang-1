@@ -30,6 +30,27 @@ public class AccountSubjectController extends BaseController {
 
 
     /**
+     * 初始化数据修改.
+     *
+     * @return
+     */
+    @RequestMapping("/initData/edit")
+    @ResponseBody
+    public Map<String, Object> initDataEdit(AccountSubject accountSubject) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+
+        try {
+            accountSubjectService.initDataEdit(accountSubject);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("msg", e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
      * 获取树形结构数据.
      *
      * @return
@@ -199,7 +220,6 @@ public class AccountSubjectController extends BaseController {
     @RequestMapping("/category/{id}/subjects")
     @ResponseBody
     public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId) {
-
         return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
     }
 
