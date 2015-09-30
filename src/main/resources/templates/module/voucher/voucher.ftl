@@ -40,37 +40,36 @@
                             type:'combobox',
                             options:{
                                 valueField:'subjectCode',
-                                textField:'subjectCode'+'subjectName',
+                                textField:'subjectTextName',
                                 method:'get',
-                                url:'/voucher/accountSubjectList',
-                                onChange:function(newValue,oldValue){}
+                                url:'/voucher/accountSubjectList'
                             }}" rowspan="2">科目代码</th>
             <th colspan="11">借方金额</th>
             <th colspan="11">贷方金额</th>
         </tr>
         <tr>
-            <th data-options="field:'bHundredMillion',width:18,align:'center',editor:{type:'textMax',options:{}}">亿</th>
-            <th data-options="field:'bTenMillions',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">千</th>
-            <th data-options="field:'bMillions',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">百</th>
-            <th data-options="field:'bHundredThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">十</th>
-            <th data-options="field:'bTenThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">万</th>
-            <th data-options="field:'bThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">千</th>
-            <th data-options="field:'bHundred',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">百</th>
-            <th data-options="field:'bTen',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">十</th>
-            <th data-options="field:'bYuan',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">元</th>
-            <th data-options="field:'bAngle',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">角</th>
-            <th data-options="field:'bCent',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">分</th>
-            <th data-options="field:'lHundredMillion',width:18,align:'center',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">亿</th>
-            <th data-options="field:'lTenMillions',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">千</th>
-            <th data-options="field:'lMillions',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">百</th>
-            <th data-options="field:'lHundredThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">十</th>
-            <th data-options="field:'lTenThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">万</th>
-            <th data-options="field:'lThousand',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">千</th>
-            <th data-options="field:'lHundred',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">百</th>
-            <th data-options="field:'lTen',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">十</th>
-            <th data-options="field:'lYuan',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">元</th>
-            <th data-options="field:'lAngle',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">角</th>
-            <th data-options="field:'lCent',width:18,align:'center',editor:'textbox',editor:{type:'numberbox',options:{min:0,max:9,precision:0}}">分</th>
+            <th data-options="field:'dHundredMillion',width:18,align:'center',editor:{type:'textMax',options:{num:10000000000,direction:'d'}}">亿</th>
+            <th data-options="field:'dTenMillions',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000000000,direction:'d'}}">千</th>
+            <th data-options="field:'dMillions',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100000000,direction:'d'}}">百</th>
+            <th data-options="field:'dHundredThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10000000,direction:'d'}}">十</th>
+            <th data-options="field:'dTenThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000000,direction:'d'}}">万</th>
+            <th data-options="field:'dThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100000,direction:'d'}}">千</th>
+            <th data-options="field:'dHundred',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10000,direction:'d'}}">百</th>
+            <th data-options="field:'dTen',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000,direction:'d'}}">十</th>
+            <th data-options="field:'dYuan',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100,direction:'d'}}">元</th>
+            <th data-options="field:'dAngle',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10,direction:'d'}}">角</th>
+            <th data-options="field:'dCent',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1,direction:'d'}}">分</th>
+            <th data-options="field:'crHundredMillion',width:18,align:'center',editor:{type:'textMax',options:{num:10000000000,direction:'cr'}}">亿</th>
+            <th data-options="field:'crTenMillions',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000000000,direction:'cr'}}">千</th>
+            <th data-options="field:'crMillions',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100000000,direction:'cr'}}">百</th>
+            <th data-options="field:'crHundredThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10000000,direction:'cr'}}">十</th>
+            <th data-options="field:'crTenThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000000,direction:'cr'}}">万</th>
+            <th data-options="field:'crThousand',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100000,direction:'cr'}}">千</th>
+            <th data-options="field:'crHundred',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10000,direction:'cr'}}">百</th>
+            <th data-options="field:'crTen',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1000,direction:'cr'}}">十</th>
+            <th data-options="field:'crYuan',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:100,direction:'cr'}}">元</th>
+            <th data-options="field:'crAngle',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:10,direction:'cr'}}">角</th>
+            <th data-options="field:'crCent',width:18,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1,direction:'cr'}}">分</th>
         </tr>
     </thead>
 </table>
