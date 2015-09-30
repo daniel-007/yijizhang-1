@@ -2,16 +2,20 @@
 	<div class="info">
 		<b><@spring.message code="app.title" /> - 【欢迎<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">&#8194;:&#8194;<@security.authentication property="name"/></@security.authorize>】</b>
 		<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
-			<#if CURRENT_ACCOUNT_BOOK??>${CURRENT_ACCOUNT_BOOK.bookName}</#if>
-
-			<input id="accountBookList" style="border-radius: 0px;" class="easyui-combobox" data-options="
-			valueField: 'id',
-			textField: 'bookName',
-			url: 'account/book/list',
-			method:'GET',
-			onSelect: function(rec){
-				alert(rec.id+rec.bookName);
-			}" />
+        	-
+			【
+				<span style="font-size: 12px;">
+					<i class="fa fa-circle-o-notch fa-spin"></i> 活动账套：
+					<#if CURRENT_ACCOUNT_BOOK??>${CURRENT_ACCOUNT_BOOK.bookName}<input id="currentAccountBookId" type="hidden" value="${CURRENT_ACCOUNT_BOOK.id}"/></#if>
+                    &#8194;<#if CURRENT_PERIOD??>第${CURRENT_PERIOD.currentPeriod}期<input id="currentPeriodId" type="hidden" value="${CURRENT_PERIOD.id}"/></#if>
+                    &#8194;&#8194;&#8194;
+					<input id="accountBookList" style="border-radius: 0px;display: none;"/>
+                    <a id="switchBtn" href="javascript:void(0);">切换</a>
+					<a id="confirmSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">保存</a>
+					<a id="cancelSwitchBtn" style="display: none; margin-left: 5px;" href="javascript:void(0);">取消</a>
+					<i id="busyIcon" style="display: none;" class="fa fa-spinner fa-pulse"></i>
+				</span>
+			】
 		</@security.authorize>
 	</div>
 

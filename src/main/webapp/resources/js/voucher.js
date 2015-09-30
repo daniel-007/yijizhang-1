@@ -8,6 +8,9 @@ $(document).ready(function () {
 Voucher=function(){
 	var editIndex = undefined;
 	var oldValue = undefined;
+	var row = undefined;
+	var debit = undefined;
+	var crebit = undefined;
 	
 	return {
 		init:function(id) {
@@ -26,29 +29,13 @@ Voucher=function(){
 						console.log('not null');
 					} else {
 						var len = data&&data.total>0?5-data.total:5;
-				        for(i=0;i<len;i++){
+				        for(i=0;i<len;++i){
 				        	$('#dg').datagrid('appendRow',{});
 				        }
 					}
-					
-					$('#dg').datagrid('mergeCells', {
-						index: 0,
-						field: 'summary',
-						colspan: 2,
-						type: 'footer'
-					});
-					$('#dg').datagrid('mergeCells', {
-						index: 0,
-						field: 'bHundredMillion',
-						colspan: 11,
-						type: 'footer'
-					});
-					$('#dg').datagrid('mergeCells', {
-						index: 0,
-						field: 'lHundredMillion',
-						colspan: 11,
-						type: 'footer'
-					});
+					Voucher.mergeFooterCells();
+					Voucher.initFooterCells();
+					editIndex = undefined;
 				}
 			});
 			
@@ -63,7 +50,19 @@ Voucher=function(){
 			    }
 			});
         },
-		
+        mergeFooterCells:function(){
+			$('#dg').datagrid('mergeCells', {
+				index: 0,
+				field: 'summary',
+				colspan: 2,
+				type: 'footer'
+			});
+        },
+        initFooterCells:function(){
+			row = $('#dg').datagrid('getFooterRows')[0];
+			debit = row['debit'];
+			crebit = row['crebit'];
+        },
 		endEditing:function(){
 		    if (editIndex == undefined){return true}
 		    if ($('#dg').datagrid('validateRow', editIndex)){
@@ -103,10 +102,6 @@ Voucher=function(){
             $('#dg').datagrid('rejectChanges');
             editIndex = undefined;
         },
-		getChanges:function(){
-		    var rows = $('#dg').datagrid('getChanges');
-		    alert(rows.length+' rows are changed!');
-		},
 		save:function(isAdd){
 			if (Voucher.endEditing()){
 				// 验证
@@ -117,7 +112,7 @@ Voucher=function(){
 				// 表格数据
 				var rows = $('#dg').datagrid('getChanges');
 				var params="&";
-				for(i=0;i<rows.length;i++){
+				for(i=0;i<rows.length;++i){
 					if(rows[i].subjectCode){
 						params = Voucher.extend(params, rows[i]);
 					}
@@ -176,15 +171,49 @@ Voucher=function(){
         	var tab = $TC.tabs('getSelected');  // get selected panel
         	tab.panel('refresh', 'voucher/main'+"?&time="+new Date().getTime());
         },
-        cellkeyDown:function(newValue,oldValue,p){
-        	alert(this.value);
-        },
         cellkeyDown:function(tthis){
-        	oldValue=tthis.value;
+        	oldValue=Voucher.cellSetValue(tthis.value);
         },
-        cellkeyUp:function(tthis){
-        	var rows = $('#dg').datagrid('getFooterRows');
-        	rows[0]['bHundredMillion']=rows[0]['bHundredMillion']+(tthis.value-oldValue)*;
+        cellkeyUp:function(tthis,num,direction){
+        	var newValue=Voucher.cellSetValue(tthis.value);
+        	console.log(debit+":"+newValue+":"+oldValue);
+        	if(direction=='d'&&(newValue-oldValue!=0)){
+        		debit=parseInt(Voucher.cellSetValue(debit))+(newValue-oldValue)*num;
+        		Voucher.changeFooter(debit,direction);
+        	}else if(direction=='cr'&&(newValue-oldValue!=0)){
+        		crebit=parseInt(Voucher.cellSetValue(crebit))+(newValue-oldValue)*num;
+        		Voucher.changeFooter(crebit,direction);
+        	}else{
+        		console.log("no change");
+        	}
+        },
+        cellSetValue:function(value){
+        	if(value&&!isNaN(value)){
+        		return value;
+        	}else {
+        		return 0;
+        	}
+        },
+        changeFooter:function(value,direction){
+        	var valueStr = value+"";
+        	var length = valueStr.length;
+        	var i = 0;
+        	if(length>11){
+        		i=length-11;
+        	}
+        	row[direction+'HundredMillion']=length>=11?valueStr.charAt(i++):'';
+        	row[direction+'TenMillions']=length>=10?valueStr.charAt(i++):'';
+        	row[direction+'Millions']=length>=9?valueStr.charAt(i++):'';
+        	row[direction+'HundredThousand']=length>=8?valueStr.charAt(i++):'';
+        	row[direction+'TenThousand']=length>=7?valueStr.charAt(i++):'';
+        	row[direction+'Thousand']=length>=6?valueStr.charAt(i++):'';
+        	row[direction+'Hundred']=length>=5?valueStr.charAt(i++):'';
+        	row[direction+'Ten']=length>=4?valueStr.charAt(i++):'';
+        	row[direction+'Yuan']=length>=3?valueStr.charAt(i++):'';
+        	row[direction+'Angle']=length>=2?valueStr.charAt(i++):'';
+        	row[direction+'Cent']=length>=1?valueStr.charAt(i++):'';
+        	$('#dg').datagrid('reloadFooter');
+        	Voucher.mergeFooterCells();
         }
 	};
 }();
@@ -192,7 +221,7 @@ Voucher=function(){
 $.extend($.fn.datagrid.defaults.editors, {
     textMax: {
         init: function(container, options){
-            var input = $('<input type="text" maxlength="1" onkeydown="Voucher.cellkeyDown(this,'+options. +')" onkeydown="Voucher.cellkeyUp(this)" class="datagrid-editable-input">').appendTo(container);
+            var input = $('<input type="text" maxlength="1" onkeyup="Voucher.cellkeyUp(this,'+options.num+',\''+options.direction+'\')" onkeydown="Voucher.cellkeyDown(this)" class="datagrid-editable-input">').appendTo(container);
             return input;
         },
         destroy: function(target){

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
 import cn.ahyc.yjz.service.VoucherService;
+import cn.ahyc.yjz.util.Constant;
 
 /**
  * VoucherController
@@ -39,11 +41,11 @@ public class VoucherController extends BaseController{
     private VoucherService voucherService;
 
 	public VoucherController() {
-		this.pathPrefix="module/voucher/";
+	    this.pathPrefix="module/voucher/";
 	}
 
 	@RequestMapping("/main")
-    public String voucher(Model model, Long voucherId) {
+    public String voucher(Model model, Long voucherId, HttpSession session) {
         Voucher voucher;
         if (voucherId != null) {
             voucher = voucherService.queryVoucher(voucherId);
@@ -51,8 +53,7 @@ public class VoucherController extends BaseController{
             voucher = new Voucher();
         }
         model.addAttribute("voucher", voucher);
-        // TODO "1" "1L"
-        model.addAttribute("period", "1");
+        model.addAttribute("period", session.getAttribute(Constant.CURRENT_PERIOD));
         model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(1L));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         model.addAttribute("voucherTime", dateFormat.format(new Date()));
@@ -69,9 +70,9 @@ public class VoucherController extends BaseController{
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("total", list != null && list.size() > 0 ? list.size() : 0);
         map.put("rows", list);
+        // TODO
         List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
         Map<String, Object> footermap = new HashMap<String, Object>();
-        footermap.put("bHundredMillion", "11");
         footermap.put("summary", "总计");
         footerlist.add(footermap);
         map.put("footer", footerlist);
@@ -87,12 +88,11 @@ public class VoucherController extends BaseController{
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> save(Model model, HttpServletRequest request, Voucher voucher) {
+    public Map<String, Object> save(HttpSession session, Model model, HttpServletRequest request, Voucher voucher) {
 
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            // TODO "1L"
-            voucher.setPeriodId(1L);
+            voucher.setPeriodId((Long) session.getAttribute(Constant.CURRENT_PERIOD));
             /** 组织凭证明细数据 **/
             List<VoucherDetail> details = new ArrayList<VoucherDetail>();
             String[] summaryArr = request.getParameterValues("summary");
@@ -119,9 +119,8 @@ public class VoucherController extends BaseController{
 
     @RequestMapping("/accountSubjectList")
     @ResponseBody
-    public List<AccountSubject> accountSubjectList() {
-        // TODO 30L
-        long bookId = 30L;
+    public List<AccountSubject> accountSubjectList(HttpSession session) {
+        long bookId = (long) session.getAttribute(Constant.CURRENT_PERIOD);
         List<AccountSubject> list = voucherService.queryAccountSubjectList(bookId);
         return list;
     }

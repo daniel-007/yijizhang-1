@@ -31,4 +31,12 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper{
      * @return
      */
     List<AccountSubject> selectLastChildSubject(Long bookId);
+    /**
+     * 根据账套id查询出损益类其中之一会计科目代码
+     * 
+     * @param bookId
+     * @return 
+     * @return
+     */
+    Map<String, Object> getSubjectCodeByRoot(Map<String, Object> param);
 }

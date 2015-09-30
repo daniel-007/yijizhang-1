@@ -16,13 +16,22 @@
 
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.model.LoginHistory;
+import cn.ahyc.yjz.service.AccountBookService;
+import cn.ahyc.yjz.service.LoginHistoryService;
+import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.util.Constant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -35,6 +44,15 @@ import java.util.Map;
 @Controller
 public class AppController {
 
+      @Autowired
+      private LoginHistoryService loginHistoryService;
+
+      @Autowired
+      private AccountBookService accountBookService;
+
+      @Autowired
+      private PeriodService periodService;
+
       /**
        * 跳转到Dashboard视图.
        *
@@ -42,6 +60,7 @@ public class AppController {
        * @return
        */
       @RequestMapping("/")
+      @Secured({"ROLE_ADMIN","ROLE_USER"})
       public String dashboard(Map<String, Object> model) {
 
 
@@ -83,5 +102,26 @@ public class AppController {
       public String logout(Map<String, Object> model) {
             SecurityContextHolder.clearContext();
             return "login";
+      }
+
+      /**
+       * 切换账套.
+       * @param id
+       * @return
+       */
+      @RequestMapping("/switch/to/book/{id}")
+      @ResponseBody
+      public boolean switchAccoutBook(@PathVariable("id") Long id,HttpServletRequest request){
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            LoginHistory loginHistory = loginHistoryService.selectLastSuccessLoginHistory(user.getUsername());
+            loginHistory.setAccountBookId(id);
+            int result = loginHistoryService.updateLoginHistory(loginHistory);
+            if(result<=0){
+                  return false;
+            }else{
+                  request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBookService.selectAccountBookById(id));
+                  request.getSession().setAttribute(Constant.CURRENT_PERIOD,periodService.selectCurrentPeriod(id));
+                  return true;
+            }
       }
 }

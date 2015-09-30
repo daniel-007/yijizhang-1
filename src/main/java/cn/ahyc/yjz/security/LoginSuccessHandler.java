@@ -14,6 +14,7 @@ import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.util.Constant;
 import cn.ahyc.yjz.util.NetworkUtil;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
