@@ -20,7 +20,7 @@
 			</button>
 		</div>
 		<div class="jtk-node" id="flowchartWindow4">
-			<button id="btn_cssj" class="button button-action button-box button-jumbo">
+			<button id="btn_cssj" onClick="App.addTab('初始化数据','account/subject/initData/main',true);" class="button button-action button-box button-jumbo">
 				<div><i class="fa fa-laptop"></i></div>
 				<div><small style="font-size:12px;"><@spring.message code="welcome.cssj"/></small></div>
 			</button>
