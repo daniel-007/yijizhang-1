@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
@@ -24,6 +25,8 @@ public class CarryOverServiceImpl implements  CarryOverService{
 	private VoucherService voucherService;
 	@Autowired
 	private VoucherDetailExtendMapper voucherDetailExtendMapper;
+	@Autowired
+	private AccountSubjectExtendMapper accountSubjectExtendMapper;
 	 /**
 	 * 结转损益.
 	 *
@@ -32,6 +35,10 @@ public class CarryOverServiceImpl implements  CarryOverService{
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int CarryoverSubmit(String summary, String voucherWord) {
+		Map<String, Object> param1 = new HashMap<String, Object>();
+		param1.put("bookId", 32);
+		Map<String, Object> ss=accountSubjectExtendMapper.getSubjectCodeByRoot(param1);
+		String tmp=ss.get("subject_code").toString();
 		//设置记账凭证主表数据
 		Voucher voucher=new Voucher();
 		voucher.setVoucherWord(voucherWord);

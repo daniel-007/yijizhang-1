@@ -90,4 +90,19 @@
         ORDER BY
             t.subject_code
     </select>
+    <select id="getSubjectCodeByRoot" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+		  c.subject_code 
+		FROM
+		  account_subject a,
+		  account_subject b,
+		  account_subject c 
+		WHERE a.subject_code = b.parent_subject_code
+		  AND b.subject_code = c.parent_subject_code 
+		  AND a.book_id = b.book_id 
+		  AND a.book_id = c.book_id 
+		  AND a.subject_code = - 6 
+		  AND a.book_id = #{bookId,jdbcType=BIGINT} 
+		LIMIT 1 
+    </select>
 </mapper>
