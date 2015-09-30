@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,11 +58,11 @@ public class CarryOverController  extends BaseController {
 	 */
     @RequestMapping(value = ("/complete"))
 	@ResponseBody
-	public Map<String, Boolean> complete( String summary, String voucherWord) {
-			Map<String, Boolean> map = new HashMap<String, Boolean>();
+	public Map<String, String> complete( String summary, String voucherWord,HttpSession session) {
+			Map<String, String> map = new HashMap<String, String>();
 			//保存业务数据
-			int result =carryOverService.CarryoverSubmit(summary, voucherWord);
-			map.put("result", result > 0 ? true : false);
+			String result =carryOverService.CarryoverSubmit(summary, voucherWord,session);
+			map.put("result", result);
 			return map;
 	}
 }
