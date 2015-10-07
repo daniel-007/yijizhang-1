@@ -8,10 +8,10 @@
 			<div data-options="region:'center'" style="padding: 15px;">
 				<form id="create_book" action="#" method="post">
 					<div id="firstJsp">
-						<br /> <font size="3"><b>请在建账向导的指引下，建议一个最合适你公司实际情况的账套。</b></font>
-						<br /> <br /> <font size="2">请输入账套名称:</font> <input type="text"
+						<br /> <label size="3"><b>请在建账向导的指引下，建立一个最合适你公司实际情况的账套。</b></label>
+						<br /> <br /> <label style="color: #ff0000;">*</label><label size="2">请输入账套名称:</label> <input type="text"
 							id="book_name" name="bookName" style="width: 80%;" /> <br /> <br />
-						<br /> <font size="2">请输入公司名称:</font> <input type="text"
+						<br /> <label style="color: #ff0000;">*</label><label size="2">请输入公司名称:</label> <input type="text"
 							id="company_name" name="companyName" style="width: 80%;" />
 					</div>
 					<div id="sencondJsp" style="display: none;">

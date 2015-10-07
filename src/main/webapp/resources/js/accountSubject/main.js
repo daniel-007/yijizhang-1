@@ -116,7 +116,7 @@ $(function () {
             var category_id = id.replace("category_", "").replace(",", "");
 
             account_subject.specific_subject.category_id = category_id;
-            account_subject.specific_subject.account_subject_id = -1
+            account_subject.specific_subject.account_subject_id = -1;
 
             var table_id = category_id + "_table";
             $accountSubject_tabs.tabs('getSelected').html("<table id='" + table_id + "' style='width: 100%;'></table>");
@@ -158,4 +158,6 @@ $(function () {
     /*初始化按钮事件*/
     account_subject.init($accountSubject_layout);
 
-})
+    $('#accountSubject_layout').show();
+
+});

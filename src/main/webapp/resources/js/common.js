@@ -34,7 +34,7 @@ $(document).ready(function(){
 		if(id != $('#currentAccountBookId').val()){
 			$(this).hide();
 			$('#cancelSwitchBtn').hide();
-			$('#busyIcon').show();
+				$('#busyIcon').show();
 			$.ajax({
 				url: "switch/to/book/" + id,
 				context: document.body,
