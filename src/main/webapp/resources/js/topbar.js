@@ -3,6 +3,29 @@ TopBar = function(){
     return {
 
         bindEvent: function () {
+
+            //绑定注销按钮事件
+            $('#logoutLink').tooltip({
+                content: $('<div style="text-align: center;font-size: 11px;">' +
+                    '<i class="fa fa-key"></i>&#8194;<a href="#" style="color: #3c3c3c;text-decoration: none; ">密码</a></br></br>' +
+                    '<i class="fa fa-sign-out"></i>&#8194;<a href="/logout" style="color: #3c3c3c;text-decoration: none; ">注销</a>' +
+                    '</div>'),
+                onUpdate: function(content){
+                    content.panel({
+                        width: 80,
+                        border: false
+                    });
+                },
+                onShow: function(){
+                    var t = $(this);
+                    t.tooltip('tip').unbind().bind('mouseenter', function(){
+                        t.tooltip('show');
+                    }).bind('mouseleave', function(){
+                        t.tooltip('hide');
+                    });
+                }
+            });
+
             //绑定事件
             $('#switchBtn').click(function(){
                 $('#accountBookList').combobox({

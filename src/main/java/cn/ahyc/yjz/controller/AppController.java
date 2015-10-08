@@ -94,6 +94,15 @@ public class AppController {
       }
 
       /**
+       * 修改密码页面.
+       * @return
+       */
+      @RequestMapping("/password")
+      public String password(){
+            return "common/password";
+      }
+
+      /**
        * 注销.
        * @param model
        * @return

@@ -18,6 +18,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -70,9 +72,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 							.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");
 		}
 
+		@Bean
+		public PasswordEncoder passwordEncoder(){
+				return new StandardPasswordEncoder();
+		}
+
 		@Autowired
 		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-				auth.jdbcAuthentication().dataSource(this.dataSource);
+				auth.jdbcAuthentication().passwordEncoder(passwordEncoder()).dataSource(this.dataSource);
 		}
 
 		private CsrfTokenRepository csrfTokenRepository() {

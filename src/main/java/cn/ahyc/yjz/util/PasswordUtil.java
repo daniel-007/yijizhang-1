@@ -7,6 +7,8 @@ package cn.ahyc.yjz.util;
  */
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 /**
  * Created by sanlli on 15/9/24.
@@ -41,10 +43,13 @@ public class PasswordUtil {
       }
 
 //      public static void main(String[] args) {
-//            String encryptedText =  PasswordUtil.encrypt("1120");
-//            System.out.println(encryptedText);
-//            String plainText = PasswordUtil.decrypt(encryptedText);
-//            System.out.println(plainText);
+////            String encryptedText =  PasswordUtil.encrypt("1120");
+////            System.out.println(encryptedText);
+////            String plainText = PasswordUtil.decrypt(encryptedText);
+////            System.out.println(plainText);
+//
+//            PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
+//            System.out.println(passwordEncoder.encode("admin"));
 //      }
 
 }
