@@ -7,6 +7,7 @@ Welcome=function(){
     return {
 
         bindEvent:function(){
+        	//会计科目
             var $btn_kjkm = $("#btn_kjkm");
             $btn_kjkm.click(function () {
                 $("#default_win").window({
@@ -17,6 +18,21 @@ Welcome=function(){
                     collapsible: false,
                     shadow: true,
                     href: 'account/subject/main',
+                    onLoad: function () {
+                    }
+                });
+            });
+            //结转损益
+            var $btn_jzsy = $("#btn_jzsy");
+            $btn_jzsy.click(function () {
+                $("#default_win").window({
+                    title: '<i class="fa fa-list-alt"></i>结转本期损益',
+                    width: 600,
+                    height: 400,
+                    modal: true,
+                    collapsible: false,
+                    shadow: true,
+                    href: 'account/carryOver/main',
                     onLoad: function () {
                     }
                 });

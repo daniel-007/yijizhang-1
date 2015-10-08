@@ -31,16 +31,15 @@
 	</div>
 	<div data-options="region:'south'"
 		style="height: 50px; text-align: right;">
-		<a id="completeLink" href="javascript:void(0)"    onclick="CarryOver.complete()" class="button button-primary button-small" >
+		<a id="completeLink" href="javascript:void(0)"    class="button button-primary button-small" >
 			<i class="fa fa-check-circle"></i>完成
-		</a> <a id="cancelLink" href="javascript:void(0)" onclick="CarryOver.cancel()" class="button button-primary button-small"> 
+		</a> <a id="cancelLink" href="javascript:void(0)" class="button button-primary button-small"> 
 			<i class="fa fa-power-off"></i>取消
 		</a>
 	</div>
 </div>
 <script type="text/javascript">
 	$(function () {
-		CarryOver.bindEvent();
 		CarryOver.init();
 	});
 </script>
