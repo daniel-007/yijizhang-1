@@ -223,7 +223,7 @@
             }
         }
 
-        if (!param.onCancelPre(param.index, preIdx)) {
+        if (!param.onCancelPre(param.index, preIdx, param.field)) {
             return false;
         }
 

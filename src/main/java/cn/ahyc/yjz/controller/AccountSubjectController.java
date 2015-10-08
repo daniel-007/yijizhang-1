@@ -1,7 +1,9 @@
 package cn.ahyc.yjz.controller;
 
 import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.AccountSubjectService;
+import cn.ahyc.yjz.util.Constant;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,6 @@ import java.util.Map;
 public class AccountSubjectController extends BaseController {
 
     private final Long category_subject_code = -9999l;
-    Long bookId = 32l;
 
     @Resource
     private AccountSubjectService accountSubjectService;
@@ -53,12 +55,18 @@ public class AccountSubjectController extends BaseController {
     /**
      * 获取树形结构数据.
      *
+     * @param session
+     * @param keyword
      * @return
      */
     @RequestMapping("/initData/alldata")
     @ResponseBody
-    public List<AccountSubject> allSubjectTreeData() {
-        return accountSubjectService.allSubjectTreeData(category_subject_code, bookId);
+    public Map allSubjectTreeData(HttpSession session, String keyword) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
+        return accountSubjectService.allSubjectTreeData(bookId, keyword);
     }
 
 
@@ -141,7 +149,10 @@ public class AccountSubjectController extends BaseController {
      * @return
      */
     @RequestMapping(value = ("/main"))
-    public String main(Model model) {
+    public String main(Model model, HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
 
         List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code, bookId);
         model.addAttribute("categories", templates);
@@ -163,7 +174,11 @@ public class AccountSubjectController extends BaseController {
             @PathVariable("opt") String opt
             , @PathVariable("categoryId") Long categoryId
             , Long subjectId
-            , Model model) {
+            , Model model
+            , HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
 
         AccountSubject subject = new AccountSubject();
         subject.setBookId(bookId);
@@ -205,7 +220,11 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/detail")
     @ResponseBody
-    public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId) {
+    public List<AccountSubject> getCategoryDetailByCategoryId(@RequestParam("category_id") Long categoryId, HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
         List<AccountSubject> categoryDetails = accountSubjectService.getCategoriesByCategoryId(categoryId, bookId);
         return categoryDetails;
     }
@@ -219,7 +238,11 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/{id}/subjects")
     @ResponseBody
-    public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId) {
+    public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId, HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
         return accountSubjectService.getSubjectsByCategoryId(categoryId, bookId);
     }
 

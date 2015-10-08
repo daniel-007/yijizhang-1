@@ -3,7 +3,9 @@ package cn.ahyc.yjz.service.impl;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.AccountSubjectExample;
+import cn.ahyc.yjz.model.AccountSubjectExtExample;
 import cn.ahyc.yjz.service.AccountSubjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,10 +64,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public void editAccountSubject(
-            AccountSubject accountSubject
-            , Long parentSubjectCodeBack
-            , Long parentSubjectCode) throws Exception {
+    public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception {
 
         Long id = accountSubject.getId();
 
@@ -106,24 +105,45 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubject> allSubjectTreeData(Long category_subject_code, Long bookId) {
+    public Map allSubjectTreeData(Long bookId, String keyword) {
 
-
-        AccountSubjectExample example = new AccountSubjectExample();
-        AccountSubjectExample.Criteria criteria = example.createCriteria();
+        AccountSubjectExtExample example = new AccountSubjectExtExample();
+        AccountSubjectExtExample.Criteria criteria = example.createCriteria();
 
         criteria.andBookIdEqualTo(bookId);
         criteria.andSubjectCodeGreaterThan(0l);
-        return accountSubjectMapper.selectByExample(example);
+        example.setOrderByClause("CAST(subject_code AS CHAR)");
 
+        /**
+         * 关键字查询.
+         */
+        if (!StringUtils.isEmpty(keyword)) {
 
-//        Map param = new HashMap();
-//        param.put("category_subject_code", category_subject_code);
-//        param.put("bookId", bookId);
-//
-//        List<Map<String, Object>> categories = accountSubjectMapper.getFirstLevelSubjectsByCode(param);
-//
-//        return this.setChildrenSubject(categories, param, "", "");
+            keyword = keyword.trim();
+
+            try {
+                Long kw = Long.parseLong(keyword);
+                example.andSubjectCodeLike(keyword.concat("%"));
+            } catch (Exception e) {
+                criteria.andSubjectNameLike("%".concat(keyword).concat("%"));
+            }
+        }
+
+        List<AccountSubject> accountSubjects = accountSubjectMapper.selectByExample(example);
+
+        //损益类会计科目父级代码.
+        Map map = new HashMap();
+        map.put("bookId", bookId);
+        Map creaseCode_map = accountSubjectMapper.getSubjectCodeByRoot(map);
+        String code = creaseCode_map.getOrDefault("subject_code", "").toString();
+        if (!StringUtils.isEmpty(code)) {
+            code = code.substring(0, 1);
+        }
+
+        map.put("accountSubjects", accountSubjects);
+        map.put("creaseCode", code);
+
+        return map;
     }
 
     @Override
