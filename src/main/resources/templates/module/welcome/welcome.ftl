@@ -50,6 +50,14 @@
 
 <div id="default_win"></div>
 
+<script>
+	$(function(){
+		Welcome.bindEvent();
+        Welcome.initJsPlumb();
+	});
+
+</script>
+
 
 
 

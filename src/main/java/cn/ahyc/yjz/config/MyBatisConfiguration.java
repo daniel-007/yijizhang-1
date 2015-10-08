@@ -1,6 +1,7 @@
 package cn.ahyc.yjz.config;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -79,19 +80,25 @@ public class MyBatisConfiguration {
        * @return
        */
       @Bean
-      public SqlSessionFactory sqlSessionFactory() throws Exception {
+      public SqlSessionFactory sqlSessionFactory(){
             LOGGER.info("Initialize SqlSessionFactory...mapperLocations={}", this.mapperLocations);
 
             SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
             //设置数据源 datasource
-            sqlSessionFactoryBean.setDataSource(dataSource());
+            DataSource dataSource = dataSource();
+            sqlSessionFactoryBean.setDataSource(dataSource);
 
             PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
             //设置 configLocation
             LOGGER.info("configLocation={}", configLocation);
             configLocation = StringUtils.isBlank(configLocation) ? "mybatis/mybatis-config.xml" : configLocation;
-            Resource[] configLocationRes = pathMatchingResourcePatternResolver.getResources(configLocation);
+            Resource[] configLocationRes = new Resource[0];
+            try {
+                  configLocationRes = pathMatchingResourcePatternResolver.getResources(configLocation);
+            } catch (IOException e) {
+                  e.printStackTrace();
+            }
             if (configLocationRes.length == 0) {
                   LOGGER.warn("Can't found mybatis-config.xml file in path '{}'", configLocation);
             } else {
@@ -106,13 +113,23 @@ public class MyBatisConfiguration {
 
             //设置 mapperLocations
             mapperLocations = StringUtils.isBlank(mapperLocations) ? "mybatis/mappers/**/*.xml" : mapperLocations;
-            Resource[] mapperLocationsRes = pathMatchingResourcePatternResolver.getResources(mapperLocations);
+            Resource[] mapperLocationsRes = new Resource[0];
+            try {
+                  mapperLocationsRes = pathMatchingResourcePatternResolver.getResources(mapperLocations);
+            } catch (IOException e) {
+                  e.printStackTrace();
+            }
             if (mapperLocationsRes.length == 0) {
                   LOGGER.warn("Set mapperLocations failed. Can not found any file in path '{}'", mapperLocations);
             } else {
                   sqlSessionFactoryBean.setMapperLocations(mapperLocationsRes);
             }
-            SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getObject();
+            SqlSessionFactory sqlSessionFactory = null;
+            try {
+                  sqlSessionFactory = sqlSessionFactoryBean.getObject();
+            } catch (Exception e) {
+                  e.printStackTrace();
+            }
             return sqlSessionFactory;
       }
 

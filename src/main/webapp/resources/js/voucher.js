@@ -1,10 +1,6 @@
 /**
  * 记账凭证的JS脚本文件。
  */
-$(document).ready(function () {
-	
-});
-
 Voucher=function(){
 	var editIndex = undefined;//表格编辑index
 	var oldValue = undefined;//金额单元格的旧的值
