@@ -78,8 +78,8 @@ public class AccountBookController extends BaseController {
 				Map<String,Object> map = new HashMap<String,Object>();
 				int level1 = 4;
 				//保存业务数据
-				int result = accountBookService.createAccountBook(accountBook, level1, level2, level3, level4, level5);
-				map.put("result", result > 0 ? true : false);
+				Long resultId = accountBookService.createAccountBook(accountBook, level1, level2, level3, level4, level5);
+				map.put("resultId", resultId);
 				return map;
 		}
 }

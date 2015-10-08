@@ -51,12 +51,12 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 */
 		@Transactional(rollbackFor = Exception.class)
 		@Override
-		public int createAccountBook(AccountBook accountBook, int... level) {
+		public Long createAccountBook(AccountBook accountBook, int... level) {
 				Date startTime = generateStartTime(accountBook);
 				//保存账套表
 				accountBook.setStartTime(startTime);
 				accountBook.setOverFlag(0);
-				accountBookMapper.insertSelective(accountBook);
+				accountBookMapper.insertSelectiveReturnId(accountBook);
 				//保存科目代码长度表
 				for (int i = 0; i < level.length; i++) {
 						SubjectLength subjectLength = new SubjectLength();
@@ -66,9 +66,10 @@ public class AccountBookServiceImpl implements AccountBookService {
 						subjectLengthMapper.insertSelective(subjectLength);
 				}
 				//复制科目体系对应的会计科目数据
-				Map<String, Object> map = new HashMap();
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("dictValueId", accountBook.getDictValueId());
 				map.put("bookId", accountBook.getId());
+				Long resultId= 0L;
 				accountSubjectTemplateExtendMapper.copyAccountSubject(map);
 				//插入期表，当前期
 				Period period = new Period();
@@ -78,7 +79,10 @@ public class AccountBookServiceImpl implements AccountBookService {
 				period.setBookId(accountBook.getId());
 				period.setEndFlag(0);
 				int result = periodMapper.insertSelective(period);
-				return result;
+				if(result>0){
+					resultId= accountBook.getId();
+				}
+				return resultId;
 		}
 
 		//生成账套启用启用,字符串转化成日期
@@ -113,7 +117,7 @@ public class AccountBookServiceImpl implements AccountBookService {
 		 */
 		@Override
 		public List<AccountBook> selectAccountBookByName(String name) {
-				Map map = new HashMap();
+				Map<String, String> map = new HashMap<String, String>();
 				map.put("name",name);
 				List<AccountBook> accountBooks = accountBookMapper.selectByName(map);
 				return accountBooks;
