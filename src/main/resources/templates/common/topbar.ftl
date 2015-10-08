@@ -29,3 +29,8 @@
 		</ul>
 	</div>
 </div>
+<script>
+    $(function(){
+        TopBar.bindEvent();
+    });
+</script>

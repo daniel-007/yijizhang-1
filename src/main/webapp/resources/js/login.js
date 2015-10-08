@@ -8,6 +8,19 @@ Login = function(){
 
     return {
 
+        bindEvent:function(){
+
+            $('#loginSubmit').click(function(){
+                Login.submit();
+            });
+
+            $('#loginForm').keypress(function(e){
+                if(e.which==13) {
+                    Login.submit();
+                }
+            });
+        },
+
         /**
          * 登录表单提交.
          */
@@ -21,17 +34,3 @@ Login = function(){
     }
 
 }();
-
-$(function(){
-
-    $('#loginSubmit').click(function(){
-        Login.submit();
-    });
-
-    $('#loginForm').keypress(function(e){
-        if(e.which==13) {
-            Login.submit();
-        }
-    });
-
-});

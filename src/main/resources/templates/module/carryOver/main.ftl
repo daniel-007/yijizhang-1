@@ -40,6 +40,7 @@
 </div>
 <script type="text/javascript">
 	$(function () {
+		CarryOver.bindEvent();
 		CarryOver.init();
 	});
 </script>
