@@ -1,5 +1,7 @@
 package cn.ahyc.yjz.service.impl;
 
+import java.util.HashMap;
+
 /**
  * AccountBookServiceImpl
  *
@@ -8,14 +10,15 @@ package cn.ahyc.yjz.service.impl;
  */
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
-import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
+import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
@@ -33,7 +36,7 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherExtendMapper voucherExtendMapper;
 
     @Autowired
-    private VoucherDetailMapper voucherDetailMapper;
+    private VoucherDetailExtendMapper voucherDetailExtendMapper;
 
     @Autowired
     private CompanyCommonValueMapper companyCommonValueMapper;
@@ -55,7 +58,7 @@ public class VoucherServiceImpl implements VoucherService {
             VoucherDetailExample example = new VoucherDetailExample();
             cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
             criteria.andVoucherIdEqualTo(voucherId);
-            voucherDetailMapper.deleteByExample(example);
+            voucherDetailExtendMapper.deleteByExample(example);
         } else {
             voucherNo = queryNextVoucherNo(voucher.getPeriodId());
             voucher.setVoucherNo(voucherNo);
@@ -65,7 +68,8 @@ public class VoucherServiceImpl implements VoucherService {
         /** 新增凭证明细 **/
         for (VoucherDetail detail : details) {
             detail.setVoucherId(voucherId);
-            voucherDetailMapper.insertSelective(detail);
+            detail.setId(null);
+            voucherDetailExtendMapper.insertSelective(detail);
         }
 
         return voucher.getVoucherWord() + "字第" + voucherNo + "号";
@@ -85,11 +89,11 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public List<VoucherDetail> queryVoucherDetailList(Long voucherId) {
-        VoucherDetailExample example = new VoucherDetailExample();
-        cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
-        criteria.andVoucherIdEqualTo(voucherId);
-        return voucherDetailMapper.selectByExample(example);
+    public List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("voucherId", voucherId);
+        param.put("bookId", bookId);
+        return voucherDetailExtendMapper.selectDetailList(param);
     }
 
     @Override
@@ -100,5 +104,10 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public List<AccountSubject> queryAccountSubjectList(Long bookId) {
         return accountSubjectExtendMapper.selectLastChildSubject(bookId);
+    }
+
+    @Override
+    public Map<String, Object> queryDetailTotal(Long voucherId) {
+        return voucherDetailExtendMapper.selectDetailTotal(voucherId);
     }
 }
