@@ -1,4 +1,4 @@
-<div id="accountSubject_layout" class="easyui-layout" data-options="fit:true">
+<div id="accountSubject_layout" style="display: none;" class="easyui-layout" data-options="fit:true">
     <div data-options="region:'east',title:'操作'" style="width:120px;text-align: center;">
 
         <br/>

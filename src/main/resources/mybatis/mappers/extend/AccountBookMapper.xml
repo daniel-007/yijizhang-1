@@ -33,7 +33,91 @@
     id, book_name, money_code, money_name, start_time, init_year, init_period, company_name,
     company_id, dict_value_id, over_flag, create_time, modify_time
   </sql>
-
+  <insert id="insertSelectiveReturnId" parameterType="cn.ahyc.yjz.model.AccountBook" useGeneratedKeys="true" keyProperty="id">
+   insert into account_book
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bookName != null">
+        book_name,
+      </if>
+      <if test="moneyCode != null">
+        money_code,
+      </if>
+      <if test="moneyName != null">
+        money_name,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="initYear != null">
+        init_year,
+      </if>
+      <if test="initPeriod != null">
+        init_period,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="dictValueId != null">
+        dict_value_id,
+      </if>
+      <if test="overFlag != null">
+        over_flag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="bookName != null">
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="moneyCode != null">
+        #{moneyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moneyName != null">
+        #{moneyName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=DATE},
+      </if>
+      <if test="initYear != null">
+        #{initYear,jdbcType=INTEGER},
+      </if>
+      <if test="initPeriod != null">
+        #{initPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValueId != null">
+        #{dictValueId,jdbcType=INTEGER},
+      </if>
+      <if test="overFlag != null">
+        #{overFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
   <select id="selectByName" parameterType="java.util.Map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

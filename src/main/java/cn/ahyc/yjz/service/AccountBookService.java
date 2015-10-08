@@ -21,7 +21,7 @@ public interface AccountBookService {
 		 * @param accountBook
 		 * @throws Exception
 		 */
-		int createAccountBook(AccountBook accountBook, int... level);
+		Long createAccountBook(AccountBook accountBook, int... level);
 
 		/**
 		 * 根据ID查询账套.

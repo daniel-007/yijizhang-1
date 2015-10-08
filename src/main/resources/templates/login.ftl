@@ -19,6 +19,8 @@
         <![endif]-->
         <script src="resources/public/js/jquery.min.js"></script>
         <script src="resources/public/easyui/jquery.easyui.min.js"></script>
+        <script src="resources/js/login.js"></script>
+        <script src="resources/js/topbar.js"></script>
         <!-- EasyUI -->
         <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
         <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/icon.css">
@@ -56,6 +58,10 @@
                 </div>
             </form>
         </div>
-    <script src="resources/js/login.js"></script>
+    <script>
+        $(function(){
+            Login.bindEvent();
+        });
+    </script>
     </body>
 </html>

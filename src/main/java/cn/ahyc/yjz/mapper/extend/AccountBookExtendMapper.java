@@ -37,5 +37,10 @@ public interface AccountBookExtendMapper extends AccountBookMapper {
 		 * @return
 		 */
 		AccountBook selectLatestAccountBook();
-
+		/**
+		 * 保存新建账套.
+		 *
+		 * @return
+		 */
+		int insertSelectiveReturnId(AccountBook record);
 }

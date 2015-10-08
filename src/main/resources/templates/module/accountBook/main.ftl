@@ -4,15 +4,18 @@
 	<div data-options="region:'center'">
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'west'"
-				style="width: 180px; background-image: url('resources/public/img/jianzhang.png')"></div>
-			<div data-options="region:'center'" style="padding: 15px;">
+				style="width: 180px; background-image: url('resources/public/img/jianzhang.png')">
+				<div style="width:100%;height:300px;"></div>
+				
+				</div>
+			<div data-options="region:'center'" style="padding: 15px;display: none;">
 				<form id="create_book" action="#" method="post">
-					<div id="firstJsp">
-						<br /> <font size="3"><b>请在建账向导的指引下，建议一个最合适你公司实际情况的账套。</b></font>
-						<br /> <br /> <font size="2">请输入账套名称:</font> <input type="text"
-							id="book_name" name="bookName" style="width: 80%;" /> <br /> <br />
-						<br /> <font size="2">请输入公司名称:</font> <input type="text"
-							id="company_name" name="companyName" style="width: 80%;" />
+					<div id="firstJsp" >
+						<br /> <label size="3"><b>请在建账向导的指引下，建立一个最合适你公司实际情况的账套。</b></label>
+						<br /> <br /> <label style="color: #ff0000;">*</label><label size="2">请输入账套名称:</label> 
+						<input type="text"	id="book_name" name="bookName" class="easyui-validatebox" data-options="required:true,validType:'bookName'" style="width: 80%;" /> <br /> <br />
+						<br /> <label style="color: #ff0000;">*</label><label size="2">请输入公司名称:</label>
+						<input type="text"	id="company_name" name="companyName" class="easyui-validatebox" data-options="required:true,validType:'bookName'"style="width: 80%;" />
 					</div>
 					<div id="sencondJsp" style="display: none;">
 						<fieldset>
@@ -20,7 +23,7 @@
 								<font size="2" color="blue">请选择科目体系</font>
 							</legend>
 							<#list categories as category> <br />
-								<input name="dictValueId" value="${category.id}" type="radio" />${category.showValue?default('')}
+								<input name="dictValueId" value="${category.id}" type="radio" checked="checked"/>${category.showValue?default('')}
 							</#list>
 						</fieldset>
 						<br />
@@ -79,148 +82,27 @@
 	</div>
 	<div data-options="region:'south'"
 		style="height: 50px; text-align: right;">
-		<a id="bookInfo" href="javascript:void(0)"
+		<a id="bookInfo" href="javascript:void(0)" 
 			class="button button-primary button-small" style="display: none;">
 			<i class="fa fa-info-circle"></i>制度说明
-		</a> <a id="beforeLink" href="javascript:void(0)"
+		</a> <a id="beforeLink" href="javascript:void(0)" 
 			class="button button-primary button-small" style="display: none;">
 			<i class="fa fa-arrow-circle-left"></i>上一步
-		</a> <a id="nextLink" href="javascript:void(0)"
-			class="button button-primary button-small"> <i
-			class="fa fa-arrow-circle-right"></i>下一步
-		</a> <a id="completeLink" href="javascript:void(0)"
+		</a> <a id="nextLink" href="javascript:void(0)"   
+			class="button button-primary button-small"> 
+			<i	class="fa fa-arrow-circle-right"></i>下一步
+		</a> <a id="completeLink" href="javascript:void(0)" 
 			class="button button-primary button-small" style="display: none;">
 			<i class="fa fa-check-circle"></i>完成
-		</a> <a id="cancelLink" href="javascript:void(0)"
+		</a> <a id="cancelLink" href="javascript:void(0)" 
 			class="button button-primary button-small"> <i
 			class="fa fa-power-off"></i>取消
 		</a>
 	</div>
 </div>
 <div id="account_book_info_win"></div>
-
-<script>
-	var nowdate = new Date();
-	var year = nowdate.getFullYear();
-	var month = nowdate.getMonth() + 1;
-
-	$(function() {
-		//初始化年月
-		$('#init_year').numberbox({
-			value : year
-		});
-		$('#init_period').numberbox({
-			value : month
-		});
-		$('#start_time').text(year + '年' + month + '月1号');
-		$('#start_time').css('white-space', 'nowrap');
-		//取消按钮操作
-		$('#cancelLink').bind('click', function() {
-			$("#default_win").window("close");
-		});
-		//上一步按钮操作
-		$('#beforeLink').bind('click', function() {
-			if ($('input[name=status]').val() == 'sencondJsp') {
-				//显示对应页面与按钮
-				$('#firstJsp').css('display', '');
-				$('#sencondJsp').css('display', 'none');
-				$('#thirdJsp').css('display', 'none');
-				$('#bookInfo').css('display', 'none');
-				$('#beforeLink').css('display', 'none');
-				//设置标志
-				$('input[name=status]').val('firstJsp');
-			} else {
-				//显示对应页面与按钮
-				$('#firstJsp').css('display', 'none');
-				$('#sencondJsp').css('display', '');
-				$('#thirdJsp').css('display', 'none');
-				$('#bookInfo').css('display', '');
-				$('#nextLink').css('display', '');
-				$('#completeLink').css('display', 'none');
-				//设置标志
-				$('input[name=status]').val('sencondJsp');
-			}
-		});
-		//下一步按钮操作
-		$('#nextLink')
-				.bind(
-						'click',
-						function() {
-							if ($('input[name=status]').val() == 'firstJsp') {
-								//firstJsp页面要素要填写
-								if ($('#book_name').val() == ''
-										|| $('#company_name').val() == '') {
-									$.messager.alert("提示信息", "账套名称与公司名称均不能为空!");
-									return;
-								}
-                                //检查账套名称是否已经存在
-                                $.ajax({
-                                    url: "account/book/is/exist",
-                                    async:false,
-                                    data:{
-                                        'name':$('#book_name').val().trim()
-                                    },
-                                    success: function(result){
-                                        if(result){
-                                            $.messager.alert("提示信息", "账套名称已经存在，请重新命名账套!");
-                                            return;
-                                        }else{
-                                            //显示对应页面与按钮
-                                            $('#firstJsp').css('display', 'none');
-                                            $('#sencondJsp').css('display', '');
-                                            $('#thirdJsp').css('display', 'none');
-                                            $('#bookInfo').css('display', '');
-                                            $('#beforeLink').css('display', '');
-                                            //设置标志
-                                            $('input[name=status]').val('sencondJsp');
-                                        }
-                                    }
-                                });
-							} else {
-								//secondJsp页面需选择科目体系
-								if ($('input:radio[name="dictValueId"]:checked')
-										.val() == undefined) {
-									$.messager.alert("提示信息", "请选择科目体系!");
-									return;
-								}
-								//显示对应页面与按钮
-								$('#firstJsp').css('display', 'none');
-								$('#sencondJsp').css('display', 'none');
-								$('#thirdJsp').css('display', '');
-								$('#bookInfo').css('display', 'none');
-								$('#nextLink').css('display', 'none');
-								$('#completeLink').css('display', '');
-								//设置标志
-								$('input[name=status]').val('thirdJsp');
-							}
-						});
-		//制度说明
-		$('#bookInfo').bind('click', function() {
-			$("#account_book_info_win").window({
-				title : '<i class="fa fa-info-circle"></i>制度说明',
-				width : 650,
-				height : 500,
-				modal : true,
-				collapsible : false,
-				shadow : true,
-				href : 'account/book/info'
-			});
-		});
-		//完成按钮
-		$('#completeLink').bind('click', function() {
-
-            $.ajax({
-                url: "account/book/complete",
-                data:$("#create_book").serialize(),
-                success: function(data){
-                    if(data.result){
-                        $.messager.alert("提示信息", "新建账套成功!");
-                        $("#default_win").window('close');
-                    }else{
-                        $.messager.alert("提示信息", "操作失败，请联系管理员!");
-                    }
-                }
-            });
-		});
+<script type="text/javascript">
+	$(function () {
+		Book.init();
 	});
 </script>
