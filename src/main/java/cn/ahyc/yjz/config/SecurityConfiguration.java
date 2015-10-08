@@ -68,7 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())
 							.failureUrl("/login?error").failureHandler(loginFailureHandler())
 							.loginPage("/login").permitAll()
-							.and().logout().logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll()
+							.and().logout().logoutSuccessUrl("/login?logout").invalidateHttpSession(true).permitAll()
 							.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");
 		}
 

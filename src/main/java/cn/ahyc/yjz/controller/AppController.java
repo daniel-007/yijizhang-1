@@ -20,6 +20,7 @@ import cn.ahyc.yjz.model.LoginHistory;
 import cn.ahyc.yjz.service.AccountBookService;
 import cn.ahyc.yjz.service.LoginHistoryService;
 import cn.ahyc.yjz.service.PeriodService;
+import cn.ahyc.yjz.service.UserService;
 import cn.ahyc.yjz.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -29,12 +30,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * AppController
@@ -45,13 +46,16 @@ import java.util.Map;
 public class AppController {
 
       @Autowired
-      private LoginHistoryService loginHistoryService;
+      LoginHistoryService loginHistoryService;
 
       @Autowired
-      private AccountBookService accountBookService;
+      AccountBookService accountBookService;
 
       @Autowired
-      private PeriodService periodService;
+      PeriodService periodService;
+
+      @Autowired
+      UserService userService;
 
       /**
        * 跳转到Dashboard视图.
@@ -103,6 +107,32 @@ public class AppController {
       }
 
       /**
+       * 修改保存密码.
+       * @return
+       */
+      @RequestMapping(value = "/password/save",method = RequestMethod.POST)
+      @ResponseBody
+      @Secured({"ROLE_ADMIN","ROLE_USER"})
+      public Map<String,Object> savePassWd(@RequestParam String oldPasswd,
+                                           @RequestParam String newPasswd){
+            Map<String,Object> map = new HashMap<>();
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(!userService.isPassWdMatch(user.getUsername(),oldPasswd)){
+                  map.put("success",false);
+                  map.put("msg","原始密码不正确!");
+            }else{
+                  if(!userService.modifyPasswd(user.getUsername(),newPasswd)){
+                        map.put("success",false);
+                        map.put("msg","修改密码失败，请稍候重试!");
+                  }else {
+                        map.put("success",true);
+                        map.put("msg","密码修改成功！");
+                  }
+            }
+            return map;
+      }
+
+      /**
        * 注销.
        * @param model
        * @return
@@ -110,7 +140,7 @@ public class AppController {
       @RequestMapping("/logout")
       public String logout(Map<String, Object> model) {
             SecurityContextHolder.clearContext();
-            return "login";
+            return "redirect:/login";
       }
 
       /**
@@ -120,6 +150,7 @@ public class AppController {
        */
       @RequestMapping("/switch/to/book/{id}")
       @ResponseBody
+      @Secured({"ROLE_ADMIN","ROLE_USER"})
       public boolean switchAccoutBook(@PathVariable("id") Long id,HttpServletRequest request){
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             LoginHistory loginHistory = loginHistoryService.selectLastSuccessLoginHistory(user.getUsername());

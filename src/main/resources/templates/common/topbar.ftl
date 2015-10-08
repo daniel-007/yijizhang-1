@@ -29,6 +29,7 @@
 		</ul>
 	</div>
 </div>
+<div id="passwordWin"></div>
 <script>
     $(function(){
         TopBar.bindEvent();
