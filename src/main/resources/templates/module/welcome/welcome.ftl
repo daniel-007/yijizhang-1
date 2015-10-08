@@ -26,7 +26,7 @@
 			</button>
 		</div>
 		<div class="jtk-node" id="flowchartWindow5">
-			<button id="btn_jiez" class="button button-action button-box button-jumbo">
+			<button id="btn_jiez" onClick="App.addTab('结账','account/cashier/main',true);" class="button button-action button-box button-jumbo">
 				<div><i class="fa fa-calendar"></i></div>
 				<div><small style="font-size:12px;"><@spring.message code="welcome.jiez"/></small></div>
 			</button>
