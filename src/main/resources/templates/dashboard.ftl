@@ -30,10 +30,5 @@
             <#include "common/center.ftl" />
         </div>
 
-    <script>
-        $(function(){
-            App.init();
-        });
-    </script>
     </body>
 </html>
