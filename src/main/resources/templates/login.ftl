@@ -31,7 +31,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/base.css">
     </head>
     <body class="easyui-layout">˝
-        <div data-options="region:'north',border:false" style="height:130px;overflow: hidden;">
+        <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
             <#include "./common/topbar.ftl"/>
         </div>
         <div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">

@@ -4,15 +4,6 @@
 App=function(){
 
 	return{
-		/** 初始化 */
-		init:function(){
-			/** 所有的ajax请求都自动提交_csrf头信息，否则POST方式调用REST会报403. */
-			var token = $("meta[name='_csrf']").attr("content");
-			var header = $("meta[name='_csrf_header']").attr("content");
-			$(document).ajaxSend(function(e, xhr, options) {
-				xhr.setRequestHeader(header, token);
-			});
-		},
 
 		/** 增加新的tab */
 		addTab:function(title,href,closable){
@@ -50,4 +41,13 @@ $.extend($.fn.validatebox.defaults.rules, {
 		},
 		message: '请输入至少{0}个字符'
 	}
+});
+
+$(function(){
+	/** 所有的ajax请求都自动提交_csrf头信息，否则POST方式调用REST会报403. */
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+		xhr.setRequestHeader(header, token);
+	});
 });
