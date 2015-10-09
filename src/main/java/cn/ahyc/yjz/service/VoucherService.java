@@ -6,6 +6,7 @@ package cn.ahyc.yjz.service;/**
  */
 
 import java.util.List;
+import java.util.Map;
 
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
@@ -33,9 +34,10 @@ public interface VoucherService {
      * 获取凭证明细列表
      * 
      * @param voucherId
+     * @param bookId
      * @return
      */
-    List<VoucherDetail> queryVoucherDetailList(Long voucherId);
+    List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId);
 
     /**
      * 查询记账凭证
@@ -61,5 +63,13 @@ public interface VoucherService {
      * @return
      */
     List<AccountSubject> queryAccountSubjectList(Long bookId);
+
+    /**
+     * 查询凭证分录合计
+     * 
+     * @param voucherId
+     * @return
+     */
+    Map<String, Object> queryDetailTotal(Long voucherId);
 
 }
