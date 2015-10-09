@@ -13,7 +13,6 @@
 			</a>
 			</div>
 	</div>
-	
 	<div data-options="region:'south'"	style="height: 60%;padding: 35px;">
 		<div  class="button button-action button-box button-jumbo" style="float:left;">
 				<i class="fa fa-calendar"></i></div>
@@ -43,7 +42,7 @@
 		</div>
 	</div>
 </div>
-<div id="cashier_win"></div>
+<div id="newDialog" style="padding:5px 0 0 20px;"></div>
 <script type="text/javascript">
 	$(function () {
 		Cashier.init();
