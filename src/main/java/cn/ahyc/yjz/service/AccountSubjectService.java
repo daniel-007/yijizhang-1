@@ -28,4 +28,6 @@ public interface AccountSubjectService {
     void initDataEdit(AccountSubject accountSubject) throws Exception;
 
     void calculate(Long bookId, Long category_subject_code) throws Exception;
+
+    Map balance(Long bookId, Long category_subject_code);
 }

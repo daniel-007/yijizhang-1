@@ -7,35 +7,65 @@
         <result property="subjectTextname" column="subject_textname" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <select id="getTotalBalance" parameterType="java.lang.Long" resultType="java.util.Map">
+        SELECT
+            (
+                IFNULL(SUM(t.total_debit), 0) - IFNULL(SUM(t.total_credit), 0)
+            ) AS dValue,
+            IFNULL(SUM(t.total_debit), 0) AS sum_total_debit,
+            IFNULL(SUM(t.total_credit), 0) AS sum_total_credit
+        FROM
+            account_subject t
+        WHERE
+            t.book_id = #{bookId}
+        AND `level` = 1
+    </select>
+
+    <select id="getInitLeftBalance" parameterType="java.lang.Long" resultType="java.util.Map">
+        SELECT
+	        IFNULL((t1.sum_total_debit - t1.sum_total_credit),0) as dValue,
+            SUM(t1.sum_total_credit) as sum_total_credit,
+            SUM(t1.sum_total_debit) as sum_total_debit
+        FROM (
+            SELECT
+                SUM(IF(t.direction = 1, t.initial_left, 0)) AS sum_total_debit,
+                SUM(IF(t.direction = 2, t.initial_left, 0)) AS sum_total_credit
+            FROM account_subject t
+                WHERE t.book_id = #{bookId}
+                    AND `level` = 1
+                GROUP BY t.direction
+            ) t1
+    </select>
+
     <select id="getParentSum" resultType="java.util.Map">
         SELECT
-            t1.parent_subject_code,
-            t2.*
+        t1.parent_subject_code,
+        t2.*
         FROM
-            account_subject t1,
-            (
-                SELECT
-                    t.book_id,
-                    t.parent_subject_code AS subject_code,
-                    SUM(t.total_debit) AS sum_total_debit,
-                    SUM(t.total_credit) AS sum_total_credit,
-                    SUM(t.initial_left) AS sum_initial_left,
-                    SUM(t.year_occur_amount) AS sum_year_occur_amount
-                FROM
-                    account_subject t
-                WHERE
-                    t.parent_subject_code IN
-
-                    <foreach collection="parentSubjectCodes" item="parentSubjectCode" open="(" separator="," close=")" >
-                      #{parentSubjectCode}
-                    </foreach>
-
-                AND t.book_id = #{bookId}
-                GROUP BY
-                    t.parent_subject_code
-            ) t2
+        account_subject t1,
+        (
+        SELECT
+        t.book_id,
+        t.parent_subject_code AS subject_code,
+        SUM(t.total_debit) AS sum_total_debit,
+        SUM(t.total_credit) AS sum_total_credit,
+        SUM(t.initial_left) AS sum_initial_left,
+        SUM(t.year_occur_amount) AS sum_year_occur_amount
+        FROM
+        account_subject t
         WHERE
-            t1.book_id = t2.book_id
+        t.parent_subject_code IN
+
+        <foreach collection="parentSubjectCodes" item="parentSubjectCode" open="(" separator="," close=")">
+            #{parentSubjectCode}
+        </foreach>
+
+        AND t.book_id = #{bookId}
+        GROUP BY
+        t.parent_subject_code
+        ) t2
+        WHERE
+        t1.book_id = t2.book_id
         AND t2.subject_code = t1.subject_code
     </select>
 

@@ -57,4 +57,22 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @return
      */
     List<Map> getParentSum(@Param("parentSubjectCodes") List<Long> parentSubjectCodes, @Param("bookId") Long bookId);
+
+    /**
+     * 计算期初余额平衡值.
+     *
+     * @param bookId
+     * @return
+     */
+    Map getInitLeftBalance(@Param("bookId") Long bookId);
+
+    /**
+     * 本年累计平衡值.
+     *
+     * @param bookId
+     * @return
+     */
+    Map getTotalBalance(@Param("bookId") Long bookId);
+
+
 }

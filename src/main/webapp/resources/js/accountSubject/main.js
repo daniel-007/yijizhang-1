@@ -111,7 +111,9 @@ $(function () {
     /*会计大科目tab页初始化。*/
     $accountSubject_tabs.tabs({
         border: false,
+        cache: true,
         onSelect: function (title) {
+
             var id = $accountSubject_tabs.tabs('getSelected').panel('options').id;
             var category_id = id.replace("category_", "").replace(",", "");
 
@@ -125,6 +127,7 @@ $(function () {
                 idField: 'subject_code',
                 treeField: 'subject_code',
                 fitColumns: true,
+                border: false,
                 columns: [
                     [
                         {title: '编码', field: 'subject_code', width: 200},

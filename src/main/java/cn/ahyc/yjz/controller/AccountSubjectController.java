@@ -30,6 +30,35 @@ public class AccountSubjectController extends BaseController {
     @Resource
     private AccountSubjectService accountSubjectService;
 
+
+    /**
+     * 平衡.
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/initData/balance")
+    @ResponseBody
+    public Map balance(HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+
+        try {
+            Map map = accountSubjectService.balance(bookId, category_subject_code);
+            result.put("balance", map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("msg", e.getMessage());
+        }
+
+        return result;
+    }
+
     /**
      * 汇总.
      *

@@ -157,6 +157,38 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void calculate(Long bookId, Long category_subject_code) throws Exception {
+
+        List<Map> childSums = accountSubjectMapper.getLastChildSum(bookId);
+        calculateChildren(childSums, bookId);
+
+    }
+
+    @Override
+    public Map balance(Long bookId, Long category_subject_code) {
+
+        Map result = new HashMap();
+        result.put("isBalance", false);
+
+        Map initLeftBalance = accountSubjectMapper.getInitLeftBalance(bookId);
+        Map totalBalance = accountSubjectMapper.getTotalBalance(bookId);
+        result.put("initLeftBalance", initLeftBalance);
+        result.put("totalBalance", totalBalance);
+
+        //期初余额借贷差值
+        BigDecimal initLeftBalance_dValue = (BigDecimal) initLeftBalance.get("dValue");
+        //本年累计借贷差值
+        BigDecimal totalBalance_dValue = (BigDecimal) totalBalance.get("dValue");
+
+        if (initLeftBalance_dValue.compareTo(BigDecimal.ZERO) == 0 && totalBalance_dValue.compareTo(BigDecimal.ZERO) == 0) {
+            result.put("isBalance", true);
+        }
+
+        return result;
+    }
+
     private void calculateChildren(List<Map> sums, Long bookId) {
 
         Set<Long> parent_code_set = new HashSet<Long>();
@@ -215,16 +247,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             List<Map> childSums = accountSubjectMapper.getParentSum(parent_code_list, bookId);
             calculateChildren(childSums, bookId);
         }
-    }
-
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void calculate(Long bookId, Long category_subject_code) throws Exception {
-
-        List<Map> childSums = accountSubjectMapper.getLastChildSum(bookId);
-        calculateChildren(childSums, bookId);
-
     }
 
     /**

@@ -5,18 +5,6 @@
         color: #333;
     }
 
-    #init_data_table_container .datagrid-cell-c1-totalDebit, .datagrid-cell-c1-totalCredit, .datagrid-cell-c1-initialLeft {
-        font-weight: 700;
-    }
-
-    #init_data_table_container .datagrid-cell-c1-totalDebit {
-        color: red;
-    }
-
-    #init_data_table_container .datagrid-cell-c1-totalCredit {
-        color: green;
-    }
-
     #init_data_table_container .init-data-tip-text {
         position: absolute;
         z-index: 9999;

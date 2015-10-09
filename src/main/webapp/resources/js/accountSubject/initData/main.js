@@ -79,10 +79,16 @@ Account_Subject_Init_Data = function () {
                     [
                         {field: 'subjectCode', title: '科目代码', width: 100, formatter: this.subjectCodeFormatter},
                         {field: 'subjectName', title: '科目名称', width: 180, formatter: this.subjectNameFormatter},
-                        {field: 'totalDebit', title: '累计借方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter},
-                        {field: 'totalCredit', title: '累计贷方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter},
+                        {field: 'totalDebit', title: '累计借方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
+                            return 'font-weight: 700;color:red;';
+                        }},
+                        {field: 'totalCredit', title: '累计贷方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
+                            return 'font-weight: 700;color:green;';
+                        }},
                         {field: 'direction', title: '方向', width: 30, align: 'center', formatter: this.directionFormatter},
-                        {field: 'initialLeft', title: '期初余额', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter},
+                        {field: 'initialLeft', title: '期初余额', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
+                            return 'font-weight: 700';
+                        }},
                         {field: 'yearOccurAmount', title: '本年累计损益<br/>实际发生额', width: 80, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: this.yearOccurAmountStyler}
                     ]
                 ],
@@ -124,7 +130,21 @@ Account_Subject_Init_Data = function () {
                     {
                         text: '<i class="fa fa-balance-scale fa-lg"></i> 平衡',
                         handler: function () {
-                            alert('help')
+                            var thiss = $(this);
+                            thiss.linkbutton('disable');
+
+                            $.ajax({
+                                url: 'account/subject/initData/balance',
+                                success: function (data) {
+                                    thiss.linkbutton('enable');
+                                    if (data.success) {
+                                        Account_Subject_Init_Data._init_data_table_.datagrid("disableCellEditing");
+                                        Account_Subject_Init_Data._init_data_table_.datagrid('reload', {});
+                                    } else {
+                                        $.messager.alert("错误", data.msg, "error");
+                                    }
+                                }
+                            })
                         }
                     }
                 ],
