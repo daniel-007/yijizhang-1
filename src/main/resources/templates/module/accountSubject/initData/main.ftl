@@ -7,7 +7,7 @@
 
     #init_data_table_container .init-data-tip-text {
         position: absolute;
-        z-index: 9999;
+        z-index: 999;
         right: 18px;
         top: 30px;
         height: 28px;

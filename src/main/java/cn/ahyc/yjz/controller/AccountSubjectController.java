@@ -32,31 +32,21 @@ public class AccountSubjectController extends BaseController {
 
 
     /**
-     * 平衡.
+     * 试算平衡页面.
      *
      * @param session
      * @return
      */
-    @RequestMapping("/initData/balance")
-    @ResponseBody
-    public Map balance(HttpSession session) {
+    @RequestMapping("/initData/balance/page")
+    public String balancePage(Model model, HttpSession session) {
 
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         Long bookId = period.getBookId();
+        Map map = accountSubjectService.balance(bookId, category_subject_code);
+        model.addAttribute("balance", map);
+        model.addAttribute("currentPeriod", period.getCurrentPeriod());
 
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("success", true);
-
-        try {
-            Map map = accountSubjectService.balance(bookId, category_subject_code);
-            result.put("balance", map);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.put("success", false);
-            result.put("msg", e.getMessage());
-        }
-
-        return result;
+        return view("accountSubject/initData/balance");
     }
 
     /**

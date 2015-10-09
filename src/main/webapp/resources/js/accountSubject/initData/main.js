@@ -94,13 +94,6 @@ Account_Subject_Init_Data = function () {
                 ],
                 toolbar: [
                     {
-                        text: '<i class="fa fa-floppy-o fa-lg"></i> 保存',
-                        handler: function () {
-                            alert('edit')
-                        }
-                    },
-                    '-',
-                    {
                         text: '<i class="fa fa-filter fa-lg"></i> 过滤',
                         handler: function () {
                             $("#init_data_toolbar").slideToggle();
@@ -130,21 +123,26 @@ Account_Subject_Init_Data = function () {
                     {
                         text: '<i class="fa fa-balance-scale fa-lg"></i> 平衡',
                         handler: function () {
-                            var thiss = $(this);
-                            thiss.linkbutton('disable');
 
-                            $.ajax({
-                                url: 'account/subject/initData/balance',
-                                success: function (data) {
-                                    thiss.linkbutton('enable');
-                                    if (data.success) {
-                                        Account_Subject_Init_Data._init_data_table_.datagrid("disableCellEditing");
-                                        Account_Subject_Init_Data._init_data_table_.datagrid('reload', {});
-                                    } else {
-                                        $.messager.alert("错误", data.msg, "error");
+                            var balanceDialog = $("<div></div>").dialog({
+                                title: '<i class="fa fa-balance-scale fa-lg"></i> 查看试算平衡',
+                                href: 'account/subject/initData/balance/page',
+                                width: 500,
+                                height: 200,
+                                modal: true,
+                                collapsible: false,
+                                shadow: true,
+                                buttons: [
+                                    {
+                                        text: '退出',
+                                        iconCls: 'icon-cancel',
+                                        handler: function () {
+                                            balanceDialog.dialog("destroy");
+                                        }
                                     }
-                                }
-                            })
+                                ]
+                            });
+
                         }
                     }
                 ],
