@@ -8,7 +8,9 @@ import cn.ahyc.yjz.service.AccountSubjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -64,6 +66,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception {
 
         Long id = accountSubject.getId();
@@ -100,6 +103,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long subjectId) throws Exception {
         this.accountSubjectMapper.deleteByPrimaryKey(subjectId);
     }
@@ -147,8 +151,80 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void initDataEdit(AccountSubject accountSubject) throws Exception {
         accountSubjectMapper.updateByPrimaryKey(accountSubject);
+    }
+
+
+    private void calculateChildren(List<Map> sums, Long bookId) {
+
+        Set<Long> parent_code_set = new HashSet<Long>();
+
+        for (Map map : sums) {
+
+            AccountSubject accountSubject = new AccountSubject();
+            boolean isUpdate = false;
+
+            Long parent_subject_code = (Long) map.get("parent_subject_code");
+            Long subject_code = (Long) map.get("subject_code");
+            Object sum_total_debit = map.get("sum_total_debit");
+            Object sum_total_credit = map.get("sum_total_credit");
+            Object sum_initial_left = map.get("sum_initial_left");
+            Object sum_year_occur_amount = map.get("sum_year_occur_amount");
+
+            if (sum_total_debit != null) {
+                isUpdate = true;
+                accountSubject.setTotalDebit((BigDecimal) sum_total_debit);
+            }
+            if (sum_total_credit != null) {
+                isUpdate = true;
+                accountSubject.setTotalCredit((BigDecimal) sum_total_credit);
+            }
+            if (sum_initial_left != null) {
+                isUpdate = true;
+                accountSubject.setInitialLeft((BigDecimal) sum_initial_left);
+            }
+            if (sum_year_occur_amount != null) {
+                isUpdate = true;
+                accountSubject.setYearOccurAmount((BigDecimal) sum_year_occur_amount);
+            }
+
+            //是否需要更新数据库。
+            if (isUpdate) {
+                AccountSubjectExample example = new AccountSubjectExample();
+                AccountSubjectExample.Criteria criteria = example.createCriteria();
+                criteria.andBookIdEqualTo(bookId);
+                criteria.andSubjectCodeEqualTo(subject_code);
+
+                accountSubjectMapper.updateByExampleSelective(accountSubject, example);
+            }
+
+            /**
+             * 是否是父会计科目父级。如果是父级科目，则该科目父级是负数。
+             */
+            if (parent_subject_code > 0) {
+                parent_code_set.add(parent_subject_code);
+            }
+
+        }
+
+        //递归计算父级节点.
+        List<Long> parent_code_list = new ArrayList<Long>(parent_code_set);
+        if (!parent_code_list.isEmpty()) {
+            List<Map> childSums = accountSubjectMapper.getParentSum(parent_code_list, bookId);
+            calculateChildren(childSums, bookId);
+        }
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void calculate(Long bookId, Long category_subject_code) throws Exception {
+
+        List<Map> childSums = accountSubjectMapper.getLastChildSum(bookId);
+        calculateChildren(childSums, bookId);
+
     }
 
     /**
