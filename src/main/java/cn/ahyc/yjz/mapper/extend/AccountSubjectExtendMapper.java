@@ -5,8 +5,9 @@ import java.util.Map;
 
 import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
 import cn.ahyc.yjz.model.AccountSubject;
+import org.apache.ibatis.annotations.Param;
 
-public interface AccountSubjectExtendMapper extends AccountSubjectMapper{
+public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
 
     /**
      * 根据大分类获取所有会计科目.
@@ -26,17 +27,34 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper{
 
     /**
      * 查询所有末节点
-     * 
+     *
      * @param bookId
      * @return
      */
     List<AccountSubject> selectLastChildSubject(Long bookId);
+
     /**
      * 根据账套id查询出损益类其中之一会计科目代码
-     * 
-     * @param bookId
-     * @return 
+     *
+     * @param param
      * @return
      */
     Map<String, Object> getSubjectCodeByRoot(Map<String, Object> param);
+
+    /**
+     * 所以叶子节点汇总.
+     *
+     * @param bookId
+     * @return
+     */
+    List<Map> getLastChildSum(Long bookId);
+
+    /**
+     * 往父级几点汇总.
+     *
+     * @param parentSubjectCodes
+     * @param bookId
+     * @return
+     */
+    List<Map> getParentSum(@Param("parentSubjectCodes") List<Long> parentSubjectCodes, @Param("bookId") Long bookId);
 }

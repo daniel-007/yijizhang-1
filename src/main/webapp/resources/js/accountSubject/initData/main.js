@@ -7,13 +7,21 @@ Account_Subject_Init_Data = function () {
         _init_data_table_: $("#init_data_table"),
         _keyword_: $("#search_subject_code"),
         _editor_: {type: 'numberbox', options: {precision: 2, prompt: '0.00'}},
+        _keyword_val_: '',
         search: function () {
             var keyword = this._keyword_.val().toString();
+            this._keyword_val_ = keyword;
 
             this._init_data_table_.datagrid("disableCellEditing");
-
             this._init_data_table_.datagrid('reload', {
                 keyword: keyword
+            });
+        },
+        keyword_search_bind_event: function () {
+            $("#init_data_toolbar").keypress(function (e) {
+                if (e.which == 13) {
+                    Account_Subject_Init_Data.search();
+                }
             });
         },
         moneyFormatter: function (value, row, index) {
@@ -32,13 +40,6 @@ Account_Subject_Init_Data = function () {
                 return value;
             }
         },
-        subjectNameFormatter: function (value, row, index) {
-            var blank = "";
-            for (var i = 1; i < row.level; i++) {
-                blank += "&#12288;";
-            }
-            return blank + value;
-        },
         directionFormatter: function (value, row, index) {
             if (row.direction == 1) {
                 return "<span style='color: green;'>借</span>";
@@ -51,6 +52,21 @@ Account_Subject_Init_Data = function () {
                 return 'background-color:#ccc;color:#fff;';
             }
         },
+        subjectCodeFormatter: function (value, row, index) {
+            return Account_Subject_Init_Data.highlight_keyword(value.toString());
+        },
+        subjectNameFormatter: function (value, row, index) {
+            var blank = "";
+            for (var i = 1; i < row.level; i++) {
+                blank += "&#12288;";
+            }
+
+            return Account_Subject_Init_Data.highlight_keyword(blank + value);
+        },
+        highlight_keyword: function (val) {
+            var keyword = Account_Subject_Init_Data._keyword_val_;
+            return val.replace(keyword, "<span style='color: red;'>" + keyword + "</span>");
+        },
         init_data_table: function () {
             this._init_data_table_.datagrid({
                 url: 'account/subject/initData/alldata',
@@ -58,9 +74,10 @@ Account_Subject_Init_Data = function () {
                 rownumbers: true,
                 singleSelect: true,
                 toolbar: '#init_data_toolbar',
+                border: false,
                 columns: [
                     [
-                        {field: 'subjectCode', title: '科目代码', width: 100},
+                        {field: 'subjectCode', title: '科目代码', width: 100, formatter: this.subjectCodeFormatter},
                         {field: 'subjectName', title: '科目名称', width: 180, formatter: this.subjectNameFormatter},
                         {field: 'totalDebit', title: '累计借方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter},
                         {field: 'totalCredit', title: '累计贷方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter},
@@ -87,7 +104,21 @@ Account_Subject_Init_Data = function () {
                     {
                         text: '<i class="fa fa-calculator fa-lg"></i> 汇总',
                         handler: function () {
-                            alert('help')
+                            var thiss = $(this);
+                            thiss.linkbutton('disable');
+
+                            $.ajax({
+                                url: 'account/subject/initData/calculate',
+                                success: function (data) {
+                                    thiss.linkbutton('enable');
+                                    if (data.success) {
+                                        Account_Subject_Init_Data._init_data_table_.datagrid("disableCellEditing");
+                                        Account_Subject_Init_Data._init_data_table_.datagrid('reload', {});
+                                    } else {
+                                        $.messager.alert("错误", data.msg, "error");
+                                    }
+                                }
+                            })
                         }
                     },
                     {
@@ -98,7 +129,7 @@ Account_Subject_Init_Data = function () {
                     }
                 ],
                 rowStyler: function (index, row) {
-                    if (row.level == -1) {
+                    if (row.isParent) {
                         return 'background-color:#FEFFB4;';
                     }
                 },
@@ -115,12 +146,12 @@ Account_Subject_Init_Data = function () {
                         if (_data) {
                             var next_subject_code = _data.subjectCode.toString();
                             if (next_subject_code.indexOf(cur_subject_code) > -1) {
-                                accountSubjects[i].level = -1;  //会计科目父节点
+                                accountSubjects[i].isParent = true;  //会计科目父节点
                             }
                         }
                         //是否损益校验.
                         if (cur_subject_code.substring(0, 1) == creaseCode) {
-                            accountSubjects[i].isCrease = true;
+                            accountSubjects[i].isCrease = true; //是否损益类.
                         } else {
                             accountSubjects[i].isCrease = false;
                         }
@@ -142,15 +173,16 @@ Account_Subject_Init_Data = function () {
                                 async: true,
                                 success: function (data) {
                                     if (!data.success) {
-                                        $.messager.alert("错误", e.msg, "error");
+                                        $.messager.alert("错误", data.msg, "error");
                                     }
                                 }
                             })
                         }
 
-                        //是否修改校验.
+                        //校验是否可以修改.
                         if (!$.isEmptyObject(rows)) {
-                            if (rows[cur_idx].level == -1) {
+                            //父级几点.
+                            if (rows[cur_idx].isParent) {
                                 return false;
                             }
 
@@ -167,30 +199,12 @@ Account_Subject_Init_Data = function () {
                 }
             });
         },
-        bind_event: function () {
-            $("#init_data_toolbar").keypress(function (e) {
-                if (e.which == 13) {
-                    Account_Subject_Init_Data.search();
-                }
-            });
-
-            $("#init_data_toolbar a").click(function () {
-                Account_Subject_Init_Data.search();
-            })
-
-        },
         //初始数据表格.
         init: function () {
             this.init_data_table();
-            this.bind_event();
+            this.keyword_search_bind_event();
         }
     }
 
 }()
 
-
-$(function () {
-
-    Account_Subject_Init_Data.init();
-
-})

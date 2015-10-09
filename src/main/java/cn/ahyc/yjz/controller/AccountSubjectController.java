@@ -30,6 +30,31 @@ public class AccountSubjectController extends BaseController {
     @Resource
     private AccountSubjectService accountSubjectService;
 
+    /**
+     * 汇总.
+     *
+     * @return
+     */
+    @RequestMapping("/initData/calculate")
+    @ResponseBody
+    public Map<String, Object> calculate(HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+
+        try {
+            accountSubjectService.calculate(bookId, category_subject_code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("msg", e.getMessage());
+        }
+
+        return result;
+    }
 
     /**
      * 初始化数据修改.
