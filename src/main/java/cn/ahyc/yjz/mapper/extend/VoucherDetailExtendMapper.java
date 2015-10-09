@@ -15,4 +15,21 @@ public interface VoucherDetailExtendMapper extends VoucherDetailMapper{
 	 * @return
 	 */
 	List<VoucherDetail> selectProfitAndLoss(Map<String, Object> param);
+
+    /**
+     * 查询凭证分录合计
+     * 
+     * @param voucherId
+     * @return
+     */
+    Map<String, Object> selectDetailTotal(Long voucherId);
+
+    /**
+     * 查询凭证分录列表
+     * 
+     * @param voucherId
+     * @param bookId
+     * @return
+     */
+    List<Map<String, Object>> selectDetailList(Map<String, Object> param);
 }

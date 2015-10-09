@@ -47,30 +47,34 @@
 .flowchart-demo .hover {
     border: 1px dotted red;
 }
-
+#canvas {
+	width: 900px;
+	text-align: center; 
+	margin: 0px auto;
+}
 #flowchartWindow1 {
     top: 2em;
-    left: 13em;
+    left: 0em;
 }
 
 #flowchartWindow2 {
     top: 14em;
-    left: 40em;
+    left: 33.5em;
 }
 
 #flowchartWindow3 {
     top: 2em;
-    left: 70em;
+    left: 67em;
 }
 
 #flowchartWindow4 {
     top: 26em;
-    left: 13em;
+    left: 0em;
 }
 
 #flowchartWindow5 {
     top: 26em;
-    left: 70em;
+    left: 67em;
 }
 
 .flowchart-demo ._jsPlumb_connector {
