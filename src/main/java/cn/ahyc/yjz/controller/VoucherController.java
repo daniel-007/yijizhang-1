@@ -161,4 +161,9 @@ public class VoucherController extends BaseController{
         List<AccountSubject> list = voucherService.queryAccountSubjectList(bookId);
         return list;
     }
+
+    @RequestMapping("/help")
+    public String help() {
+        return view("help");
+    }
 }
