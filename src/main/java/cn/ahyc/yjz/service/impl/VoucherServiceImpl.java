@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
+import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
 import cn.ahyc.yjz.model.AccountSubject;
@@ -43,6 +44,9 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Autowired
     private AccountSubjectExtendMapper accountSubjectExtendMapper;
+
+    @Autowired
+    private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,7 +76,26 @@ public class VoucherServiceImpl implements VoucherService {
             voucherDetailExtendMapper.insertSelective(detail);
         }
 
+        updateSubjectSum(voucher.getPeriodId());
+        updateSubjectBalance(voucher.getPeriodId());
         return voucher.getVoucherWord() + "字第" + voucherNo + "号";
+    }
+
+    /**
+     * 更新科目余额表累计项
+     * 
+     * @param periodId
+     */
+    @Transactional(rollbackFor = Exception.class)
+    private void updateSubjectSum(Long periodId) {
+        subjectBalanceExtendMapper.insertOrUpdateSubjectSum(periodId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSubjectBalance(Long periodId) {
+        // 更新科目余额表余额项
+        subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(periodId);
     }
 
     @Override

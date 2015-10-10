@@ -57,8 +57,137 @@
 	  ORDER BY a.id
   </select>
 
+  <insert id="insertOrUpdateSubjectSum" parameterType="java.lang.Long">
+  <![CDATA[
+		INSERT INTO subject_balance (
+			subject_code,
+			book_id,
+			period_id,
+			period_debit_occur,
+			period_credit_occur,
+			year_debit_occur,
+			year_credit_occur
+		) SELECT
+			sb.subject_code,
+			sb.book_id,
+			sb.period_id,
+			sb.debit,
+			sb.credit,
+			sby.ydebit,
+			sby.ycredit
+		FROM
+			(
+				SELECT
+					t.subject_code,
+					p.book_id,
+					v.period_id,
+					NULLIF(sum(t.debit), 0) AS debit,
+					NULLIF(sum(t.credit), 0) AS credit
+				FROM
+					voucher_detail t,
+					voucher v,
+					period p
+				WHERE
+					t.voucher_id = v.id
+				AND p.id = v.period_id
+				AND v.period_id = #{periodId,jdbcType=BIGINT}
+				GROUP BY
+					t.subject_code,
+					p.book_id,
+					v.period_id
+			) AS sb,
+			(
+				SELECT
+					t.subject_code,
+					p.book_id,
+					#{periodId,jdbcType=BIGINT} AS period_id,
+					NULLIF(sum(t.debit), 0) AS ydebit,
+					NULLIF(sum(t.credit), 0) AS ycredit
+				FROM
+					voucher_detail t,
+					voucher v,
+					period p
+				WHERE
+					t.voucher_id = v.id
+				AND p.id = v.period_id
+				GROUP BY
+					t.subject_code,
+					p.book_id
+			) AS sby
+		WHERE
+			sb.subject_code = sby.subject_code
+		AND sb.book_id = sby.book_id
+		AND sb.period_id = sby.period_id ON DUPLICATE KEY UPDATE period_debit_occur = sb.debit,
+		 period_credit_occur = sb.credit,
+		 year_debit_occur = sby.ydebit,
+		 year_credit_occur = sby.ycredit
+	]]>
+  </insert>
 
+  <insert id="insertOrUpdateSubjectBalance" parameterType="java.lang.Long">
+  	<![CDATA[
+		INSERT INTO subject_balance (
+			subject_code,
+			book_id,
+			period_id,
+			terminal_debit_balance,
+			terminal_credit_balance,
+			initial_debit_balance,
+			initial_credit_balance
+		) SELECT
+				*
+			FROM
+			(
+				SELECT
+					t2.subject_code,
+					t2.book_id,
+					#{periodId,jdbcType=BIGINT} AS period_id,
+					NULLIF(IF(t2.direction = 1,IFNULL(t2.initial_left, 0) + IFNULL(t.year_debit_occur, 0) - IFNULL(t.year_credit_occur, 0),NULL),0) AS t_debit_balance,
+					NULLIF(IF(t2.direction = 2,IFNULL(t2.initial_left, 0) - IFNULL(t.year_debit_occur, 0) + IFNULL(t.year_credit_occur, 0),NULL),0) AS t_credit_balance,
+					NULLIF(IF(t2.direction = 1,IFNULL(t2.initial_left, 0) + IFNULL(t.year_debit_occur, 0) - IFNULL(t.year_credit_occur, 0) - IFNULL(t.period_debit_occur, 0) + IFNULL(t.period_credit_occur, 0),NULL),0) AS i_debit_balance,
+					NULLIF(IF(t2.direction = 2,IFNULL(t2.initial_left, 0) - IFNULL(t.year_debit_occur, 0) + IFNULL(t.year_credit_occur, 0) + IFNULL(t.period_debit_occur, 0) - IFNULL(t.period_credit_occur, 0),NULL),0) AS i_credit_balance
+				FROM
+					period p,
+					account_subject t2
+					LEFT JOIN subject_balance t ON t.subject_code = t2.subject_code AND t.book_id = t2.book_id AND t.period_id = #{periodId,jdbcType=BIGINT}
+				WHERE
+					p.id = #{periodId,jdbcType=BIGINT}
+					AND p.book_id = t2.book_id
+					AND (t2.initial_left IS NOT NULL or t.period_id is not null) 
+			) AS sb 
+		ON DUPLICATE KEY UPDATE terminal_debit_balance = sb.t_debit_balance,
+			terminal_credit_balance = sb.t_credit_balance,
+			initial_debit_balance = sb.i_debit_balance,
+			initial_credit_balance = sb.i_credit_balance
+	]]>
+  </insert>
   
-
-
+  <insert id="insertNextPeriodSubjectBalance" parameterType="java.util.Map">
+  	<![CDATA[
+		INSERT INTO subject_balance (
+			subject_code,
+			book_id,
+			period_id,
+			terminal_debit_balance,
+			terminal_credit_balance,
+			initial_debit_balance,
+			initial_credit_balance,
+			year_debit_occur,
+			year_credit_occur
+		) SELECT
+			subject_code,
+			book_id,
+			#{newPeriodId,jdbcType=BIGINT},
+			terminal_debit_balance,
+			terminal_credit_balance,
+			terminal_debit_balance,
+			terminal_credit_balance,
+			year_debit_occur,
+			year_credit_occur
+		FROM
+			subject_balance
+		WHERE
+			period_id = #{periodId,jdbcType=BIGINT}
+	]]>
+  </insert>
 </mapper>

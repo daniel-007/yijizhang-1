@@ -72,4 +72,10 @@ public interface VoucherService {
      */
     Map<String, Object> queryDetailTotal(Long voucherId);
 
+    /**
+     * 更新科目余额表余额项
+     * 
+     * @param periodId
+     */
+    void updateSubjectBalance(Long periodId);
 }

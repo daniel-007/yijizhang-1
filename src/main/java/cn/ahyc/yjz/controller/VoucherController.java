@@ -61,8 +61,9 @@ public class VoucherController extends BaseController{
             voucher = new Voucher();
         }
         model.addAttribute("voucher", voucher);
-        model.addAttribute("period", ((Period) session.getAttribute(Constant.CURRENT_PERIOD)).getCurrentPeriod());
-        model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(1L));
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        model.addAttribute("period", period.getCurrentPeriod());
+        model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(period.getId()));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         model.addAttribute("voucherTime", dateFormat.format(new Date()));
 	    return view("voucher");
