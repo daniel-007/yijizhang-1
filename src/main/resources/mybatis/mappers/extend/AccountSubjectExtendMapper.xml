@@ -79,54 +79,38 @@
 
     <!--自定义sql-->
     <select id="getSubjectsByCategoryId" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT
-            t2.*, t1.id AS category_detail_id,
-            t1.subject_code AS category_datail_parent_subject_code,
-            IFNULL(
-                (
-                    SELECT
-                        t3.length
-                    FROM
-                        subject_length t3
-                    WHERE
-                        t3.book_id = #{bookId}
-                    AND t3.`level` = (t2.`level` + 1)
-                ),
-                2
-            ) AS next_level_length
-        FROM
-            account_subject t1,
-            account_subject t2
-        WHERE
-            t1.book_id = #{bookId}
-        AND t1.book_id = t2.book_id
-        AND t1.parent_subject_code = #{parent_subject_code}
-        AND t2.parent_subject_code = t1.subject_code
-        ORDER BY
-            t2.subject_code
+        SELECT t2.subject_code AS id, t2.subject_name AS text, (
+                SELECT CASE COUNT(1) WHEN 0 THEN 'open' ELSE 'closed' END
+                FROM account_subject t3
+                WHERE t3.book_id = t1.book_id
+                    AND t3.parent_subject_code = t2.subject_code
+                ) AS state, t2.id AS id_back, t2.subject_name
+            , t2.subject_code, t2.`level`, t2.base_flag, IFNULL(t4.length, 2) AS next_level_length
+            , t2.parent_subject_code AS category_datail_parent_subject_code
+        FROM account_subject t1, account_subject t2, subject_length t4
+        WHERE t1.book_id = #{bookId}
+            AND t1.book_id = t2.book_id
+            AND t1.book_id = t4.book_id
+            AND t1.parent_subject_code = #{parent_subject_code}
+            AND t2.parent_subject_code = t1.subject_code
+            AND t4.`level` = t2.`level` + 1
+        ORDER BY t2.subject_code
     </select>
 
     <select id="getChildrenSubjectsByCategoryId" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT
-            t.*, IFNULL(
-                (
-                    SELECT
-                        t1.length
-                    FROM
-                        subject_length t1
-                    WHERE
-                        t1.book_id = #{bookId}
-                    AND t1.`level` = (t.`level` + 1)
-                ),
-                2
-            ) AS next_level_length
-        FROM
-            account_subject t
-        WHERE
-            t.book_id = #{bookId}
-        AND t.parent_subject_code = #{parent_subject_code}
-        ORDER BY
-            t.subject_code
+        SELECT t1.subject_code AS id, t1.subject_name AS text, (
+                SELECT CASE COUNT(1) WHEN 0 THEN 'open' ELSE 'closed' END
+                FROM account_subject t3
+                WHERE t3.book_id = t1.book_id
+                    AND t3.parent_subject_code = t1.subject_code
+                ) AS state, t1.id AS id_back, t1.subject_name
+            , t1.subject_code, t1.`level`, t1.base_flag, IFNULL(t4.length, 2) AS next_level_length
+        FROM account_subject t1, subject_length t4
+        WHERE t1.book_id = #{bookId}
+            AND t1.book_id = t4.book_id
+            AND t1.parent_subject_code = #{parent_subject_code}
+            AND t4.`level` = t1.`level` + 1
+        ORDER BY t1.subject_code
     </select>
 
     <select id="selectLastChildSubject" parameterType="java.lang.Long" resultMap="TextNameResultMap">

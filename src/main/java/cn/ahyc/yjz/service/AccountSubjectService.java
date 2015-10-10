@@ -13,7 +13,7 @@ public interface AccountSubjectService {
 
     List<AccountSubject> getCategoriesByCode(Long subjectCode, Long bookId);
 
-    List<Map<String, Object>> getSubjectsByCategoryId(Long categoryId, Long bookId);
+    List<Map> getSubjectsByCategoryId(Long categoryId, Long bookId);
 
     AccountSubject getSubjectById(Long subjectId);
 
