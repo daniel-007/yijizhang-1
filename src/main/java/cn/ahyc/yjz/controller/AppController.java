@@ -32,6 +32,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,6 +79,7 @@ public class AppController {
        * @return
        */
       @RequestMapping("/login")
+      @PermitAll
       public String login(Map<String, Object> model,HttpServletRequest request) {
             if(request.getSession().getAttribute(Constant.SPRING_SECURITY_CONTEXT)!=null){
                   return "redirect:/";

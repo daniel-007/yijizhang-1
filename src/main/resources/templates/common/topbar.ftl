@@ -24,14 +24,10 @@
 			<li><a href="#"><i class="fa fa-fax"></i>&#8194;客服</a></li>
 			<li><a href="#"><i class="fa fa-question-circle"></i>&#8194;帮助</a></li>
 			<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
+				<input type="hidden" id="redirectFlag" value="true"/>
                 <li><a id="logoutLink" href="javascript:void(0);"><i class="fa fa-user"></i>&#8194;<@security.authentication property="name"/></a></li>
 			</@security.authorize>
 		</ul>
 	</div>
 </div>
 <div id="passwordWin"></div>
-<script>
-    $(function(){
-        TopBar.bindEvent();
-    });
-</script>

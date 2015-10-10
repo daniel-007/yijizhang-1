@@ -15,7 +15,8 @@
         <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <script src="resources/public/js/jquery.min.js"></script>
+        <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
+        <script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
         <script src="resources/public/easyui/jquery.easyui.min.js"></script>
         <script src="resources/js/topbar.js"></script>
         <!-- EasyUI -->

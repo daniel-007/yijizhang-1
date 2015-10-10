@@ -1,5 +1,11 @@
-<div id="tabContainer" class="easyui-tabs" data-options="fit:true,border:false,tabWidth:112" style="width:100%;height:100%;">
-    <div title="<@spring.message code="welcome.text"/>">
-		<#include "../module/welcome/welcome.ftl"/>
+<div id="tabContainer">
+    <div title='<i class="fa fa-home"></i> <@spring.message code="welcome.text"/>' class="welcome-panel easyui-layout">
+        <div data-options="region:'center',border:false" style="width: 75%;">
+            <#include "../module/welcome/welcome.ftl"/>
+        </div>
+
+        <div id="east" data-options="region:'east',border:false,split:true" style="width:25%;">
+            <#include "../module/welcome/east.ftl" />
+        </div>
     </div>
 </div>

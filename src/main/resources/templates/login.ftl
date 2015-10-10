@@ -14,13 +14,14 @@
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-        <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" async="true"></script>
+        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" async="true"></script>
         <![endif]-->
-        <script src="resources/public/js/jquery.min.js"></script>
+        <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
+        <script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
         <script src="resources/public/easyui/jquery.easyui.min.js"></script>
-        <script src="resources/js/login.js"></script>
-        <script src="resources/js/topbar.js"></script>
+        <script src="resources/js/topbar.js" async="true"></script>
+        <script src="resources/js/login.js" async="true"></script>
         <!-- EasyUI -->
         <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
         <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/icon.css">
@@ -30,16 +31,13 @@
         <link rel="stylesheet" href="resources/public/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="resources/css/base.css">
     </head>
-    <body class="easyui-layout">˝
+    <body class="easyui-layout">
         <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
             <#include "./common/topbar.ftl"/>
         </div>
-        <div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
-            <#include "./common/copyright.ftl" />
-        </div>
         <div data-options="region:'center',border:false">
             <form name="loginForm" id='loginForm' action="/login" method="POST">
-                <div style="width:400px;margin:0 auto;padding:30px 70px 20px 70px">
+                <div style="width:400px;margin:10% auto;padding:30px 70px 20px 70px">
                     <div style="margin-bottom:10px;color: #CC6600;"><#if failureMsg??><i class="fa fa-exclamation-circle"></i> ${failureMsg}</#if></div>
                     <div style="margin-bottom:10px">
                         <input id="username" name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px"
@@ -58,10 +56,19 @@
                 </div>
             </form>
         </div>
-    <script>
-        $(function(){
-            Login.bindEvent();
-        });
-    </script>
+        <div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
+            <#include "./common/copyright.ftl" />
+        </div>
+        <script>
+            $(function(){
+                //sessionTimeout之后Tab里面的页面跳转到登录页面，形成了嵌套
+                // 自己都很瞧不上的垃圾的解决方案。
+                if($('#redirectFlag').val()=='true'){
+                    $.messager.alert('提示信息','您的登录信息已过期，请重新登录！','info',function(){
+                        document.location.reload();
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

@@ -43,6 +43,9 @@ Welcome=function(){
 
             jsPlumb.ready(function () {
 
+                var h = $('.welcome-panel').height();
+                $('#canvas').height(0.7*h);
+
                 var instance = jsPlumb.getInstance({
                     // default drag options
                     //DragOptions: { cursor: 'pointer', zIndex: 2000},
@@ -144,3 +147,9 @@ Welcome=function(){
     };
 
 }();
+
+$(function(){
+    Welcome.bindEvent();
+    Welcome.initJsPlumb();
+    East.createInit();
+});

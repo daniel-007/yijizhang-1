@@ -153,3 +153,7 @@ TopBar = function(){
     };
 
 }();
+
+$(function(){
+    TopBar.bindEvent();
+});
