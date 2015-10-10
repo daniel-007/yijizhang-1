@@ -282,7 +282,7 @@ public class AccountSubjectController extends BaseController {
      */
     @RequestMapping("/category/{id}/subjects")
     @ResponseBody
-    public List<Map<String, Object>> getSubject(@PathVariable("id") Long categoryId, HttpSession session) {
+    public List<Map> getSubject(@PathVariable("id") Long categoryId, HttpSession session) {
 
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         Long bookId = period.getBookId();

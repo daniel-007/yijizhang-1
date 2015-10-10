@@ -23,5 +23,5 @@ public interface UserExtendMapper extends UserMapper{
      * @param map
      * @return
      */
-    int updatePassword(Map<String,String > map);
+    int updatePassword(Map map);
 }

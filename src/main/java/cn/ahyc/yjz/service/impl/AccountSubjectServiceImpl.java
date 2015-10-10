@@ -36,29 +36,56 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<Map<String, Object>> getSubjectsByCategoryId(Long categoryId, Long bookId) {
+    public List<Map> getSubjectsByCategoryId(Long categoryId, Long bookId) {
 
         //获取父级.
         AccountSubject parentSubject = accountSubjectMapper.selectByPrimaryKey(categoryId);
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map map = new HashMap();
         map.put("parent_subject_code", parentSubject.getSubjectCode());
         map.put("bookId", bookId);
 
-        List<Map<String, Object>> subjects = accountSubjectMapper.getSubjectsByCategoryId(map);
-        subjects = this.setChildrenSubject(subjects, map, "", "");
+        List<Map> subjects = accountSubjectMapper.getSubjectsByCategoryId(map);
+        subjects = this.setChildrenSubject(subjects, map, "");
 
-        List<Map<String, Object>> new_subjects = new ArrayList<Map<String, Object>>();
         map.put("id", -1);
-        map.put("text", "首级");
+        map.put("text", "无");
+        map.put("level", -1);
         map.put("next_level_length", first_level_subject_len - 1);
-        map.put("subject_name", "首级");
+        map.put("subject_name", "无");
         map.put("subject_code", subjects.get(0).get("subject_code").toString().substring(0, 1));
+
+        //添加第一级
+        List<Map> new_subjects = new ArrayList<Map>();
         new_subjects.add(map);
         new_subjects.addAll(subjects);
 
         return new_subjects;
     }
+
+    private List<Map> setChildrenSubject(List<Map> subjects, Map map, String categoryDatailParentSubjectCode) {
+
+        for (Map sub : subjects) {
+
+            if (!StringUtils.isEmpty(categoryDatailParentSubjectCode)) {
+                sub.put("category_datail_parent_subject_code", categoryDatailParentSubjectCode);
+            } else {
+                categoryDatailParentSubjectCode = sub.get("category_datail_parent_subject_code").toString();
+            }
+
+            String state = sub.get("state").toString();
+            if ("closed".equals(state)) {
+                map.put("parent_subject_code", sub.get("subject_code").toString());
+                List<Map> children = accountSubjectMapper.getChildrenSubjectsByCategoryId(map);
+                sub.put("children", children);
+                setChildrenSubject(children, map, categoryDatailParentSubjectCode);
+            }
+
+        }
+
+        return subjects;
+    }
+
 
     @Override
     public AccountSubject getSubjectById(Long subjectId) {
@@ -69,8 +96,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     @Transactional(rollbackFor = Exception.class)
     public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception {
 
-        Long id = accountSubject.getId();
-
         if (parentSubjectCode == -1) {
             parentSubjectCode = parentSubjectCodeBack;
         }
@@ -80,7 +105,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         Date now = new Date();
         accountSubject.setModifyTime(now);
 
-        if (id == -1) {
+        if (accountSubject.getId() == -1) {
             accountSubject.setId(null);
             accountSubjectMapper.insertSelective(accountSubject);
         } else {
@@ -233,7 +258,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             }
 
             /**
-             * 是否是父会计科目父级。如果是父级科目，则该科目父级是负数。
+             * 是否是会计科目父级。如果是父级科目，则该科目父级是负数。
              */
             if (parent_subject_code > 0) {
                 parent_code_set.add(parent_subject_code);
@@ -247,47 +272,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             List<Map> childSums = accountSubjectMapper.getParentSum(parent_code_list, bookId);
             calculateChildren(childSums, bookId);
         }
-    }
-
-    /**
-     * 填充子级地址.
-     *
-     * @param subjects
-     * @param map
-     * @param category_detail_id
-     * @param category_datail_parent_subject_code
-     * @return
-     */
-    private List<Map<String, Object>> setChildrenSubject(
-            List<Map<String, Object>> subjects
-            , Map<String, Object> map
-            , String category_detail_id
-            , String category_datail_parent_subject_code) {
-
-        for (Map<String, Object> sub : subjects) {
-
-            category_detail_id = sub.getOrDefault("category_detail_id", category_detail_id).toString();
-            category_datail_parent_subject_code = sub.getOrDefault("category_datail_parent_subject_code", category_datail_parent_subject_code).toString();
-
-            Long subject_code = (Long) sub.get("subject_code");
-
-            sub.put("id_back", sub.get("id").toString());
-            sub.put("id", subject_code.toString());
-            sub.put("state", "open");
-            sub.put("text", sub.get("subject_name"));
-            sub.put("category_detail_id", category_detail_id);
-            sub.put("category_datail_parent_subject_code", category_datail_parent_subject_code);
-
-            map.put("parent_subject_code", subject_code);
-            List<Map<String, Object>> children = accountSubjectMapper.getChildrenSubjectsByCategoryId(map);
-            if (!children.isEmpty()) {
-                sub.put("state", "closed");
-                sub.put("children", children);
-                this.setChildrenSubject(children, map, category_detail_id, category_datail_parent_subject_code);
-            }
-        }
-
-        return subjects;
     }
 
 }

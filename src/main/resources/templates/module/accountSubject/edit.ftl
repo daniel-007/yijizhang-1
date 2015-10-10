@@ -68,3 +68,10 @@
 
 <script src="resources/public/jqueryPlugin/jquery.maskedinput.min.js"></script>
 <script src="resources/js/accountSubject/edit.js"></script>
+<script>
+
+    $(function () {
+        Account_Subject_Edit.init();
+    });
+
+</script>

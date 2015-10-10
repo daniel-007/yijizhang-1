@@ -32,3 +32,10 @@
 <div id="account_subject_eidt_win"></div>
 
 <script src="resources/js/accountSubject/main.js"></script>
+<script>
+
+    $(function () {
+        Account_Subject.init();
+    });
+
+</script>

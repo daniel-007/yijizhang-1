@@ -1,11 +1,11 @@
 package cn.ahyc.yjz.mapper.extend;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
 import cn.ahyc.yjz.model.AccountSubject;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
 
@@ -15,7 +15,7 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @param param
      * @return
      */
-    List<Map<String, Object>> getSubjectsByCategoryId(Map<String, Object> param);
+    List<Map> getSubjectsByCategoryId(Map<String, Object> param);
 
     /**
      * 根据父级id获取所有子级.
@@ -23,7 +23,7 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @param param
      * @return
      */
-    List<Map<String, Object>> getChildrenSubjectsByCategoryId(Map<String, Object> param);
+    List<Map> getChildrenSubjectsByCategoryId(Map<String, Object> param);
 
     /**
      * 查询所有末节点

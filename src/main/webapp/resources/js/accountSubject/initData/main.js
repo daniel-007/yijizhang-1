@@ -37,7 +37,7 @@ Account_Subject_Init_Data = function () {
                 }
                 return val;
             } else {
-                return value;
+                return value == 0 ? "" : value;
             }
         },
         directionFormatter: function (value, row, index) {
