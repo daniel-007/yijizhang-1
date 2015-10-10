@@ -119,6 +119,10 @@ Account_Subject = function () {
                 onSelect: function (title) {
 
                     var id = $accountSubject_tabs.tabs('getSelected').panel('options').id;
+                    var category_id = id.replace("category_", "").replace(",", "");
+
+                    Account_Subject.specific_subject.category_id = category_id;
+                    Account_Subject.specific_subject.account_subject_id = -1;
 
                     //判断是否已经加载数据.
                     if ($("#" + id).html()) {
@@ -128,11 +132,6 @@ Account_Subject = function () {
                     /**
                      * 以下内容加载树形数据.
                      */
-                    var category_id = id.replace("category_", "").replace(",", "");
-
-                    Account_Subject.specific_subject.category_id = category_id;
-                    Account_Subject.specific_subject.account_subject_id = -1;
-
                     var table_id = category_id + "_table";
                     $accountSubject_tabs.tabs('getSelected').html("<table id='" + table_id + "' style='width: 100%;'></table>");
                     Account_Subject.account_subject_current_table = $("#" + table_id).treegrid({
