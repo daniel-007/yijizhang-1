@@ -135,7 +135,7 @@
         WHERE
             t.book_id = #{bookId}
         AND LEVEL > 0
-        AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code)
+        AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code AND b.book_id = #{bookId})
         ORDER BY
             t.subject_code
     </select>

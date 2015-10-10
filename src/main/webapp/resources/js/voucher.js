@@ -163,6 +163,7 @@ Voucher=function(){
 			if(crebit){
 				Voucher.changeFooter(crebit,"cr");
 			}
+			Voucher.footerDX();
         },
         //结束编辑
 		endEditing:function(){
@@ -336,9 +337,6 @@ Voucher=function(){
         },
         /*金额editor事件*/
         cellkeyUp:function(event,tthis,num,direction,field){
-        	if(tthis.value&&tthis.value.length>1){
-        		tthis.value=tthis.value.charAt(1);
-        	}
         	var rows=$('#voucherDg').datagrid('getRows');
         	//189：按键'-'负号，金额为负
         	if(event.keyCode==189){
@@ -350,6 +348,18 @@ Voucher=function(){
         			$("."+direction+"textMax").css("color","red");
         		}
         	}
+        	if(tthis.value&&isNaN(tthis.value)&&tthis.value.length==1){//过滤非数字，金额只能录入数字
+        		tthis.value='';
+        		if(event.keyCode!=189){
+        			return;
+        		}
+        	}else if(tthis.value&&tthis.value.length>1){//每一格只能录入一位
+        		if(isNaN(tthis.value.charAt(1))){
+        			tthis.value=tthis.value.charAt(0);
+        		}else{
+        			tthis.value=tthis.value.charAt(1);
+        		}
+        	}
         	//合计
         	rows[editIndex][field]=Voucher.cellSetValue(tthis.value);
 			var money=0;
@@ -359,9 +369,11 @@ Voucher=function(){
 			if(direction=='d'){
 				debit=money;
 				Voucher.changeFooter(debit,direction);
+				Voucher.footerDX();
     		}else if(direction=='cr'){
     			crebit=money;
     			Voucher.changeFooter(crebit,direction);
+    			Voucher.footerDX();
     		}else{
     			console.log("editor direction error");
     		}
@@ -378,7 +390,7 @@ Voucher=function(){
         //合计中文
         footerDX:function(){
         	row['summary']='合计：';
-        	if(debit==crebit){//借贷平衡
+        	if(debit==crebit&&debit&&crebit){//借贷平衡
         		balanceFlag=true;
         		row['summary']+=Voucher.DX(debit/100);
         	}
@@ -417,9 +429,6 @@ Voucher=function(){
         		row[direction+'Angle']='<span style="color:red;">'+row[direction+'Angle']+'</span>';
         		row[direction+'Cent']='<span style="color:red;">'+row[direction+'Cent']+'</span>';
         	}
-        	$('#voucherDg').datagrid('reloadFooter');
-        	Voucher.mergeFooterCells();
-        	Voucher.footerDX();
         },
         // 阿拉伯数字转中文大写
         DX:function(n){
