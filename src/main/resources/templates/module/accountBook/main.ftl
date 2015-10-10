@@ -13,9 +13,9 @@
 					<div id="firstJsp" >
 						<br /> <label size="3"><b>请在建账向导的指引下，建立一个最合适你公司实际情况的账套。</b></label>
 						<br /> <br /> <label style="color: #ff0000;">*</label><label size="2">请输入账套名称:</label> 
-						<input type="text"	id="book_name" name="bookName" class="easyui-validatebox" data-options="required:true,validType:'bookName'" style="width: 80%;" /> <br /> <br />
+						<input type="text"	id="book_name" name="bookName" class="easyui-textbox" data-options="required:true" style="width: 80%;" /> <br /> <br />
 						<br /> <label style="color: #ff0000;">*</label><label size="2">请输入公司名称:</label>
-						<input type="text"	id="company_name" name="companyName" class="easyui-validatebox" data-options="required:true,validType:'bookName'"style="width: 80%;" />
+						<input type="text"	id="company_name" name="companyName" class="easyui-textbox" data-options="required:true"style="width: 80%;" />
 					</div>
 					<div id="sencondJsp" style="display: none;">
 						<fieldset>

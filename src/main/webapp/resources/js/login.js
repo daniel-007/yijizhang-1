@@ -8,8 +8,15 @@ Login = function(){
 
     return {
 
-        bindEvent:function(){
+        //初始化
+        init:function(){
+            //让用户名输入框获得焦点
+            $('#username').next('span').find('input').focus();
+            this.bindEvent();
+        },
 
+        //绑定事件
+        bindEvent:function(){
             $('#loginSubmit').click(function(){
                 Login.submit();
             });
@@ -32,5 +39,10 @@ Login = function(){
         }
 
     }
-
 }();
+
+$(function(){
+
+    //执行初始化函数
+    Login.init();
+});

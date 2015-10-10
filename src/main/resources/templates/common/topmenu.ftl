@@ -7,8 +7,8 @@
 		<i class="fa fa-search-plus"></i><br/><small style="font-size:12px;">查账</small>
 	</button>
 
-	<button onClick="App.addTab('结账','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-left">
-		<i class="fa fa-calendar-check-o"></i><br/><small style="font-size:12px;">结账</small>
+	<button onClick="App.addTab('结账','account/cashier/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-left">
+		<i class="fa fa-calendar"></i><br/><small style="font-size:12px;">结账</small>
 	</button>
 
 	<button onClick="App.addTab('报表','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-right">

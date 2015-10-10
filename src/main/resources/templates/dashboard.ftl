@@ -16,19 +16,16 @@
 
         <#include "common/jsbiz.ftl"/>
     </head>
-    <body class="easyui-layout">˝
+    <body class="easyui-layout" style="width: 100%;height: 100%;">
         <div data-options="region:'north',border:false" style="height:130px;overflow: hidden;">
             <#include "common/header.ftl" />
+        </div>
+        <div data-options="region:'center',border:false">
+            <#include "./common/center.ftl" />
         </div>
         <div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
             <#include "common/copyright.ftl" />
         </div>
-        <div data-options="region:'east',border:false, split:true" style="width:25%;overflow: hidden;">
-            <#include "common/east.ftl" />
-        </div>
-        <div data-options="region:'center',border:false">
-            <#include "common/center.ftl" />
-        </div>
-
+        <div id="default_win"></div>
     </body>
 </html>

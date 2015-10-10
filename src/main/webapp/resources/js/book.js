@@ -11,6 +11,7 @@ Book=function(){
 			$('#init_period').numberbox({
 				value : month
 			});
+
 			$('#start_time').text(year + '年' + month + '月1号');
 			$('#start_time').css('white-space', 'nowrap');
 			$('#create_book').parent().show();
