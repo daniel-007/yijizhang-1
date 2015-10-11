@@ -54,27 +54,29 @@
 }
 #flowchartWindow1 {
     top: 2em;
-    left: 0em;
+    left: 3em;
 }
 
 #flowchartWindow2 {
-    top: 14em;
+    top: 8em;
     left: 33.5em;
 }
 
 #flowchartWindow3 {
     top: 2em;
-    left: 67em;
+    right: 3em;
 }
 
 #flowchartWindow4 {
-    top: 26em;
-    left: 0em;
+    /*top: 26em;*/
+    bottom: 2em;
+    left: 3em;
 }
 
 #flowchartWindow5 {
-    top: 26em;
-    left: 67em;
+    /*top: 26em;*/
+    bottom: 2em;
+    right: 3em;
 }
 
 .flowchart-demo ._jsPlumb_connector {

@@ -1,128 +1,128 @@
 /* Body CSS */
-body{
-	border:none;
-	margin:0 auto;
-	padding:0;
-	font-family: 微软雅黑;
-	font-size: 12px;
+body {
+    border: none;
+    margin: 0 auto;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 12px;
 }
 
-body,html{height: 100%;}
-
+body, html {
+    height: 100%;
+}
 
 /* 底部CSS */
-.foot{
-	text-align: center;
-	height: 30px;
-	line-height: 30px;
-	overflow: hidden;
-	text-shadow: 2px 2px 2px #CCCCCC;
-	color:#FFFFFF;
-	background-color: #1b9af7;
+.foot {
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    text-shadow: 2px 2px 2px #CCCCCC;
+    color: #FFFFFF;
+    background-color: #1b9af7;
 }
 
 /* 顶部CSS */
-.top-bar{
-	height: 30px;
-	background-color: #1b9af7;
-	overflow: hidden;
+.top-bar {
+    height: 30px;
+    background-color: #1b9af7;
+    overflow: hidden;
 }
 
-.top-bar .info{
-	color:#FFFFFF;
-	text-align: left;
-	float: left;
-	height: 30px;
-	line-height: 30px;
-	width: 60%;
-	text-shadow: 5px 5px 5px #CCCCCC;
+.top-bar .info {
+    color: #FFFFFF;
+    text-align: left;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    width: 60%;
+    text-shadow: 5px 5px 5px #CCCCCC;
 }
 
-.top-bar .info a{
-	color:#ffffff;
-	font-size: 10px;
+.top-bar .info a {
+    color: #ffffff;
+    font-size: 10px;
 }
 
-.top-bar .info a:hover{
-	color:#CCCCCC;
-	font-size: 10px;
+.top-bar .info a:hover {
+    color: #CCCCCC;
+    font-size: 10px;
 }
 
-.top-bar .info .textbox{
-	border:none;
-	border-radius: 0px;
+.top-bar .info .textbox {
+    border: none;
+    border-radius: 0px;
 }
 
-.top-bar .info b{
-	margin-left: 10px;
+.top-bar .info b {
+    margin-left: 10px;
 }
 
-.top-bar .action{
-	text-align: right;
-	float: left;
-	width: 40%;
+.top-bar .action {
+    text-align: right;
+    float: left;
+    width: 40%;
 }
 
-.top-bar ul{
-	list-style:none;
-	float: right;
-	margin:0;
+.top-bar ul {
+    list-style: none;
+    float: right;
+    margin: 0;
 }
 
-.top-bar ul li{
-	float: left;
-	margin: 0 20px;
-	height:30px;
-	line-height: 30px;
+.top-bar ul li {
+    float: left;
+    margin: 0 20px;
+    height: 30px;
+    line-height: 30px;
 }
 
-.top-bar ul li a{
-	color: #FFFFFF;
-	text-decoration: none;
+.top-bar ul li a {
+    color: #FFFFFF;
+    text-decoration: none;
 }
 
-
-.top-menu{
-	overflow: hidden;
+.top-menu {
+    overflow: hidden;
 }
 
 .top-menu button {
-	margin: 15px 20px 0px 20px;
-	font-size: 30px;
-	line-height: 10px;
+    margin: 15px 20px 0px 20px;
+    font-size: 30px;
+    line-height: 10px;
 }
 
 /* 欢迎页面CSS */
-.welcome-panel{
-	width: 100%;
-	height: 100%;
+.welcome-panel {
+    width: 100%;
+    height: 100%;
 }
 
-.welcome-panel .welcome-tb{
-	margin-top: 2%;
+.welcome-panel .welcome-tb {
+    margin-top: 2%;
 }
 
-.welcome-panel .welcome-tb button{
-	font-size: 40px;
-	line-height: 10px;
-	width: 80px !important;
-	height: 80px;
+.welcome-panel .welcome-tb button {
+    font-size: 40px;
+    line-height: 10px;
+    width: 80px !important;
+    height: 80px;
 }
 
-.chartBtnDiv{
-	height:10% !important;
-	overflow: hidden;
-	margin-left: 8%;
+.chartBtnDiv {
+    height: 10% !important;
+    overflow: hidden;
+    margin-left: 8%;
 }
 
-.welcome-panel .chartBtnDiv button{
-	margin: 5% 6%;
+.welcome-panel .chartBtnDiv button {
+    margin: 4% 6%;
 }
 
 /** 错误页面 */
-#errorCenter a{
-	text-decoration: none;
-	font-size: 12px;
-	color: dimgrey;
-	margin: 20px;
+#errorCenter a {
+    text-decoration: none;
+    font-size: 12px;
+    color: dimgrey;
+    margin: 20px;
 }
