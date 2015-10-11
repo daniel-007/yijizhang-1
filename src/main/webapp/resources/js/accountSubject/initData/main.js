@@ -156,6 +156,7 @@ Account_Subject_Init_Data = function () {
                     var accountSubjects = data.accountSubjects;
                     var creaseCode = data.creaseCode; //损益类科目第一个代码.
                     var len = accountSubjects.length;
+                    var isFirstPeriod = data.isFirstPeriod; //是否第一期.
 
                     for (var i = 0; i < len; i++) {
                         var cur_subject_code = accountSubjects[i].subjectCode.toString();
@@ -175,9 +176,18 @@ Account_Subject_Init_Data = function () {
                         }
                     }
 
-                    return {total: len, rows: accountSubjects};
+                    return {total: len, rows: accountSubjects, isFirstPeriod: isFirstPeriod};
                 },
                 onLoadSuccess: function (data) {
+
+                    //如果第一期则不需修改.
+                    if (!data.isFirstPeriod) {
+                        $('td[field="totalDebit"],td[field="totalCredit"],td[field="yearOccurAmount"],td[field="initialLeft"]').css({
+                            "background-color": "#f2f2f2",
+                            "border-color": "#ccc"
+                        });
+                        return;
+                    }
 
                     $(this).datagrid("enableCellEditing", function (cur_idx, pre_idx, field) {
                         var rows = data.rows;

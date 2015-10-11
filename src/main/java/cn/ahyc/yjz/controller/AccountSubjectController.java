@@ -108,9 +108,8 @@ public class AccountSubjectController extends BaseController {
     public Map allSubjectTreeData(HttpSession session, String keyword) {
 
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-        Long bookId = period.getBookId();
 
-        return accountSubjectService.allSubjectTreeData(bookId, keyword);
+        return accountSubjectService.allSubjectTreeData(period, keyword);
     }
 
 

@@ -26,6 +26,7 @@ Account_Subject_Edit = function () {
             $('#account_subject_eidt_win').window('close');
         },
         button_event_bind: function () {
+            $("#subject_form_close_win_button").unbind();
             $("#subject_form_close_win_button").click(function () {
                 Account_Subject_Edit.closeAndRefreshCurTab();
             })
@@ -55,16 +56,13 @@ Account_Subject_Edit = function () {
         },
         checkCategoryDetail: function (record, fromParent) {
 
-            var $subject_code = $("#accountSubject_edit").find("#subject_code");
-            var $category_detail = $("#accountSubject_edit").find("#category_detail");
-            var opt = $("#accountSubject_edit").find("#opt").val();
-            var category_id = $("#accountSubject_edit").find("#category_id").val();
+            var $subject_code = $("#accountSubject_edit #subject_code");
+            var $category_detail = $("#accountSubject_edit #category_detail");
+            var opt = $("#accountSubject_edit #opt").val();
+            var category_id = $("#accountSubject_edit #category_id").val();
 
-            var id = record.id;
-            var is_readonly = true;
             var subject_len = record.next_level_length;
             var subject_code = record.subject_code;
-            var category_detail_id = record.category_datail_parent_subject_code;
             var total_len = (subject_code.toString()).length + parseInt(subject_len);
 
             if (opt == 'add' || fromParent) {
@@ -86,38 +84,36 @@ Account_Subject_Edit = function () {
                 $("#accountSubject_edit").find("#parent_subject").combotree('readonly', true);
             }
 
-            if (id == -1) {
-                is_readonly = false;
-                category_detail_id = "";
-            }
-
             $category_detail.combobox({
                     url: '/account/subject/category/detail?category_id=' + category_id,
                     valueField: 'subjectCode',
                     textField: 'subjectName',
                     required: true,
                     editable: false,
-                    readonly: is_readonly,
+                    readonly: record.id == -1 ? false : true,
                     onLoadSuccess: function () {
-                        $category_detail.combobox('setValue', category_detail_id);
+                        var category_datail_subject_code = record.category_datail_subject_code;
+                        if (category_datail_subject_code) {
+                            $category_detail.combobox('setValue', category_datail_subject_code);
+                        }
                     }
                 }
             );
         },
         initFormEle: function () {
 
-            var account_subject_direction = $("#accountSubject_edit").find("#account_subject_direction").val();
+            var account_subject_direction = $("#accountSubject_edit #account_subject_direction").val();
 
-            var $parent_subject = $("#accountSubject_edit").find("#parent_subject");
-            var $subject_level_hidden = $("#accountSubject_edit").find("input[name='level']");
-            var opt = $("#accountSubject_edit").find("#opt").val();
-            var category_id = $("#accountSubject_edit").find("#category_id").val();
-
+            var $parent_subject = $("#accountSubject_edit #parent_subject");
+            var $subject_level_hidden = $("#accountSubject_edit input[name='level']");
+            var opt = $("#accountSubject_edit #opt").val();
+            var category_id = $("#accountSubject_edit #category_id").val();
 
             /**
              * 初始化借贷方向.
              */
             $("input[value=" + account_subject_direction + "]").attr("checked", true);
+
 
             /**
              * 初始化父级科目选项.
@@ -137,10 +133,9 @@ Account_Subject_Edit = function () {
         init: function () {
 
             this.initFormEle();
-            this.checkCategoryDetail(Account_Subject.account_subject_selected_row, false);
             this.button_event_bind();
             this.form_submit_bind();
-
+            this.checkCategoryDetail(Account_Subject.account_subject_selected_row, false);
         }
 
     }

@@ -1,6 +1,7 @@
 package cn.ahyc.yjz.service;
 
 import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.Period;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface AccountSubjectService {
 
     void delete(Long subjectId) throws Exception;
 
-    Map allSubjectTreeData(Long bookId, String keyword);
+    Map allSubjectTreeData(Period period, String keyword);
 
     void initDataEdit(AccountSubject accountSubject) throws Exception;
 

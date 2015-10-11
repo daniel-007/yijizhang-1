@@ -40,10 +40,18 @@ Account_Subject = function () {
                 $.messager.alert('警告', '基础数据不允许操作。', 'warning');
                 return false;
             }
+
             return true;
         },
         remove: function () {
             if (!Account_Subject.checkNullAndBaseData()) {
+                return false;
+            }
+
+            //判断是否已经挂件记账凭证
+            var haveVoucher = Account_Subject.account_subject_selected_row.haveVoucher;
+            if (haveVoucher > 0) {
+                $.messager.alert('警告', '您选择的会计科目已经关联凭证，不允许删除。', 'warning');
                 return false;
             }
 
@@ -143,7 +151,8 @@ Account_Subject = function () {
                         columns: [
                             [
                                 {title: '编码', field: 'subject_code', width: 200},
-                                {title: '名称', field: 'subject_name', width: 300}
+                                {title: '名称', field: 'subject_name', width: 300},
+                                {title: '分类', field: 'category_datail_subject_name', width: 300}
                             ]
                         ],
                         onClickRow: function (row) {
@@ -164,6 +173,9 @@ Account_Subject = function () {
                                 }
                             }
                             return d;
+                        },
+                        onLoadSuccess: function () {
+                            Account_Subject.button_bind_event();
                         }
                     });
 
@@ -174,7 +186,6 @@ Account_Subject = function () {
         init: function () {
 
             this.init_tab();
-            this.button_bind_event();
 
             //解决加载不同步问题。
             $('#accountSubject_layout').show();

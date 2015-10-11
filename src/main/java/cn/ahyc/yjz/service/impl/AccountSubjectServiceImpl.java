@@ -1,9 +1,8 @@
 package cn.ahyc.yjz.service.impl;
 
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
-import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.AccountSubjectExample;
-import cn.ahyc.yjz.model.AccountSubjectExtExample;
+import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
+import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.service.AccountSubjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Autowired
     private AccountSubjectExtendMapper accountSubjectMapper;
+
+    @Autowired
+    private PeriodExtendMapper periodExtendMapper;
 
     private final int first_level_subject_len = 4;
 
@@ -46,7 +48,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         map.put("bookId", bookId);
 
         List<Map> subjects = accountSubjectMapper.getSubjectsByCategoryId(map);
-        subjects = this.setChildrenSubject(subjects, map, "");
+        subjects = this.setChildrenSubject(subjects, map, "", "");
 
         map.put("id", -1);
         map.put("text", "无");
@@ -63,14 +65,19 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         return new_subjects;
     }
 
-    private List<Map> setChildrenSubject(List<Map> subjects, Map map, String categoryDatailParentSubjectCode) {
+    private List<Map> setChildrenSubject(List<Map> subjects, Map map, String categoryDatailSubjectCode, String categoryDatailSubjectName) {
 
         for (Map sub : subjects) {
 
-            if (!StringUtils.isEmpty(categoryDatailParentSubjectCode)) {
-                sub.put("category_datail_parent_subject_code", categoryDatailParentSubjectCode);
+            String cdsc = categoryDatailSubjectCode;
+            String cdsn = categoryDatailSubjectName;
+
+            if (!StringUtils.isEmpty(categoryDatailSubjectCode)) {
+                sub.put("category_datail_subject_code", categoryDatailSubjectCode);
+                sub.put("category_datail_subject_name", categoryDatailSubjectName);
             } else {
-                categoryDatailParentSubjectCode = sub.get("category_datail_parent_subject_code").toString();
+                cdsc = sub.get("category_datail_subject_code").toString();
+                cdsn = sub.get("category_datail_subject_name").toString();
             }
 
             String state = sub.get("state").toString();
@@ -78,7 +85,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 map.put("parent_subject_code", sub.get("subject_code").toString());
                 List<Map> children = accountSubjectMapper.getChildrenSubjectsByCategoryId(map);
                 sub.put("children", children);
-                setChildrenSubject(children, map, categoryDatailParentSubjectCode);
+                setChildrenSubject(children, map, cdsc, cdsn);
             }
 
         }
@@ -134,7 +141,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public Map allSubjectTreeData(Long bookId, String keyword) {
+    public Map allSubjectTreeData(Period period, String keyword) {
+
+        Long bookId = period.getBookId();
 
         AccountSubjectExtExample example = new AccountSubjectExtExample();
         AccountSubjectExtExample.Criteria criteria = example.createCriteria();
@@ -147,9 +156,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
          * 关键字查询.
          */
         if (!StringUtils.isEmpty(keyword)) {
-
             keyword = keyword.trim();
-
             try {
                 Long kw = Long.parseLong(keyword);
                 example.andSubjectCodeLike(keyword.concat("%"));
@@ -158,19 +165,29 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             }
         }
 
-        List<AccountSubject> accountSubjects = accountSubjectMapper.selectByExample(example);
-
         //损益类会计科目父级代码.
         Map map = new HashMap();
         map.put("bookId", bookId);
         Map creaseCode_map = accountSubjectMapper.getSubjectCodeByRoot(map);
-        String code = creaseCode_map.getOrDefault("subject_code", "").toString();
+        String code = creaseCode_map.get("subject_code").toString();
         if (!StringUtils.isEmpty(code)) {
             code = code.substring(0, 1);
         }
 
-        map.put("accountSubjects", accountSubjects);
+        map.put("accountSubjects", accountSubjectMapper.selectByExample(example));
         map.put("creaseCode", code);
+        map.put("isFirstPeriod", false);
+
+        //是否是该账套第一期
+        PeriodExample periodExample = new PeriodExample();
+        PeriodExample.Criteria periodCri = periodExample.createCriteria();
+        periodCri.andBookIdEqualTo(bookId);
+        periodExample.setOrderByClause("current_period ASC");
+
+        List<Period> periods = periodExtendMapper.selectByExample(periodExample);
+        if (periods.get(0).getCurrentPeriod() == period.getCurrentPeriod()) {
+            map.put("isFirstPeriod", true);
+        }
 
         return map;
     }
@@ -178,6 +195,16 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void initDataEdit(AccountSubject accountSubject) throws Exception {
+
+        if (accountSubject.getTotalDebit() != null && BigDecimal.ZERO.compareTo(accountSubject.getTotalDebit()) == 0)
+            accountSubject.setTotalDebit(null);
+        if (accountSubject.getTotalCredit() != null && BigDecimal.ZERO.compareTo(accountSubject.getTotalCredit()) == 0)
+            accountSubject.setTotalCredit(null);
+        if (accountSubject.getYearOccurAmount() != null && BigDecimal.ZERO.compareTo(accountSubject.getYearOccurAmount()) == 0)
+            accountSubject.setYearOccurAmount(null);
+        if (accountSubject.getInitialLeft() != null && BigDecimal.ZERO.compareTo(accountSubject.getInitialLeft()) == 0)
+            accountSubject.setInitialLeft(null);
+
         accountSubjectMapper.updateByPrimaryKey(accountSubject);
     }
 

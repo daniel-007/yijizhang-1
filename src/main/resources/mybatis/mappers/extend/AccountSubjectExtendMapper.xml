@@ -77,22 +77,31 @@
         WHERE t3.subject_code = t4.subject_code
     </select>
 
-    <!--自定义sql-->
     <select id="getSubjectsByCategoryId" parameterType="java.util.Map" resultType="java.util.Map">
+
         SELECT t2.subject_code AS id, t2.subject_name AS text, (
                 SELECT CASE COUNT(1) WHEN 0 THEN 'open' ELSE 'closed' END
                 FROM account_subject t3
                 WHERE t3.book_id = t1.book_id
                     AND t3.parent_subject_code = t2.subject_code
                 ) AS state, t2.id AS id_back, t2.subject_name
-            , t2.subject_code, t2.`level`, t2.base_flag, IFNULL(t4.length, 2) AS next_level_length
-            , t2.parent_subject_code AS category_datail_parent_subject_code
-        FROM account_subject t1, account_subject t2, subject_length t4
+            , t2.subject_code, t2.`level`, t2.base_flag, IFNULL(t4.length, 2) AS next_level_length, t3.subject_code AS category_datail_subject_code
+            , t3.subject_name AS category_datail_subject_name, IFNULL((
+                SELECT COUNT(tt2.id)
+                FROM period tt, voucher tt1, voucher_detail tt2
+                WHERE tt.book_id = t1.book_id
+                    AND tt1.period_id = tt.id
+                    AND tt1.id = tt2.voucher_id
+                    AND tt2.subject_code = t2.subject_code
+                ), 0) AS haveVoucher
+        FROM account_subject t1, account_subject t2, account_subject t3, subject_length t4
         WHERE t1.book_id = #{bookId}
             AND t1.book_id = t2.book_id
+            AND t1.book_id = t3.book_id
             AND t1.book_id = t4.book_id
             AND t1.parent_subject_code = #{parent_subject_code}
             AND t2.parent_subject_code = t1.subject_code
+            AND t3.subject_code = t2.parent_subject_code
             AND t4.`level` = t2.`level` + 1
         ORDER BY t2.subject_code
     </select>
@@ -105,6 +114,14 @@
                     AND t3.parent_subject_code = t1.subject_code
                 ) AS state, t1.id AS id_back, t1.subject_name
             , t1.subject_code, t1.`level`, t1.base_flag, IFNULL(t4.length, 2) AS next_level_length
+            , IFNULL((
+                SELECT COUNT(tt2.id)
+                FROM period tt, voucher tt1, voucher_detail tt2
+                WHERE tt.book_id = t1.book_id
+                    AND tt1.period_id = tt.id
+                    AND tt1.id = tt2.voucher_id
+                    AND tt2.subject_code = t1.subject_code
+                ), 0) AS haveVoucher
         FROM account_subject t1, subject_length t4
         WHERE t1.book_id = #{bookId}
             AND t1.book_id = t4.book_id
