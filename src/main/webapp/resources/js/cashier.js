@@ -62,7 +62,7 @@ Cashier=function(){
 	        	        	            				context: document.body,
 	        	        	            				success:function(data){
 	        	        	            					if(data){
-	        	        	            					    $.messager.alert("提示信息", "年末结账成功并生成新账套!","info",function(){
+	        	        	            					    $.messager.alert("提示信息", "年末结账成功,当前为新年第1期!","info",function(){
 	        	        	            					    	$('#newDialog').dialog('close');
 	        	        	                               		 	document.location.reload();
 	        	        	                               		 });

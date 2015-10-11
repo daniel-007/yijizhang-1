@@ -138,7 +138,7 @@
 		  AND a.book_id = #{bookId,jdbcType=BIGINT} 
 		LIMIT 1 
     </select>
-    <insert id="copySubjectLength" parameterType="java.util.Map">
+    <insert id="copyAccountSubject" parameterType="java.util.Map">
 		INSERT INTO account_subject (
 		  subject_code,
 		  subject_name,
