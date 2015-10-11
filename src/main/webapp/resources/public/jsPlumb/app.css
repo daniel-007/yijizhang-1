@@ -1,6 +1,6 @@
 .demo {
     /* for IE10+ touch devices */
-    touch-action:none;
+    touch-action: none;
 }
 
 .flowchart-demo .window {
@@ -47,19 +47,21 @@
 .flowchart-demo .hover {
     border: 1px dotted red;
 }
+
 #canvas {
-	width: 900px;
-	text-align: center; 
-	margin: 0px auto;
+    width: 900px;
+    text-align: center;
+    margin: 0px auto;
 }
+
 #flowchartWindow1 {
     top: 2em;
     left: 3em;
 }
 
 #flowchartWindow2 {
-    top: 8em;
-    left: 33.5em;
+    top: 9em;
+    left: 35em;
 }
 
 #flowchartWindow3 {
@@ -69,13 +71,13 @@
 
 #flowchartWindow4 {
     /*top: 26em;*/
-    bottom: 2em;
+    bottom: 0em;
     left: 3em;
 }
 
 #flowchartWindow5 {
     /*top: 26em;*/
-    bottom: 2em;
+    bottom: 0em;
     right: 3em;
 }
 
@@ -119,5 +121,5 @@ path, ._jsPlumb_endpoint {
 }
 
 ._jsPlumb_overlay {
-    background-color:transparent;
+    background-color: transparent;
 }
