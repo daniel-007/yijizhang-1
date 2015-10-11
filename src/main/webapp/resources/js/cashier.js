@@ -52,29 +52,27 @@ Cashier=function(){
         	            				context: document.body,
         	            				success:function(data){
         	            					if(data.resultId){
-        	            						if($('#currentPeriod').val()!="12"){
-	        	            					    $.messager.alert("提示信息", "期末结账成功!","info",function(){
-	        	            					    	$('#newDialog').dialog('close');
-	        	                               		 });
-        	            						}else{
-	        	            					    $.ajax({ 
-	        	        	                        	url: "switch/to/book/" + data.resultId,
-	        	        	            				context: document.body,
-	        	        	            				success:function(data){
-	        	        	            					if(data){
-	        	        	            					    $.messager.alert("提示信息", "年末结账成功,当前为新年第1期!","info",function(){
-	        	        	            					    	$('#newDialog').dialog('close');
-	        	        	                               		 	document.location.reload();
-	        	        	                               		 });
-	        	        	            					}else{
-	        	        	            						$('#busyIcon').hide();
-	        	        	            						$(this).show();
-	        	        	            						$('#cancelSwitchBtn').show();
-	        	        	            						$.messager.alert("提示信息", "切换账套失败，请稍候重试！","error");
-	        	        	            					}
-	        	        	            				}
-	        	        	                        });
+        	            						var messageStr="期末结账成功";
+        	            						if($('#currentPeriod').val()=="12"){
+        	            							messageStr="年末结账成功,当前为新年第1期!";
         	            						}
+        	            					    $.ajax({ 
+        	        	                        	url: "switch/to/book/" + data.resultId,
+        	        	            				context: document.body,
+        	        	            				success:function(data){
+        	        	            					if(data){
+        	        	            					    $.messager.alert("提示信息", messageStr,"info",function(){
+        	        	            					    	$('#newDialog').dialog('close');
+        	        	                               		 	document.location.reload();
+        	        	                               		 });
+        	        	            					}else{
+        	        	            						$('#busyIcon').hide();
+        	        	            						$(this).show();
+        	        	            						$('#cancelSwitchBtn').show();
+        	        	            						$.messager.alert("提示信息", "切换账套失败，请稍候重试！","error");
+        	        	            					}
+        	        	            				}
+        	        	                        });
         	            					}else{
         	            						$.messager.alert("提示信息", "操作失败！","error");
         	            					}

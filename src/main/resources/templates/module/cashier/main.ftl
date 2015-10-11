@@ -1,7 +1,7 @@
 
 <div id="cashier_layout" class="easyui-layout"	data-options="fit:true">
-	<input type="hidden" name="overFlag" value="${overFlag}" />
-	<input type="hidden" name="currentPeriod" value="${currentPeriod}" />
+	<input type="hidden" id="overFlag" value="${overFlag}" />
+	<input type="hidden" id="currentPeriod" value="${currentPeriod}" />
 	<div data-options="region:'center'" style="height: 40%;padding: 35px;">
 			<div  class="button button-action button-box button-jumbo" style="float:left;"><i class="fa fa-area-chart"></i></div>
 			<div style="float:left;padding:5px 0 0 20px;overflow:hide;">
