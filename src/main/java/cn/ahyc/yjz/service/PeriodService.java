@@ -19,4 +19,12 @@ public interface PeriodService {
 		 */
 		Period selectCurrentPeriod(Long bookId);
 
+    /**
+     * 查询凭证对应的期间
+     * 
+     * @param periodId
+     * @return
+     */
+    Period queryPeriod(Long periodId);
+
 }

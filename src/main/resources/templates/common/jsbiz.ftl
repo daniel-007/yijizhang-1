@@ -5,3 +5,4 @@
 <script type="text/javascript" src="resources/js/carryOver.js"></script>
 <script type="text/javascript" src="resources/js/east.js"></script>
 <script type="text/javascript" src="resources/js/cashier.js"></script>
+<script type="text/javascript" src="resources/js/subjectBalance.js"></script>

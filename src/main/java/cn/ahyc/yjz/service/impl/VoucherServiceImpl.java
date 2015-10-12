@@ -76,26 +76,9 @@ public class VoucherServiceImpl implements VoucherService {
             voucherDetailExtendMapper.insertSelective(detail);
         }
 
-        updateSubjectSum(voucher.getPeriodId());
-        updateSubjectBalance(voucher.getPeriodId());
+        subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(voucher.getPeriodId());
+        subjectBalanceExtendMapper.collectSubjectBalance(voucher.getPeriodId());
         return voucher.getVoucherWord() + "字第" + voucherNo + "号";
-    }
-
-    /**
-     * 更新科目余额表累计项
-     * 
-     * @param periodId
-     */
-    @Transactional(rollbackFor = Exception.class)
-    private void updateSubjectSum(Long periodId) {
-        subjectBalanceExtendMapper.insertOrUpdateSubjectSum(periodId);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateSubjectBalance(Long periodId) {
-        // 更新科目余额表余额项
-        subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(periodId);
     }
 
     @Override

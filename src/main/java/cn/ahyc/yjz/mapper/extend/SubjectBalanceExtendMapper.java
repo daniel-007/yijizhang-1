@@ -16,14 +16,7 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
 	List<SubjectBalanceDto> selectProfitAndLoss(Map<String, Object> param);
 
     /**
-     * 更新科目余额表累计项
-     * 
-     * @param periodId
-     */
-    int insertOrUpdateSubjectSum(Long periodId);
-
-    /**
-     * 更新科目余额表累计项
+     * 新增或更新科目余额表累计项、余额项
      * 
      * @param periodId
      */
@@ -36,4 +29,20 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
      * @return
      */
     int insertNextPeriodSubjectBalance(Map<String, Object> param);
+
+    /**
+     * 汇总科目余额表
+     * 
+     * @param periodId
+     * @return
+     */
+    int collectSubjectBalance(Long periodId);
+
+    /**
+     * 查询科目余额
+     * 
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> selectSubjectBalanceList(Map<String, Object> map);
 }
