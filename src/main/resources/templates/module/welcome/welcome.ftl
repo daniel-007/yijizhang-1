@@ -1,5 +1,5 @@
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'center',border:false">
+    <div  data-options="region:'center',border:false">
         <div class="jtk-surface welcome-tb" id="canvas">
             <div class="jtk-node" id="flowchartWindow1">
                 <button id="btn_kjkm" class="button button-action button-box button-jumbo">

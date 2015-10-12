@@ -1,8 +1,10 @@
 <div class="top-menu">
+    <button onClick="App.selectTab(0);" class="button button-glow button-primary button-box button-giant button-longshadow-left">
+        <i class="fa fa-home"></i><br/><small style="font-size:12px;">首页</small>
+    </button>
 	<button onClick="App.addTab('记账','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-left">
-		<i class="fa fa-jpy"></i><br/><small style="font-size:12px;">记账</small>
+		<i class="fa fa-pencil-square-o"></i><br/><small style="font-size:12px;">记账</small>
 	</button>
-
 	<button onClick="App.addTab('查账','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-right">
 		<i class="fa fa-search-plus"></i><br/><small style="font-size:12px;">查账</small>
 	</button>

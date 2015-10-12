@@ -48,7 +48,7 @@
     border: 1px dotted red;
 }
 #canvas {
-	width: 900px;
+	/*width: px;*/
 	text-align: center; 
 	margin: 0px auto;
 }
