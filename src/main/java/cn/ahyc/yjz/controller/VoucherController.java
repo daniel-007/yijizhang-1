@@ -30,6 +30,7 @@ import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
+import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.service.VoucherService;
 import cn.ahyc.yjz.util.Constant;
 
@@ -47,25 +48,32 @@ public class VoucherController extends BaseController{
     @Autowired
     private VoucherService voucherService;
 
+    @Autowired
+    private PeriodService periodService;
+
 	public VoucherController() {
 	    this.pathPrefix="module/voucher/";
 	}
 
 	@RequestMapping("/main")
     public String voucher(Model model, Long voucherId, HttpSession session) {
-        Voucher voucher = null;
+        Voucher voucher = new Voucher();
+        Period voucherPeriod = null;
         if (voucherId != null) {
             voucher = voucherService.queryVoucher(voucherId);
-        }
-        if (voucher == null) {
-            voucher = new Voucher();
+            voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
+            model.addAttribute("currentPeriod", voucherPeriod.getCurrentPeriod());
         }
         model.addAttribute("voucher", voucher);
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-        model.addAttribute("period", period.getCurrentPeriod());
+        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+        model.addAttribute("sessionBook", accountBook.getInitYear());
+        model.addAttribute("sessionPeriod", period.getCurrentPeriod());
         model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(period.getId()));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        model.addAttribute("voucherTime", dateFormat.format(new Date()));
+        String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
+        String systemtime = dateFormat.format(new Date());
+        model.addAttribute("voucherTime", systemtime.startsWith(sessiontime) ? systemtime : sessiontime + "-01");
 	    return view("voucher");
 	}
 	
@@ -102,7 +110,19 @@ public class VoucherController extends BaseController{
 
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            voucher.setPeriodId(((Period) session.getAttribute(Constant.CURRENT_PERIOD)).getId());
+
+            Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+            AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+            if (period.getId().equals(voucher.getPeriodId())) {
+                throw new RuntimeException("当前会计期间id：" + period.getId() + "不等于保存凭证会计期间id：" + voucher.getPeriodId());
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
+            String voucherTime = dateFormat.format(voucher.getVoucherTime());
+            if (!StringUtils.startsWith(voucherTime, sessiontime)) {
+                throw new RuntimeException("凭证日期" + voucherTime + "不在当前会计期间日期" + sessiontime + "范围内");
+            }
+            voucher.setPeriodId(period.getId());
             /** 组织凭证明细数据 **/
             List<VoucherDetail> details = new ArrayList<VoucherDetail>();
             String[] subjectCodeArr = request.getParameterValues("subjectCode");
@@ -111,8 +131,8 @@ public class VoucherController extends BaseController{
                     throw new RuntimeException("必须存在凭证分录");
                 }
                 String[] summaryArr = request.getParameterValues("summary");
-                String[] debitArr = request.getParameterValues("newDebit");
-                String[] crebitArr = request.getParameterValues("newCrebit");
+                String[] debitArr = request.getParameterValues("newdebit");
+                String[] crebitArr = request.getParameterValues("newcrebit");
                 VoucherDetail voucherDetail;
                 BigDecimal debit;
                 BigDecimal credit;
@@ -166,5 +186,22 @@ public class VoucherController extends BaseController{
     @RequestMapping("/help")
     public String help() {
         return view("help");
+    }
+
+    @RequestMapping("/subjectBalance")
+    public String subjectBalance(Model model, String subjectCode, Long voucherId, HttpSession session) {
+        Period voucherPeriod = null;
+        if (voucherId != null) {
+            Voucher voucher = voucherService.queryVoucher(voucherId);
+            voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
+        }
+        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        model.addAttribute("currentPeriod",
+                voucherPeriod != null ? voucherPeriod.getCurrentPeriod() : period.getCurrentPeriod());
+        model.addAttribute("moneyCode", accountBook.getMoneyCode());
+        model.addAttribute("subjectName", subjectCode);
+        model.addAttribute("subjectCode", StringUtils.split(subjectCode, " ")[0]);
+        return view("subjectBalance");
     }
 }

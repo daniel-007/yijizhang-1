@@ -6,11 +6,12 @@ package cn.ahyc.yjz.service.impl;
  * @date: 15/9/28
  */
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.PeriodService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by sanlli on 15/9/28.
@@ -31,4 +32,9 @@ public class PeriodServiceImpl implements PeriodService {
 		public Period selectCurrentPeriod(Long bookId) {
 				return periodExtendMapper.selectCurrentPeriod(bookId);
 		}
+
+    @Override
+    public Period queryPeriod(Long periodId) {
+        return periodExtendMapper.selectByPrimaryKey(periodId);
+    }
 }
