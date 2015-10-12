@@ -6,7 +6,7 @@
 		<i class="fa fa-pencil-square-o"></i><br/><small style="font-size:12px;">记账</small>
 	</button>
 	<button id="cz_bubble" class="button button-glow button-primary button-box button-giant button-longshadow-right">
-		<i class="fa fa-search-plus"></i><br/><small style="font-size:12px;">查账</small>
+		<i class="fa fa-search-plus"></i><br/><small style="font-size:12px;">查账 <i class="fa fa-caret-down"></i></small>
 	</button>
 
 	<div id="cz_menu" style="display: none;">
@@ -26,7 +26,7 @@
 	</button>
 
 	<button id="bb_bubble" class="button button-glow button-primary button-box button-giant button-longshadow-right">
-		<i class="fa fa-line-chart"></i><br/><small style="font-size:12px;">报表</small>
+		<i class="fa fa-line-chart"></i><br/><small style="font-size:12px;">报表 <i class="fa fa-caret-down"></i></small>
 	</button>
     <div id="bb_menu" style="display: none;">
         <ul class="fc_menu_ul">
