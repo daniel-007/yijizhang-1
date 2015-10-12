@@ -128,6 +128,7 @@
 		WHERE
 			t.id = #{periodId,jdbcType=BIGINT}
 			AND t.book_id = t2.book_id
+			AND t2.`level` > 0
 			AND (t2.initial_left IS NOT NULL OR sb.period_id IS NOT NULL)
 		) sb
 		ON DUPLICATE KEY UPDATE period_debit_occur = sb.debit,
