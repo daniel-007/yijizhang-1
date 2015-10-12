@@ -12,12 +12,13 @@ Account_Subject = function () {
             category_id: null,
             account_subject_id: -1
         },
+        editWin: null,
         openEditWin: function (opt, title, icon) {
             var category_id = Account_Subject.specific_subject.category_id;
             var subject_id = Account_Subject.specific_subject.account_subject_id;
             var href = 'account/subject/opt/' + opt + '/category/' + category_id + "?subjectId=" + subject_id;
 
-            $("#account_subject_eidt_win").window({
+            this.editWin = $("<div></div>").window({
                 title: title,
                 iconCls: icon,
                 width: 500,
@@ -104,7 +105,7 @@ Account_Subject = function () {
             });
             //科目说明。
             container.find(".tip").click(function () {
-                $("#account_subject_eidt_win").window({
+                $("<div></div>").window({
                     title: "科目说明",
                     iconCls: "icon-tip",
                     width: 560,
@@ -152,7 +153,10 @@ Account_Subject = function () {
                             [
                                 {title: '编码', field: 'subject_code', width: 200},
                                 {title: '名称', field: 'subject_name', width: 300},
-                                {title: '分类', field: 'category_datail_subject_name', width: 300}
+                                {title: '分类', field: 'category_datail_subject_name', width: 200},
+                                {title: '方向', field: 'direction', width: 100, formatter: function (value) {
+                                    return value == 1 ? '<span style="color: green;">借</span>' : '<span style="color: red;">贷</span>';
+                                }}
                             ]
                         ],
                         onClickRow: function (row) {
@@ -175,7 +179,9 @@ Account_Subject = function () {
                             return d;
                         },
                         onLoadSuccess: function () {
-                            Account_Subject.button_bind_event();
+
+                            //解决加载不同步问题。
+                            $('#accountSubject_layout #button_container').show();
                         }
                     });
 
@@ -186,10 +192,7 @@ Account_Subject = function () {
         init: function () {
 
             this.init_tab();
-
-            //解决加载不同步问题。
-            $('#accountSubject_layout').show();
-
+            this.button_bind_event();
         }
 
     }

@@ -23,7 +23,7 @@ Account_Subject_Edit = function () {
     return {
 
         closeAndRefreshCurTab: function () {
-            $('#account_subject_eidt_win').window('close');
+            Account_Subject.editWin.window('destroy');
         },
         button_event_bind: function () {
             $("#subject_form_close_win_button").unbind();
@@ -36,7 +36,7 @@ Account_Subject_Edit = function () {
          */
         form_submit_bind: function () {
 
-            $("#subject_form_submit_button").unbind().click(function () {
+            $("#subject_form_submit_button").click(function () {
 
                 $.ajax({
                     url: "account/subject/edit",
@@ -132,9 +132,9 @@ Account_Subject_Edit = function () {
         },
         init: function () {
 
-            this.initFormEle();
             this.button_event_bind();
             this.form_submit_bind();
+            this.initFormEle();
             this.checkCategoryDetail(Account_Subject.account_subject_selected_row, false);
         }
 
