@@ -65,6 +65,15 @@ App=function(){
 				    }]
 				});
 			}
+		},
+
+		/**
+		 * 选择tab
+		 * @param title
+		 */
+		selectTab:function(title){
+			$TC = $('#tabContainer');
+			$TC.tabs('select',title);
 		}
 
 	};

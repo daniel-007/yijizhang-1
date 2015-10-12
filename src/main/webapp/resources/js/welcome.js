@@ -43,8 +43,9 @@ Welcome=function(){
 
             jsPlumb.ready(function () {
 
-                var h = $('.welcome-panel').height();
-                $('#canvas').height(0.7*h);
+                $canvas = $('#canvas');
+                var h = $canvas.parent().height();
+                $canvas.height(h);
 
                 var instance = jsPlumb.getInstance({
                     // default drag options
@@ -58,7 +59,7 @@ Welcome=function(){
                             cssClass: "aLabel"
                         }]
                     ],
-                    Container: "welcome-tb"
+                    Container: "canvas"
                 });
 
                 var basicType = {
