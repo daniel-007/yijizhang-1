@@ -25,7 +25,7 @@
 
     <div id="init_data_toolbar" style="padding:5px;background: #F5F5F5;display: none;">
 
-        <input id="search_subject_code" class="easyui-textbox" style="width: 300px;" data-options="
+        <input id="search_subject_code" class="easyui-textbox" style="width: 300px;height: 28px;" data-options="
             prompt: '科目代码或者科目名称',
             icons: [{
                 iconCls:'icon-remove',
@@ -46,8 +46,6 @@
 
 </div>
 
-<script src="resources/public/easyui/src/datagrid-cellediting.js"></script>
-<script src="resources/js/accountSubject/initData/main.js"></script>
 <script>
     $(function () {
         Account_Subject_Init_Data.init();

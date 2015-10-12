@@ -9,16 +9,16 @@
 
     <tr>
         <td>期初余额</td>
-        <td>${balance.totalBalance.sum_total_debit?c}</td>
-        <td>${balance.totalBalance.sum_total_credit?c}</td>
-        <td>${balance.totalBalance.dValue?c}</td>
+        <td>${balance.initLeftBalance.sum_total_debit?c}</td>
+        <td>${balance.initLeftBalance.sum_total_credit?c}</td>
+        <td>${balance.initLeftBalance.dValue?c}</td>
     </tr>
 
     <tr>
         <td>本年累计</td>
-        <td>${balance.initLeftBalance.sum_total_debit?c}</td>
-        <td>${balance.initLeftBalance.sum_total_credit?c}</td>
-        <td>${balance.initLeftBalance.dValue?c}</td>
+        <td>${balance.totalBalance.sum_total_debit?c}</td>
+        <td>${balance.totalBalance.sum_total_credit?c}</td>
+        <td>${balance.totalBalance.dValue?c}</td>
     </tr>
 
     <tr>

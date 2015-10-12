@@ -4,16 +4,14 @@
 Account_Subject_Init_Data = function () {
 
     return {
-        _init_data_table_: $("#init_data_table"),
-        _keyword_: $("#search_subject_code"),
         _editor_: {type: 'numberbox', options: {precision: 2, prompt: '0.00'}},
         _keyword_val_: '',
         search: function () {
-            var keyword = this._keyword_.val().toString();
+            var keyword = $("#init_data_table_container").find("#search_subject_code").val().toString();
             this._keyword_val_ = keyword;
 
-            this._init_data_table_.datagrid("disableCellEditing");
-            this._init_data_table_.datagrid('reload', {
+            $("#init_data_table_container").find("#init_data_table").datagrid("disableCellEditing");
+            $("#init_data_table_container").find("#init_data_table").datagrid('reload', {
                 keyword: keyword
             });
         },
@@ -67,8 +65,10 @@ Account_Subject_Init_Data = function () {
             var keyword = Account_Subject_Init_Data._keyword_val_;
             return val.replace(keyword, "<span style='color: red;'>" + keyword + "</span>");
         },
+
         init_data_table: function () {
-            this._init_data_table_.datagrid({
+
+            $("#init_data_table_container").find("#init_data_table").datagrid({
                 url: 'account/subject/initData/alldata',
                 fitColumns: true,
                 rownumbers: true,
@@ -96,7 +96,9 @@ Account_Subject_Init_Data = function () {
                     {
                         text: '<i class="fa fa-filter fa-lg"></i> 过滤',
                         handler: function () {
-                            $("#init_data_toolbar").slideToggle();
+                            $("#init_data_toolbar").slideToggle(function () {
+                                $(this).find(".textbox-text").select().focus();
+                            });
                         }
                     },
                     '-',
@@ -111,8 +113,8 @@ Account_Subject_Init_Data = function () {
                                 success: function (data) {
                                     thiss.linkbutton('enable');
                                     if (data.success) {
-                                        Account_Subject_Init_Data._init_data_table_.datagrid("disableCellEditing");
-                                        Account_Subject_Init_Data._init_data_table_.datagrid('reload', {});
+                                        $("#init_data_table_container").find("#init_data_table").datagrid("disableCellEditing");
+                                        $("#init_data_table_container").find("#init_data_table").datagrid('reload', {});
                                     } else {
                                         $.messager.alert("错误", data.msg, "error");
                                     }
@@ -227,6 +229,7 @@ Account_Subject_Init_Data = function () {
                 }
             });
         },
+
         //初始数据表格.
         init: function () {
             this.init_data_table();

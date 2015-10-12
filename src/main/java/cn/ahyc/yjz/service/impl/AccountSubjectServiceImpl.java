@@ -257,21 +257,21 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             Object sum_initial_left = map.get("sum_initial_left");
             Object sum_year_occur_amount = map.get("sum_year_occur_amount");
 
-            if (sum_total_debit != null) {
+            if (sum_total_debit != map.get("total_debit")) {
                 isUpdate = true;
-                accountSubject.setTotalDebit((BigDecimal) sum_total_debit);
+                accountSubject.setTotalDebit(sum_total_debit == null ? BigDecimal.ZERO : (BigDecimal) sum_total_debit);
             }
-            if (sum_total_credit != null) {
+            if (sum_total_credit != map.get("total_credit")) {
                 isUpdate = true;
-                accountSubject.setTotalCredit((BigDecimal) sum_total_credit);
+                accountSubject.setTotalCredit(sum_total_credit == null ? BigDecimal.ZERO : (BigDecimal) sum_total_credit);
             }
-            if (sum_initial_left != null) {
+            if (sum_initial_left != map.get("initial_left")) {
                 isUpdate = true;
-                accountSubject.setInitialLeft((BigDecimal) sum_initial_left);
+                accountSubject.setInitialLeft(sum_initial_left == null ? BigDecimal.ZERO : (BigDecimal) sum_initial_left);
             }
-            if (sum_year_occur_amount != null) {
+            if (sum_year_occur_amount != map.get("year_occur_amount")) {
                 isUpdate = true;
-                accountSubject.setYearOccurAmount((BigDecimal) sum_year_occur_amount);
+                accountSubject.setYearOccurAmount(sum_year_occur_amount == null ? BigDecimal.ZERO : (BigDecimal) sum_year_occur_amount);
             }
 
             //是否需要更新数据库。
