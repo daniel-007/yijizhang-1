@@ -126,3 +126,27 @@ body, html {
     color: dimgrey;
     margin: 20px;
 }
+
+
+/** 查账浮层菜单样式 */
+
+.fc_menu_ul{
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.fc_menu_ul li{
+    margin: 5px 0px;
+    padding: 0px;
+}
+
+.fc_menu_ul li a{
+    color: #1b9af7;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.fc_menu_ul li a:hover{
+    color: #336699;
+}

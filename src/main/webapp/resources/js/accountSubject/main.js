@@ -194,5 +194,4 @@ Account_Subject = function () {
 
     }
 
-}
-    ();
+}();

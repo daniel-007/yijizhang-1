@@ -46,8 +46,6 @@
 
 </div>
 
-<script src="resources/public/easyui/src/datagrid-cellediting.js"></script>
-<script src="resources/js/accountSubject/initData/main.js"></script>
 <script>
     $(function () {
         Account_Subject_Init_Data.init();

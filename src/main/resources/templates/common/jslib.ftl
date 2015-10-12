@@ -7,7 +7,11 @@
 <!-- EasyUI -->
 <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
 <script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
+<script type="text/javascript" src="resources/public/buttons/buttons.js"></script>
+<script type="text/javascript" src="resources/public/artdialog/js/dialog-min.js"></script>
 <script type="text/javascript" src="resources/public/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="resources/public/jqueryPlugin/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="resources/public/easyui/src/datagrid-cellediting.js"></script>
 <script type="text/javascript" src="resources/public/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="resources/public/jsPlumb/jquery.validate.js"></script>
 <script type="text/javascript" src="resources/public/jsPlumb/jsPlumb-1.7.10.js"></script>
