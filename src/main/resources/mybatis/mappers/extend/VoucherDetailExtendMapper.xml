@@ -18,7 +18,7 @@
       <arg column="modify_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  
+
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbggenerated
@@ -35,7 +35,7 @@
 	AND   c.current_period=#{currentPeriod,jdbcType=INTEGER}
 	ORDER BY a.id ASC
   </select>
-  
+
   <select id="selectDetailTotal" parameterType="java.lang.Long" resultType="java.util.Map">
     SELECT 	
     	"合计：" as summary,
@@ -45,7 +45,7 @@
 	WHERE
 		t.voucher_id = #{voucherId,jdbcType=BIGINT}
   </select>
-  
+
   <select id="selectDetailList" parameterType="java.util.Map" resultType="java.util.Map">
     <![CDATA[
     SELECT 	
@@ -88,4 +88,38 @@
 		t.id ASC
 	]]>
   </select>
+
+  <select id="selectVoucherDetailForSearch" resultType="java.util.Map" parameterType="java.lang.Long" >
+    SELECT CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
+        , t2.credit, t1.bill_num
+    FROM period t, voucher t1, voucher_detail t2, account_subject t3
+    WHERE t.id = #{periodId}
+        AND t1.period_id = t.id
+        AND t2.voucher_id = t1.id
+        AND t3.book_id = t.book_id
+        AND t3.subject_code = t2.subject_code
+    ORDER BY t1.voucher_time DESC
+  </select>
+
+
+  <select id="selectVoucherDetailForSearchByKeyWord" resultType="java.util.Map" parameterType="java.util.Map">
+
+    SELECT *
+    FROM (SELECT CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
+            , t2.credit, t1.bill_num
+        FROM period t, voucher t1, voucher_detail t2, account_subject t3
+        WHERE t.id = #{periodId}
+            AND t1.period_id = t.id
+            AND t2.voucher_id = t1.id
+            AND t3.book_id = t.book_id
+            AND t3.subject_code = t2.subject_code
+        ORDER BY t1.voucher_time DESC
+        ) tt
+    WHERE tt.voucher LIKE #{keyword}
+        OR tt.summary LIKE #{keyword}
+        OR tt.subject_code LIKE #{keyword}
+        OR tt.subject_name LIKE #{keyword}
+
+  </select>
+
 </mapper>

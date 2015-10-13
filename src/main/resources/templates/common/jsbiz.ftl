@@ -14,3 +14,13 @@
 <script type="text/javascript" src="resources/js/accountSubject/main.js"></script>
 <script type="text/javascript" src="resources/js/accountSubject/edit.js"></script>
 <script type="text/javascript" src="resources/js/accountSubject/initData/main.js"></script>
+
+<#--凭证查询相关js-->
+<script src="resources/public/easyui/src/datagrid-groupview.js"></script>
+<script type="text/javascript" src="resources/js/research/voucher/main.js"></script>
+
+
+
+
+
+
