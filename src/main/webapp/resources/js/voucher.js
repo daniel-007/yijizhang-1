@@ -421,7 +421,7 @@ Voucher=function(){
             return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
         },
         //时间格式化
-        myparser:function(s,period,book){
+        myparser:function(s){
             if (!s) return new Date();
             var ss = (s.split('-'));
             var y = parseInt(ss[0],10);
@@ -501,18 +501,18 @@ Voucher=function(){
 				var row=$('#voucherDg').datagrid('getRows')[editIndex];
 				var p='';
 				var v1 = editors[j].target.val()?editors[j++].target.val():'0';
-				if(v1&&v1.length==2){
+				if(v1&&v1.length>=2){
 					p+=v1.replace(row[direction+'Angle'],'');
 				}else{
 					p+=v1;
 				}
 				var v2 = editors[j].target.val()?editors[j++].target.val():'0';
-				if(v2&&v2.length==2){
-					p+=v2.replace(row[direction+'Cent'],'');
+				if(v2&&v2.length>=2){
+					p+=v2.replace(row[direction+'Cent'],'').charAt(v2.length-2);
 				}else{
 					p+=v2;
 				}
-				pval+=p;
+				pval+=p.substr(0,2);
 			}
 			return pval;
 		},
