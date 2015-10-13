@@ -11,7 +11,7 @@ Voucher=function(){
 	var subjectData;//会计科目代码下来框数据
 	var period;//会计期间月
 	var book;//账套年
-	var cellFocusFlag=true;//金额编辑器是否第一次focus标志
+	var cellFocusFlag;//金额编辑器是否第一次focus标志
 	
 	return {
 		//凭证页面初始化
@@ -22,7 +22,7 @@ Voucher=function(){
 			$.extend($.fn.datagrid.defaults.editors, {
 			    textMax: {
 			        init: function(container, options){
-			            var input = $('<input type="text" class="'+options.direction+'textMax" maxlength="2" onfocus="Voucher.cellFocus(\''+options.direction+'\')" onkeyup="Voucher.cellkeyUp(event,this,'+options.num+',\''+options.direction+'\',\''+options.field+'\')" class="datagrid-editable-input" style="-webkit-ime-mode:disabled;">').appendTo(container);
+			            var input = $('<input type="text" class="'+options.direction+'textMax" maxlength="5" onclick="Voucher.cellFocus(\''+options.direction+'\')" onkeyup="Voucher.cellkeyUp(event,this,'+options.num+',\''+options.direction+'\',\''+options.field+'\')" class="datagrid-editable-input" style="-webkit-ime-mode:disabled">').appendTo(container);
 			            return input;
 			        },
 			        destroy: function(target){
@@ -162,30 +162,36 @@ Voucher=function(){
 				method:'get',
 				showFooter:true,
 				columns:[[
-						{field:'summary',title:'摘要',width:60,halign:'center',editor:{type:'textbox',options:{multiline:true,validType:'maxLength[80]'}},rowspan:2},
-						{field:'subjectCode',title:'科目代码',width:60,halign:'center',
+						{field:'summary',title:'摘要',width:60,halign:'center',
+							editor:{
+								type:'textbox',
+								options:{
+									multiline:true,
+									validType:'maxLength[80]'
+								}},rowspan:2},
+						{field:'subjectCode',title:'会计科目',width:60,halign:'center',
 							formatter:function(value,row){
 	                            return row.subjectTextName;
 	                        },
 							editor:{
 								type:'combobox',
 								options:{
-							    valueField:'subjectCode',
-							    textField:'subjectTextName',
-							    method:'get',
-							    url:'/voucher/accountSubjectList',
-							    onBeforeLoad:function(){
-							    	if(subjectData){
-							    		$(this).combobox('loadData',subjectData); 
-							    		return false;
-							    	}
-							    },
-							    onLoadSuccess:function(){
-							    	if(!subjectData){
-							    		subjectData=$(this).combobox('getData');
-							    	}
-							    }
-							        }},rowspan:2},
+								    valueField:'subjectCode',
+								    textField:'subjectTextName',
+								    method:'get',
+								    url:'/voucher/accountSubjectList',
+								    onBeforeLoad:function(){
+								    	if(subjectData){
+								    		$(this).combobox('loadData',subjectData); 
+								    		return false;
+								    	}
+								    },
+								    onLoadSuccess:function(){
+								    	if(!subjectData){
+								    		subjectData=$(this).combobox('getData');
+								    	}
+								    }
+						        }},rowspan:2},
 						{title:'借方金额',colspan:11},
 						{title:'贷方金额',colspan:11}
 				      ],[
@@ -259,25 +265,33 @@ Voucher=function(){
 		    if ($('#voucherDg').datagrid('validateRow', editIndex)){
 		    	var summary = $($('#voucherDg').datagrid('getEditor', {index:editIndex,field:'summary'}).target).textbox('getText');
 		    	var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
-		    	if((summary||$('#voucherDg').datagrid('getRows')[editIndex]['newdebit']||$('#voucherDg').datagrid('getRows')[editIndex]['newcrebit'])&&!$(ed.target).combobox('getValue')) {
+		    	var debitMoney = $('#voucherDg').datagrid('getRows')[editIndex]['newdebit'];
+		    	var crditMoney = $('#voucherDg').datagrid('getRows')[editIndex]['newcrebit'];
+		    	if((summary||(debitMoney&&debitMoney!=0)||(crditMoney&&crditMoney!=0))&&!$(ed.target).combobox('getValue')) {
 		    		$.messager.alert('警告', "科目代码不能为空!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
 					return false;
 		    	}
-		    	if(!$('#voucherDg').datagrid('getRows')[editIndex]['newdebit']&&!$('#voucherDg').datagrid('getRows')[editIndex]['newcrebit']&&$(ed.target).combobox('getValue')) {
+		    	if($(ed.target).combobox('getValue')&&Voucher.validateSubjectCode(ed)){
+		    		$.messager.alert('警告', "科目代码'"+$(ed.target).combobox('getValue')+"'不存在!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
+		    		return false;
+		    	}
+		    	if(Voucher.checkNum($(ed.target).combobox('getText'))){
+		    		$(ed.target).combobox('setValue',$(ed.target).combobox('getText'));
+		    	}else{
+		    		$(ed.target).combobox('setValue',$(ed.target).combobox('getValue'));
+		    	}
+		    	var subjectCode = $(ed.target).combobox('getText');
+		    	$('#voucherDg').datagrid('getRows')[editIndex]['subjectTextName'] = subjectCode;
+		    	if(!(debitMoney&&debitMoney!=0)&&!(crditMoney&&crditMoney!=0)&&$(ed.target).combobox('getValue')) {
 		    		$.messager.alert('警告', "凭证分录金额不能为零!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
 					return false;
 		    	}
-                if($(ed.target).combobox('getValue')&&Voucher.validateSubjectCode(ed)){
-					$.messager.alert('警告', "科目代码'"+$(ed.target).combobox('getValue')+"'不存在!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
-					return false;
-				}
-                if(Voucher.checkNum($(ed.target).combobox('getText'))){
-                	$(ed.target).combobox('setValue',$(ed.target).combobox('getText'));
-                }else{
-                	$(ed.target).combobox('setValue',$(ed.target).combobox('getValue'));
-                }
-                var subjectCode = $(ed.target).combobox('getText');
-                $('#voucherDg').datagrid('getRows')[editIndex]['subjectTextName'] = subjectCode;
+		    	if(!(debitMoney&&debitMoney!=0)){
+		    		Voucher.changeEditorMoney(0,'d',true);
+		    	}
+	    		if(!(crditMoney&&crditMoney!=0)){
+		    		Voucher.changeEditorMoney(0,'cr',true);
+		    	}
 		        $('#voucherDg').datagrid('endEdit', editIndex);
 		        editIndex = undefined;
 		        return true;
@@ -294,8 +308,17 @@ Voucher=function(){
 		        	}
 		            $('#voucherDg').datagrid('selectRow', index)
 		                    .datagrid('beginEdit', index);
-		            cellFocusFlag=true;
 		            editIndex = index;
+		            
+		            //金额editor初始化需要
+		            var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
+		            $("input",$(ed.target).next("span")).on('focus',function(){  
+		            	cellFocusFlag=null;
+		            });
+		            $("input",$(ed.target).next("span")).on('focus',function(){  
+		            	cellFocusFlag=null;
+		            });
+		            cellFocusFlag=null;
 		        } else {
 		            $('#voucherDg').datagrid('selectRow', editIndex);
 		        }
@@ -359,10 +382,15 @@ Voucher=function(){
 	                success: function(data){
 	                    if(data.result){
 	                        if(!$("#id").val()){
-	                        	$.messager.alert('警告', "已生成了一张记账凭证，凭证字号为："+data.result, 'warning');
-	                        }
-	                        if(isAdd){//新增
-	                        	Voucher.add();
+	                        	$.messager.alert('警告', "已生成了一张记账凭证，凭证字号为："+data.result, 'warning',function(){
+	                        		if(isAdd){//新增
+	    	                        	Voucher.add();
+	    	                        }
+	                        	});
+	                        }else{
+	                        	if(isAdd){//新增
+		                        	Voucher.add();
+		                        }
 	                        }
 	                    }else{
 	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
@@ -393,7 +421,7 @@ Voucher=function(){
             return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
         },
         //时间格式化
-        myparser:function(s,period,book){
+        myparser:function(s){
             if (!s) return new Date();
             var ss = (s.split('-'));
             var y = parseInt(ss[0],10);
@@ -445,6 +473,7 @@ Voucher=function(){
 				row['newcrebit']='';
 				row['new'+direction+'ebit']=pval;
 			}
+			console.log("pval:"+pval);
 			return pval;
 		},
 		//单行Editor金额合计
@@ -467,43 +496,47 @@ Voucher=function(){
 			if(pval&&Voucher.startWith(pval,'0')){
 				pval=pval.substr(1,pval.length);
 			}
-			if(editors[j+1].target.val()||editors[j+2].target.val()){
+			if(editors[j].target.val()||editors[j+1].target.val()){
 				if(!pval)pval+='0';
 				var row=$('#voucherDg').datagrid('getRows')[editIndex];
+				var p='';
 				var v1 = editors[j].target.val()?editors[j++].target.val():'0';
-				if(v1&&v1.length==2){
-					pval+=v1.replace(row[direction+'Angle'],'');
-					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Cent'}).target).focus();
+				if(v1&&v1.length>=2){
+					p+=v1.replace(row[direction+'Angle'],'');
 				}else{
-					pval+=v1;
+					p+=v1;
 				}
 				var v2 = editors[j].target.val()?editors[j++].target.val():'0';
-				if(v2&&v2.length==2){
-					pval+=v2.replace(row[direction+'Cent'],'');
+				if(v2&&v2.length>=2){
+					p+=v2.replace(row[direction+'Cent'],'').charAt(v2.length-2);
 				}else{
-					pval+=v2;
+					p+=v2;
 				}
+				pval+=p.substr(0,2);
 			}
 			return pval;
 		},
 		cellFocus:function(direction){
-			console.log("sds");
-			if(cellFocusFlag){
-				cellFocusFlag=false;
-				$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target).focus();
+			if(cellFocusFlag!=direction){
 				var rows=$('#voucherDg').datagrid('getRows');
-				if(!rows[editIndex]['new'+direction+'ebit']){
+				$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target)[0].focus();
+				if(!(rows[editIndex]['new'+direction+'ebit']&&rows[editIndex]['new'+direction+'ebit']!=0)){
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target).val('0');
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Angle')}).target).val('0');
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Cent')}).target).val('0');
 				}
 			}
+			cellFocusFlag=direction;
 		},
         /*金额editor事件*/
         cellkeyUp:function(event,tthis,num,direction,field){
         	var rows=$('#voucherDg').datagrid('getRows');
-        	//189：按键'-'负号，金额为负
-        	if(Voucher.endWith(tthis.value,'-')||Voucher.startWith(tthis.value,'-')){
+        	if(event.keyCode==46){
+        		console.log("delete");
+        		Voucher.changeEditorMoney(0,direction);
+        	} else if(event.keyCode==8){
+        		console.log("backspace");
+        	} else if(Voucher.endWith(tthis.value,'-')||Voucher.startWith(tthis.value,'-')){
         		if(rows[editIndex][direction+'pn']=='-'){
         			rows[editIndex][direction+'pn']='';
         			$("."+direction+"textMax").css("color","black");
@@ -511,35 +544,48 @@ Voucher=function(){
         			rows[editIndex][direction+'pn']='-';
         			$("."+direction+"textMax").css("color","red");
         		}
-        	}
-        	if(direction=='d'&&rows[editIndex]['newcrebit']&&rows[editIndex]['newcrebit']!=0){
-        		tthis.value='';
-        		$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:'crYuan'}).target).focus();
-        		return;
-        	}
-        	if(direction=='cr'&&rows[editIndex]['newdebit']&&rows[editIndex]['newdebit']!=0){
-        		tthis.value='';
-        		$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:'dYuan'}).target).focus();
-        		return;
-        	}
-        	//过滤空或非数字，金额只能录入数字
-        	if(Voucher.endWith(tthis.value,'.')||Voucher.startWith(tthis.value,'.')){
-        		$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Angle'}).target).focus();
-        		if(tthis.value&&tthis.value.length>1){
-        			tthis.value=tthis.value.charAt(Voucher.startWith(tthis.value,'.')?1:0);
-        		}else {
-        			tthis.value=rows[editIndex][field]?rows[editIndex][field]:'';
-        		}
-        		return;
-        	}
-        	if(!tthis.value){
-        		return;
-        	}if(tthis.value&&!Voucher.checkNum(tthis.value)){
-    			tthis.value=rows[editIndex][field]?rows[editIndex][field]:'';
+        		tthis.value=tthis.value.replace('-','');
+        	} else if(Voucher.endWith(tthis.value,'.')||Voucher.startWith(tthis.value,'.')){
+    			$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Angle'}).target).focus();
+//	        		if(tthis.value&&tthis.value.length>1){
+//	        			tthis.value=tthis.value.charAt(Voucher.startWith(tthis.value,'.')?1:0);
+//	        		}else {
+//	        			tthis.value=rows[editIndex][field]?rows[editIndex][field]:'';
+//	        		}
+    			tthis.value=tthis.value.replace('.','');
+    			return;
+			} else {
+	        	if(direction=='d'&&rows[editIndex]['newcrebit']&&rows[editIndex]['newcrebit']!=0){
+	        		var ed=$('#voucherDg').datagrid('getEditor', {index:editIndex,field:'crYuan'});
+	        		$(ed.target).focus();
+	        		tthis.value='';
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target).val('');
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Angle')}).target).val('');
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Cent')}).target).val('');
+	        		return;
+	        	}else if(direction=='cr'&&rows[editIndex]['newdebit']&&rows[editIndex]['newdebit']!=0){
+	        		ed=$('#voucherDg').datagrid('getEditor', {index:editIndex,field:'dYuan'});
+	        		$(ed.target).focus();
+	        		tthis.value='';
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target).val('');
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Angle')}).target).val('');
+					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Cent')}).target).val('');
+	        		return;
+	        	}
+	        	//过滤空或非数字，金额只能录入数字
+	        	if(!tthis.value || (tthis.value&&!Voucher.checkNum(tthis.value))){
+	        		return;
+	        	}
         	}
         	//重新组合金额
         	var rowmoney=Voucher.getEditorMoney(direction);
         	console.log(rowmoney);
+        	if(Voucher.endWith(field,'Angle')||Voucher.endWith(field,'Cent')){
+				$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Cent'}).target).focus();
+			}else if(!rows[editIndex][field]||event.keyCode==46){
+				var editors = $('#voucherDg').datagrid('getEditors', editIndex);
+				$(editors[direction=='d'?13-rowmoney.length:24-rowmoney.length].target).focus();
+			}
         	Voucher.changeEditorMoney(rowmoney,direction);
         	//合计
 			var money=0;
@@ -557,7 +603,6 @@ Voucher=function(){
     		}else{
     			console.log("editor direction error");
     		}
-        	console.log(debit+":"+crebit);
         },
         //检查value为空或不是数字时置为0
         cellSetValue:function(value){
@@ -579,7 +624,7 @@ Voucher=function(){
         	Voucher.mergeFooterCells();
         },
         //修改表格Editor总计金额
-        changeEditorMoney:function(value,direction){
+        changeEditorMoney:function(value,direction,setNull){
         	if(!value||value==0||value=='0'){
         		value='';
         	}
@@ -619,13 +664,13 @@ Voucher=function(){
         	editors[j].target.val(length>=4?valueStr.charAt(i++):'');
         	rows[editIndex][direction+'Ten']=editors[j].target.val();
         	j++;
-        	editors[j].target.val(length>=3?valueStr.charAt(i++):'0');
+        	editors[j].target.val(length>=3?valueStr.charAt(i++):(setNull?'':'0'));
         	rows[editIndex][direction+'Yuan']=editors[j].target.val();
         	j++;
-        	editors[j].target.val(length>=2?valueStr.charAt(i++):'0');
+        	editors[j].target.val(length>=2?valueStr.charAt(i++):(setNull?'':'0'));
         	rows[editIndex][direction+'Angle']=editors[j].target.val();
         	j++;
-        	editors[j].target.val(length>=1?valueStr.charAt(i++):'0');
+        	editors[j].target.val(length>=1?valueStr.charAt(i++):(setNull?'':'0'));
         	rows[editIndex][direction+'Cent']=editors[j].target.val();
         },
         //修改表格footer总计金额
