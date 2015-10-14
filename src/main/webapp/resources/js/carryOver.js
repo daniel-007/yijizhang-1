@@ -25,10 +25,12 @@ CarryOver=function(){
 			$("#default_win").window("close");
 		},
 		complete:function(){
+			$('#completeLink').addClass("disabled");
 		   $.ajax({
                 url: "account/carryOver/complete",
                 data:$("#carry_over").serialize(),
                 success: function(data){
+                	$('#completeLink').removeClass("disabled");
                     if(data.result){
                         $.messager.alert("提示信息", data.result,"info",function(){
                         		 $("#default_win").window('close');

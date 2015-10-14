@@ -107,10 +107,12 @@ Book=function(){
 		},
 		//完成按钮
 		completeLink:function(){
+			$('#completeLink').addClass("disabled");
 			 $.ajax({
 	                url: "account/book/complete",
 	                data:$("#create_book").serialize(),
 	                success: function(data){
+	        			$('#completeLink').removeClass("disabled");
 	                    if(data.resultId){
 	                        $.ajax({ 
 	                        	url: "switch/to/book/" + data.resultId,
