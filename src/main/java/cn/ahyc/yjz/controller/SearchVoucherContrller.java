@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,54 @@ public class SearchVoucherContrller extends BaseController {
     @Autowired
     private SearchVoucherService searchVoucherService;
 
+
+    /**
+     * 删除凭证.
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    public Map delete(HttpSession session, Long voucherId) {
+
+        Map map = new HashMap();
+        map.put("success", true);
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+
+        try {
+//            searchVoucherService.delete(voucherId);
+        } catch (Exception e) {
+            map.put("success", false);
+            map.put("msg", e.getMessage());
+        }
+
+        return map;
+    }
+
+    /**
+     * 凭证整理.
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/set")
+    @ResponseBody
+    public Map set(HttpSession session) {
+
+        Map map = new HashMap();
+        map.put("success", true);
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+
+        try {
+            searchVoucherService.set(period);
+        } catch (Exception e) {
+            map.put("success", false);
+            map.put("msg", e.getMessage());
+        }
+
+        return map;
+    }
 
     /**
      * 获取当前账套期间.

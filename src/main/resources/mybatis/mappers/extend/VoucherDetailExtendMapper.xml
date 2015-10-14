@@ -90,7 +90,7 @@
   </select>
 
   <select id="selectVoucherDetailForSearch" resultType="java.util.Map" parameterType="java.lang.Long" >
-    SELECT CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
+    SELECT t1.id, CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
         , t2.credit, t1.bill_num
     FROM period t, voucher t1, voucher_detail t2, account_subject t3
     WHERE t.id = #{periodId}
@@ -105,7 +105,7 @@
   <select id="selectVoucherDetailForSearchByKeyWord" resultType="java.util.Map" parameterType="java.util.Map">
 
     SELECT *
-    FROM (SELECT CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
+    FROM (SELECT t1.id, CONCAT(t1.voucher_word, '-', t1.voucher_no, ' ', DATE_FORMAT(t1.voucher_time, '%Y/%m/%d')) AS voucher, t2.summary, t3.subject_code, t3.subject_name, t2.debit
             , t2.credit, t1.bill_num
         FROM period t, voucher t1, voucher_detail t2, account_subject t3
         WHERE t.id = #{periodId}
@@ -121,5 +121,13 @@
         OR tt.subject_name LIKE #{keyword}
 
   </select>
+
+  <update id="resetVoucherNo" parameterType="java.lang.Long" >
+    UPDATE voucher tt,
+     (SELECT @rowNO := 0) t1
+    SET tt.voucher_no = (SELECT @rowNO := @rowNo + 1)
+    WHERE
+        tt.period_id = #{periodId}
+  </update>
 
 </mapper>

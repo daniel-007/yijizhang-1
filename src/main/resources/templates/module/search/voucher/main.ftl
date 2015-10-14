@@ -5,6 +5,23 @@
 
     <div id="tb" style="height: 28px;line-height: 28px;padding: 0 5px;">
 
+        <div style="float:left;">
+            <a id="new" href="javascript:App.addTab('记账','voucher/main',true);" class="easyui-linkbutton"
+               plain="true"><i class="fa fa-clone fa-lg"></i> 新增</a>
+            <a id="edit" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-pencil-square-o fa-lg"></i> 修改</a>
+            <a id="delete" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-times fa-lg"></i> 删除</a>
+        </div>
+
+        <div class="datagrid-btn-separator"></div>
+
+        <div style="float:left;">
+            <a id="reversal" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-retweet fa-lg"></i> 冲销</a>
+            <a id="set" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-wrench fa-lg"></i> 整理</a>
+        </div>
+
+
+        <div class="datagrid-btn-separator"></div>
+
         <a id="search" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
 
         <div id="search_div" style="display: none;">

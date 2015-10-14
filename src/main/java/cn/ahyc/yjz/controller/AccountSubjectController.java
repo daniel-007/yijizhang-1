@@ -78,16 +78,20 @@ public class AccountSubjectController extends BaseController {
     /**
      * 初始化数据修改.
      *
+     * @param session
+     * @param accountSubject
      * @return
      */
     @RequestMapping("/initData/edit")
     @ResponseBody
-    public Map<String, Object> initDataEdit(AccountSubject accountSubject) {
+    public Map<String, Object> initDataEdit(HttpSession session, AccountSubject accountSubject) {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("success", true);
 
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+
         try {
-            accountSubjectService.initDataEdit(accountSubject);
+            accountSubjectService.initDataEdit(accountSubject, period.getId());
         } catch (Exception e) {
             result.put("success", false);
             result.put("msg", e.getMessage());

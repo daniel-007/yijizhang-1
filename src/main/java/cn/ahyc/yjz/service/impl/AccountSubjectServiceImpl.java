@@ -2,6 +2,7 @@ package cn.ahyc.yjz.service.impl;
 
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
+import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.service.AccountSubjectService;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Autowired
     private PeriodExtendMapper periodExtendMapper;
+
+    @Autowired
+    private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
 
     private final int first_level_subject_len = 4;
 
@@ -194,7 +198,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void initDataEdit(AccountSubject accountSubject) throws Exception {
+    public void initDataEdit(AccountSubject accountSubject, Long periodId) throws Exception {
 
         if (accountSubject.getTotalDebit() != null && BigDecimal.ZERO.compareTo(accountSubject.getTotalDebit()) == 0)
             accountSubject.setTotalDebit(null);
@@ -206,6 +210,22 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             accountSubject.setInitialLeft(null);
 
         accountSubjectMapper.updateByPrimaryKey(accountSubject);
+
+        //程家瑞让我调更新科目余额表.
+        final Long _periodId = periodId;
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(_periodId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }.start();
+
     }
 
 

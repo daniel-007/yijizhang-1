@@ -50,4 +50,11 @@ public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
      * @return
      */
     List<Map> selectVoucherDetailForSearchByKeyWord(Map param);
+
+    /**
+     * 整理凭证字号.
+     *
+     * @param periodId
+     */
+    void resetVoucherNo(Long periodId);
 }

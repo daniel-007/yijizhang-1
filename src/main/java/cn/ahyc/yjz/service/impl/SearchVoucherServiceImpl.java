@@ -51,4 +51,9 @@ public class SearchVoucherServiceImpl implements SearchVoucherService {
 
         return periodExtendMapper.selectByExample(example);
     }
+
+    @Override
+    public void set(Period period) throws Exception {
+        voucherDetailExtendMapper.resetVoucherNo(period.getId());
+    }
 }

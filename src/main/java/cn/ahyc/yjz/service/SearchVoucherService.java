@@ -14,7 +14,6 @@ public interface SearchVoucherService {
     /**
      * 凭证查询：根据期查询出所有品种.
      *
-     *
      * @param period
      * @param keyword
      * @return
@@ -22,4 +21,11 @@ public interface SearchVoucherService {
     List<Map> vouchers(Period period, String keyword);
 
     List<Period> periods(Period period);
+
+    /**
+     * 凭证整理.
+     *
+     * @param period
+     */
+    void set(Period period) throws Exception;
 }

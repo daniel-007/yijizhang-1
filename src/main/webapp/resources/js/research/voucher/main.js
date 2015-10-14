@@ -26,8 +26,12 @@ Search_Voucher = function () {
                         }},
                         {field: 'subject_code', title: '科目代码', formatter: this.keywordHighlight, width: 100},
                         {field: 'subject_name', title: '科目名称', formatter: this.keywordHighlight, width: 100},
-                        {field: 'debit', title: '借方金额', width: 100},
-                        {field: 'credit', title: '贷方金额', width: 100}
+                        {field: 'debit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
+                            return "font-weight:700;color:red;";
+                        }},
+                        {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
+                            return "font-weight:700;color:green;";
+                        }}
                     ]
                 ],
                 view: groupview,
@@ -43,6 +47,23 @@ Search_Voucher = function () {
                 }
             });
 
+        },
+
+        moneyFormatter: function (value, row, index) {
+            if (value) {
+                var val = value.toString();
+                var idx = val.indexOf(".");
+                if (idx < 0) {
+                    val += ".00";
+                } else {
+                    if (val.substring(idx + 1, val.length).length < 2) {
+                        val += "0";
+                    }
+                }
+                return val;
+            } else {
+                return value == 0 ? "" : value;
+            }
         },
 
         keywordHighlight: function (val) {
@@ -100,8 +121,106 @@ Search_Voucher = function () {
             });
         },
 
+        init_button_event: function () {
+            //整理.
+            $("#search_voucher_container").find("#set").click(function () {
+
+                var curPeriodId = $("#currentPeriod_hidden").val();
+                var nowPeriodId = $("#search_voucher_container").find("#period").combobox("getValue");
+                if (curPeriodId != nowPeriodId) {
+                    $.messager.alert("警告", "只允许整理当前期。", "warning");
+                    return;
+                }
+
+                var msg = '&#12288;&#12288;凭证整理适用于存在凭证断号，需要系统自动进行凭证号的连续排序的情况。已结账期间的凭证不参与凭证整理。' +
+                    '<br/>&#12288;&#12288;&#12288;&nbsp;<span style="color: #ff0000;"><i class="fa fa-exclamation-triangle fa-lg"></i> 整理后，凭证号不可恢复，继续吗？</span>';
+
+                $.messager.confirm('确认', msg, function (r) {
+                    if (r) {
+                        $.ajax({
+                            url: 'search/voucher/set',
+                            async: true,
+                            success: function (result) {
+                                if (result.success) {
+                                    var curPeriodId = $("#currentPeriod_hidden").val();
+                                    $("#search_voucher_container").find("#period").combobox("setValue", curPeriodId);
+                                    $("#search_voucher_container").find("#data_table").datagrid('reload', {
+                                        periodId: curPeriodId
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+
+            });
+
+            //冲销
+            $("#search_voucher_container").find("#reversal").click(function () {
+
+                var selected_row = $("#search_voucher_container").find("#data_table").datagrid('getSelected');
+                if (selected_row) {
+                    App.addTab('记账', 'voucher/main?voucherId=' + selected_row.id + '&isreversal=true', true);
+                } else {
+                    $.messager.alert("警告", "请选择一条记录。", "warning");
+                }
+
+            });
+
+            //修改
+            $("#search_voucher_container").find("#edit").click(function () {
+
+                var selected_row = $("#search_voucher_container").find("#data_table").datagrid('getSelected');
+                if (selected_row) {
+                    App.addTab('记账', 'voucher/main?voucherId=' + selected_row.id, true);
+                } else {
+                    $.messager.alert("警告", "请选择一条记录。", "warning");
+                }
+
+            });
+
+            //修改
+            $("#search_voucher_container").find("#delete").click(function () {
+
+                var curPeriodId = $("#currentPeriod_hidden").val();
+                var nowPeriodId = $("#search_voucher_container").find("#period").combobox("getValue");
+                if (curPeriodId != nowPeriodId) {
+                    $.messager.alert("警告", "只允许删除当前期。", "warning");
+                    return;
+                }
+
+                var selected_row = $("#search_voucher_container").find("#data_table").datagrid('getSelected');
+                if (selected_row) {
+                    $.messager.confirm('确认', '确定删除所选择的记录？此操作不可恢复。', function (r) {
+                        if (r) {
+                            $.ajax({
+                                url: 'search/voucher/delete',
+                                data: {
+                                    voucherId: selected_row.id
+                                },
+                                async: true,
+                                success: function (result) {
+                                    if (result.success) {
+                                        var curPeriodId = $("#currentPeriod_hidden").val();
+                                        $("#search_voucher_container").find("#period").combobox("setValue", curPeriodId);
+                                        $("#search_voucher_container").find("#data_table").datagrid('reload', {
+                                            periodId: curPeriodId
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $.messager.alert("警告", "请选择一条记录。", "warning");
+                }
+
+            });
+        },
+
         init: function () {
 
+            this.init_button_event();
             this.init_search();
             this.init_period_select();
             this.init_data_table();

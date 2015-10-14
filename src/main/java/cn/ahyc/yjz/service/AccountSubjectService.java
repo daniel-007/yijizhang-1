@@ -26,7 +26,7 @@ public interface AccountSubjectService {
 
     Map allSubjectTreeData(Period period, String keyword);
 
-    void initDataEdit(AccountSubject accountSubject) throws Exception;
+    void initDataEdit(AccountSubject accountSubject, Long periodId) throws Exception;
 
     void calculate(Long bookId, Long category_subject_code) throws Exception;
 
