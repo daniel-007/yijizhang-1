@@ -5,15 +5,15 @@
         <a id="search" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
         <div style="float: left;font-weight: 700;">
             <i class="fa fa-hand-o-right fa-lg"></i> 会计期间：
-            <input id="startPeriod" name="startPeriod" class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 60px;" />
+            <input id="startPeriod" name="startPeriod" class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 50px;" />
             	至
-            <input id="endPeriod" name="endPeriod"     class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 60px;" />
+            <input id="endPeriod" name="endPeriod"     class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 50px;" />
         </div>
          <div style="float: left;font-weight: 700;">
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-hand-o-right fa-lg"></i>科目代码：
-            <input id="startSubjectCode" name="startSubjectCode"  	style="width: 60px;" />
+            <input id="startSubjectCode" name="startSubjectCode"  	style="width: 110px;" />
             	至
-            <input id="endSubjectCode" name="endSubjectCode"    	style="width: 60px;" />
+            <input id="endSubjectCode" name="endSubjectCode"    	style="width: 110px;" />
         </div>
     </div>
 

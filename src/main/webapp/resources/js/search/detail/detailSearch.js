@@ -8,7 +8,6 @@ Search_Detail = function (){
 	                singleSelect: true,
 	                fitColumns: true,
 	                rownumbers: true,
-	                toolbar: '#search_voucher_container #tb',
 	                columns: [
 	                    [
 	                        {field: 'voucher_time', title: '日期', hidden: true},
@@ -49,12 +48,23 @@ Search_Detail = function (){
 	    	 $('#startPeriod').val($("#currentPeriod_hidden").val());
 	    	 $('#endPeriod').val($("#currentPeriod_hidden").val());
 	     },
-	     init_subject:funtion(){
-	    	 
+	     init_SubjectCode: function () {
+	    	 $('#startSubjectCode').searchbox({
+    		    searcher:function(value,name){
+    		        Account_Subject.open_subject_search_win(function (record) {
+    		            alert(record.);
+    		        })
+    		    }
+	    	 });
+	    	 $('#endSubjectCode').searchbox({
+    		    searcher:function(value,name){
+    		        alert(value + "," + name);
+    		    }
+	    	});
 	     },
 	     init: function () {
             this.init_period_select();
-           // this.init_data_table();
+            this.init_SubjectCode();
 	     }
 	 }
 }();
