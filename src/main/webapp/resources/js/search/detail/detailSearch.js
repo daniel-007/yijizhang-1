@@ -52,7 +52,7 @@ Search_Detail = function (){
 	    	 $('#startSubjectCode').searchbox({
     		    searcher:function(value,name){
     		        Account_Subject.open_subject_search_win(function (record) {
-    		            alert(record.);
+    		            alert(record.subjectName);
     		        })
     		    }
 	    	 });
