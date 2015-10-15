@@ -19,6 +19,9 @@
 <script src="resources/public/easyui/src/datagrid-groupview.js"></script>
 <script type="text/javascript" src="resources/js/research/voucher/main.js"></script>
 
+<#--明细账相关js-->
+<script type="text/javascript" src="resources/js/research/detail/detailSearch.js"></script>
+
 
 
 
