@@ -12,6 +12,8 @@ import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
+import cn.ahyc.yjz.model.VoucherTemplate;
+import cn.ahyc.yjz.model.VoucherTemplateDetail;
 
 public interface VoucherService {
 
@@ -26,9 +28,10 @@ public interface VoucherService {
     /**
      * 获取凭证字列表
      * 
+     * @param typeId
      * @return
      */
-    List<CompanyCommonValue> queryVoucherWordList();
+    List<CompanyCommonValue> queryVoucherWordList(Long typeId);
 
     /**
      * 获取凭证明细列表
@@ -71,4 +74,52 @@ public interface VoucherService {
      * @return
      */
     Map<String, Object> queryDetailTotal(Long voucherId);
+
+    /**
+     * 查询模式凭证列表
+     * 
+     * @return
+     */
+    List<VoucherTemplate> queryVoucherTemplateList();
+
+    /**
+     * 查询模式凭证
+     * 
+     * @param voucherTemplateId
+     * @return
+     */
+    VoucherTemplate queryVoucherTemplate(Long voucherTemplateId);
+
+    /**
+     * 查询模式凭证详细
+     * 
+     * @param voucherTemplateId
+     * @param long1
+     * @return
+     */
+    List<VoucherTemplateDetail> queryVoucherTemplateDetailList(Long voucherTemplateId, Long long1);
+
+    /**
+     * 保存模式凭证
+     * 
+     * @param voucherTemplate
+     * @param details
+     */
+    void saveTemplate(VoucherTemplate voucherTemplate, List<VoucherTemplateDetail> details);
+
+    /**
+     * 检查模式凭证名称是否重复
+     * 
+     * @param name
+     * @param id
+     * @return
+     */
+    boolean checkTemplateName(String name, Long id);
+
+    /**
+     * 删除模式凭证
+     * 
+     * @param id
+     */
+    void deleteTemplate(Long id);
 }
