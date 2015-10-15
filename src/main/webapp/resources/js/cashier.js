@@ -47,6 +47,7 @@ Cashier=function(){
                     	    buttons:[{
                 				text:'确定',
                 				handler:function(){
+                					$(this).linkbutton('disable');
                 					$.ajax({ 
         	                        	url: 'account/cashier/submit',
         	            				context: document.body,
