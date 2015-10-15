@@ -9,48 +9,27 @@ Voucher=function(){
 	var crebit = undefined;//总计贷方金额
 	var balanceFlag = false;//借贷平衡标识符
 	var subjectData;//会计科目代码下来框数据
-	var period;//会计期间月
-	var book;//账套年
 	var cellFocusFlag;//金额编辑器是否第一次focus标志
 	
 	return {
 		//凭证页面初始化
-		init:function(id,period,book) {
-			period=period;
+		init:function(id,period,book,voucherWord) {
 			book=book.replace(',','');
-			//自定义的金额editor
-			$.extend($.fn.datagrid.defaults.editors, {
-			    textMax: {
-			        init: function(container, options){
-			            var input = $('<input type="text" class="'+options.direction+'textMax" maxlength="5" onclick="Voucher.cellFocus(\''+options.direction+'\')" onkeyup="Voucher.cellkeyUp(event,this,'+options.num+',\''+options.direction+'\',\''+options.field+'\')" class="datagrid-editable-input" style="-webkit-ime-mode:disabled">').appendTo(container);
-			            return input;
-			        },
-			        destroy: function(target){
-			            $(target).remove();
-			        },
-			        getValue: function(target){
-			            return $(target).val();
-			        },
-			        setValue: function(target, value){
-			            $(target).val(value);
-			        },
-			        resize: function(target, width){
-			            $(target)._outerWidth(width);
-			        }
-			    }
-			});
-			//扩展maxlength规则
-			$.extend($.fn.validatebox.defaults.rules, {     
-                maxLength: {     
-                    validator: function(value, param){     
-                        return param[0] >= value.length;     
-                    },     
-                    message: '请输入最大{0}位字符.'    
-                }     
-            });
 			//新增
 			$('#voucherAdd,#voucherMm1Add').on('click', function() {
 				Voucher.add();
+			});
+			//从模式凭证新增
+			$('#voucherTempAdd,#voucherTempMm1Add').on('click', function() {
+				$("#default_win").window({
+					title : '<i class="fa fa-info-circle"></i>模式凭证',
+					width : 677,
+					height : 440,
+					modal : true,
+					collapsible : false,
+					shadow : true,
+					href : 'voucher/voucherTemplate'
+				});
 			});
 			//保存并新增
 			$('#voucherSave,#voucherMm2Save2').on('click', function() {
@@ -59,6 +38,18 @@ Voucher=function(){
 			//保存
 			$('#voucherMm2Save1').on('click', function() {
 				Voucher.save();
+			});
+			//保存为模式凭证
+			$('#voucherTempSave,#voucherTempMm2Save').on('click', function() {
+				$("#default_win").window({
+					title : '<i class="fa fa-info-circle"></i>保存为模式凭证',
+					width : 325,
+					height : 375,
+					modal : true,
+					collapsible : false,
+					shadow : true,
+					href : 'voucher/voucherTemplate'
+				});
 			});
 			//取消修改
 			$('#voucherReject').on('click', function() {
@@ -80,7 +71,7 @@ Voucher=function(){
 				var subjectCode;
 				if(editIndex>=0){
 					var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
-					if(Voucher.validateSubjectCode(ed)){
+					if(Voucher.validateSubjectCode(ed,subjectData)){
 						$.messager.alert('警告', "科目代码'"+$(ed.target).combobox('getValue')+"'不存在!", 'warning');
 						return;
 					}
@@ -132,7 +123,7 @@ Voucher=function(){
 			    editable:false,
 			    required:true,
 			    onLoadSuccess:function(){
-			    	$('#voucherWord').combobox('setValue', '记');
+			    	$('#voucherWord').combobox('setValue', voucherWord);
 			    }
 			});
 			//日期
@@ -167,7 +158,7 @@ Voucher=function(){
 								type:'textbox',
 								options:{
 									multiline:true,
-									validType:'maxLength[80]'
+									validType:'voucherMaxLength[80]'
 								}},rowspan:2},
 						{field:'subjectCode',title:'会计科目',width:60,halign:'center',
 							formatter:function(value,row){
@@ -236,7 +227,7 @@ Voucher=function(){
 			});
         },
         //验证科目代码不合法
-        validateSubjectCode:function(ed){
+        validateSubjectCode:function(ed,subjectData){
         	return JSON.stringify(subjectData).indexOf('"subjectCode":'+$(ed.target).combobox('getValue')+',')<0;
         },
         //合并footer中的单元格
@@ -271,7 +262,7 @@ Voucher=function(){
 		    		$.messager.alert('警告', "科目代码不能为空!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
 					return false;
 		    	}
-		    	if($(ed.target).combobox('getValue')&&Voucher.validateSubjectCode(ed)){
+		    	if($(ed.target).combobox('getValue')&&Voucher.validateSubjectCode(ed,subjectData)){
 		    		$.messager.alert('警告', "科目代码'"+$(ed.target).combobox('getValue')+"'不存在!", 'warning' ,function(){$('#voucherDg').datagrid('selectRow', editIndex);});
 		    		return false;
 		    	}
@@ -306,16 +297,20 @@ Voucher=function(){
 		        	if(index>0&&!$('#voucherDg').datagrid('getRows')[index-1]['subjectCode']){
 		        		return;
 		        	}
-		            $('#voucherDg').datagrid('selectRow', index)
-		                    .datagrid('beginEdit', index);
-		            editIndex = index;
+		        	editIndex = index;
+		            $('#voucherDg').datagrid('selectRow', index).datagrid('beginEdit', index);
+		            var ed = $('#voucherDg').datagrid('getEditor', {index:index,field:field});
+                    if (ed){
+                        ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+                    }
 		            
 		            //金额editor初始化需要
-		            var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
-		            $("input",$(ed.target).next("span")).on('focus',function(){  
+		            ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'summary'});
+		            $(ed.target).textbox('textbox').on('focus',function(){  
 		            	cellFocusFlag=null;
 		            });
-		            $("input",$(ed.target).next("span")).on('focus',function(){  
+		            ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
+		            $(ed.target).textbox('textbox').on('focus',function(){  
 		            	cellFocusFlag=null;
 		            });
 		            cellFocusFlag=null;
@@ -337,67 +332,77 @@ Voucher=function(){
 		append:function(){
 		    if (Voucher.endEditing()){
 		        $('#voucherDg').datagrid('appendRow',{});
-		        editIndex = $('#voucherDg').datagrid('getRows').length-1;
-		        $('#voucherDg').datagrid('selectRow', editIndex)
-		                .datagrid('beginEdit', editIndex);
 		    }
 		},
 		//删除行
 		removeit:function(){
 		    if (editIndex == undefined){return}
-		    $('#voucherDg').datagrid('cancelEdit', editIndex)
-		            .datagrid('deleteRow', editIndex);
+		    $('#voucherDg').datagrid('cancelEdit', editIndex).datagrid('deleteRow', editIndex);
 		    editIndex = undefined;
+		    Voucher.totalSum('d');
+		    Voucher.totalSum('cr');
 		},
 		//取消修改
 		reject:function(){
-            $('#voucherDg').datagrid('rejectChanges');
-            editIndex = undefined;
-            Voucher.changeRowMoney(footerdebit,"d");
-            Voucher.changeRowMoney(footercrebit,"cr");
-            Voucher.footerDX();
+			var tab = $TC.tabs('getSelected');  // get selected panel
+        	tab.panel('refresh');
         },
         //保存
 		save:function(isAdd){
+			$('#voucherSave').linkbutton('mydisable');
 			if (Voucher.endEditing()){
-				if(!$('#fm').form('validate')){// 表单验证
+				if(!$('#voucherFm').form('validate')){// 表单验证
+					$('#voucherSave').linkbutton('myenable');
 					return;
 				}
 				// 凭证分录数据
 				var params=Voucher.getChanges();
 				if(!params){
-					$.messager.alert('警告', "无凭证分录!", 'warning');
+					$.messager.alert('警告', "无凭证分录!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
 					return;
 				}
 				console.log(params);
 				if(!balanceFlag){// 借贷平衡
-					$.messager.alert('警告', "借贷不平衡!", 'warning');
+					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
 					return;
 				}
 				// 提交保存
 	            $.ajax({
 	                url: "voucher/save",
 	                type:'post',
-	                data:$("#fm").serialize()+params,
+	                data:$("#voucherFm").serialize()+params,
 	                success: function(data){
 	                    if(data.result){
 	                        if(!$("#id").val()){
-	                        	$.messager.alert('警告', "已生成了一张记账凭证，凭证字号为："+data.result, 'warning',function(){
+	                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
 	                        		if(isAdd){//新增
 	    	                        	Voucher.add();
 	    	                        }
+	                        		$('#voucherSave').linkbutton('enable');
 	                        	});
 	                        }else{
 	                        	if(isAdd){//新增
 		                        	Voucher.add();
 		                        }
+	                        	$('#voucherSave').linkbutton('enable');
 	                        }
 	                    }else{
-	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
+	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
+	                        	$('#voucherSave').linkbutton('enable');
+	                        });
 	                    }
-	                }
+	                },
+	                error: function(XMLHttpRequest, textStatus, errorThrown) {
+	                	$('#voucherSave').linkbutton('enable');
+                    }
 	            });
+		    }else{
+		    	$('#voucherSave').linkbutton('myenable');
 		    }
+		},
+		//保存
+		tempSave:function(){
+			alert("template save");
 		},
 		//表格修改数据
 		getChanges:function(){
@@ -405,7 +410,6 @@ Voucher=function(){
 			var rows = $('#voucherDg').datagrid('getRows');
 			for(i=0;i<rows.length;++i){
 				if(rows[i].subjectCode){
-					//修改会计科目
 					params+='&'+JSON.stringify(rows[i]);
 				}
 			}
@@ -519,11 +523,17 @@ Voucher=function(){
 		cellFocus:function(direction){
 			if(cellFocusFlag!=direction){
 				var rows=$('#voucherDg').datagrid('getRows');
-				$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target)[0].focus();
+				 var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Yuan'});
+                 if (ed){
+                	 ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+                 }
 				if(!(rows[editIndex]['new'+direction+'ebit']&&rows[editIndex]['new'+direction+'ebit']!=0)){
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Yuan')}).target).val('0');
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Angle')}).target).val('0');
 					$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:(direction+'Cent')}).target).val('0');
+					rows[editIndex][direction+'Yuan']='0';
+					rows[editIndex][direction+'Angle']='0';
+					rows[editIndex][direction+'Cent']='0';
 				}
 			}
 			cellFocusFlag=direction;
@@ -531,12 +541,12 @@ Voucher=function(){
         /*金额editor事件*/
         cellkeyUp:function(event,tthis,num,direction,field){
         	var rows=$('#voucherDg').datagrid('getRows');
-        	if(event.keyCode==46){
+        	if(event.keyCode==46){//Delete按键
         		console.log("delete");
         		Voucher.changeEditorMoney(0,direction);
-        	} else if(event.keyCode==8){
+        	} else if(event.keyCode==8){//Backspace按键
         		console.log("backspace");
-        	} else if(Voucher.endWith(tthis.value,'-')||Voucher.startWith(tthis.value,'-')){
+        	} else if(Voucher.endWith(tthis.value,'-')||Voucher.startWith(tthis.value,'-')){//"-"录入
         		if(rows[editIndex][direction+'pn']=='-'){
         			rows[editIndex][direction+'pn']='';
         			$("."+direction+"textMax").css("color","black");
@@ -544,17 +554,13 @@ Voucher=function(){
         			rows[editIndex][direction+'pn']='-';
         			$("."+direction+"textMax").css("color","red");
         		}
-        		tthis.value=tthis.value.replace('-','');
-        	} else if(Voucher.endWith(tthis.value,'.')||Voucher.startWith(tthis.value,'.')){
+        		tthis.value=rows[editIndex][field];
+        	} else if(Voucher.endWith(tthis.value,'.')||Voucher.startWith(tthis.value,'.')){//"."录入
     			$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Angle'}).target).focus();
-//	        		if(tthis.value&&tthis.value.length>1){
-//	        			tthis.value=tthis.value.charAt(Voucher.startWith(tthis.value,'.')?1:0);
-//	        		}else {
-//	        			tthis.value=rows[editIndex][field]?rows[editIndex][field]:'';
-//	        		}
-    			tthis.value=tthis.value.replace('.','');
+    			tthis.value=rows[editIndex][field];
     			return;
 			} else {
+				//金额只能录入一方，或借方或贷方
 	        	if(direction=='d'&&rows[editIndex]['newcrebit']&&rows[editIndex]['newcrebit']!=0){
 	        		var ed=$('#voucherDg').datagrid('getEditor', {index:editIndex,field:'crYuan'});
 	        		$(ed.target).focus();
@@ -573,7 +579,10 @@ Voucher=function(){
 	        		return;
 	        	}
 	        	//过滤空或非数字，金额只能录入数字
-	        	if(!tthis.value || (tthis.value&&!Voucher.checkNum(tthis.value))){
+	        	if(!tthis.value){
+	        		return;
+	        	}else if(tthis.value&&!Voucher.checkNum(tthis.value)){
+	        		tthis.value=rows[editIndex][field];
 	        		return;
 	        	}
         	}
@@ -588,7 +597,11 @@ Voucher=function(){
 			}
         	Voucher.changeEditorMoney(rowmoney,direction);
         	//合计
-			var money=0;
+			Voucher.totalSum(direction);
+        },
+        totalSum:function(direction){
+        	var rows=$('#voucherDg').datagrid('getRows');
+        	var money=0;
 			for(i=0;i<rows.length;++i){
 				money=parseInt(money)+Voucher.getMoney(direction,rows[i])*100;
 			}
@@ -619,6 +632,8 @@ Voucher=function(){
         	if(debit==crebit&&debit&&crebit){//借贷平衡
         		balanceFlag=true;
         		row['summary']+=Voucher.DX(debit/100);
+        	}else{
+        		balanceFlag=false;
         	}
         	$('#voucherDg').datagrid('reloadFooter');
         	Voucher.mergeFooterCells();
@@ -768,3 +783,34 @@ Voucher=function(){
 		}
 	};
 }();
+
+//自定义的金额editor
+$.extend($.fn.datagrid.defaults.editors, {
+    textMax: {
+        init: function(container, options){
+            var input = $('<input type="text" class="'+options.direction+'textMax" maxlength="5" onclick="Voucher.cellFocus(\''+options.direction+'\')" onkeyup="Voucher.cellkeyUp(event,this,'+options.num+',\''+options.direction+'\',\''+options.field+'\')" class="datagrid-editable-input" style="-webkit-ime-mode:disabled">').appendTo(container);
+            return input;
+        },
+        destroy: function(target){
+            $(target).remove();
+        },
+        getValue: function(target){
+            return $(target).val();
+        },
+        setValue: function(target, value){
+            $(target).val(value);
+        },
+        resize: function(target, width){
+            $(target)._outerWidth(width);
+        }
+    }
+});
+//扩展voucher maxlength规则
+$.extend($.fn.validatebox.defaults.rules, {     
+    voucherMaxLength: {     
+        validator: function(value, param){     
+            return param[0] >= value.length;     
+        },     
+        message: '请输入最大{0}位字符.'    
+    }     
+});

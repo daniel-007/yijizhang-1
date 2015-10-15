@@ -6,7 +6,7 @@
 <script type="text/javascript" src="resources/js/east.js"></script>
 <script type="text/javascript" src="resources/js/cashier.js"></script>
 <script type="text/javascript" src="resources/js/subjectBalance.js"></script>
-
+<script type="text/javascript"  src="resources/js/voucherTemplate.js"></script>
 
 <#--会计科目相关js-->
 <script type="text/javascript" src="resources/public/jqueryPlugin/jquery.maskedinput.min.js"></script>

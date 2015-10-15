@@ -48,7 +48,7 @@ public class CarryOverController  extends BaseController {
     @RequestMapping(value = ("/category/detail"))
     @ResponseBody
     public List<CompanyCommonValue> getCategoryDetail() {
-    	List<CompanyCommonValue> categoryDetails=voucherService.queryVoucherWordList();
+        List<CompanyCommonValue> categoryDetails = voucherService.queryVoucherWordList(1L);
         return categoryDetails;
     }
     /**
