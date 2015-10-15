@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.SearchDetailService;
@@ -44,6 +45,7 @@ public class SearchDetailController  extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = ("/submitNow"))
+	@ResponseBody
 	public  List<Map> submitNow(String startPeriod,String endPeriod,String startSubjectCode,String endSubjectCode,HttpSession session) {
 	
 		 return searchDetailService.submitNow(startPeriod, endPeriod,startSubjectCode,endSubjectCode,session);

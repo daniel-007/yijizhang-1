@@ -20,7 +20,7 @@
 <script type="text/javascript" src="resources/js/search/voucher/main.js"></script>
 
 <#--明细账相关js-->
-<script type="text/javascript" src="resources/js/research/detail/detailSearch.js"></script>
+<script type="text/javascript" src="resources/js/search/detail/detailSearch.js"></script>
 
 
 
