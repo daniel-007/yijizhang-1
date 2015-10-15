@@ -30,6 +30,8 @@ import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
+import cn.ahyc.yjz.model.VoucherTemplate;
+import cn.ahyc.yjz.model.VoucherTemplateDetail;
 import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.service.VoucherService;
 import cn.ahyc.yjz.util.Constant;
@@ -100,7 +102,14 @@ public class VoucherController extends BaseController{
     @RequestMapping("/voucherWordList")
     @ResponseBody
     public List<CompanyCommonValue> voucherWordList() {
-        List<CompanyCommonValue> list = voucherService.queryVoucherWordList();
+        List<CompanyCommonValue> list = voucherService.queryVoucherWordList(1L);// 1L：凭证字
+        return list;
+    }
+
+    @RequestMapping("/voucherTemplateTypeList")
+    @ResponseBody
+    public List<CompanyCommonValue> voucherTemplateTypeList() {
+        List<CompanyCommonValue> list = voucherService.queryVoucherWordList(2L);// 2L：模式凭证类别
         return list;
     }
 
@@ -167,7 +176,6 @@ public class VoucherController extends BaseController{
             }
             /** 保存 **/
             map.put("result", voucherService.save(voucher, details));
-            map.put("message", "保存成功");
         } catch (Exception e) {
             e.printStackTrace();
             map.put("message", "系统异常！");
@@ -203,5 +211,129 @@ public class VoucherController extends BaseController{
         model.addAttribute("subjectName", subjectCode);
         model.addAttribute("subjectCode", StringUtils.split(subjectCode, " ")[0]);
         return view("subjectBalance");
+    }
+
+    @RequestMapping("/voucherTemplate")
+    public String voucherTemplate(Model model) {
+        return view("voucherTemplate");
+    }
+
+    @RequestMapping("/voucherTemplateList")
+    @ResponseBody
+    public Map<String, Object> voucherTemplateList(HttpSession session) {
+        List<VoucherTemplate> list = voucherService.queryVoucherTemplateList();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("total", list != null && list.size() > 0 ? list.size() : 0);
+        map.put("rows", list);
+        return map;
+    }
+
+    @RequestMapping("/voucherTemplateAdd")
+    public String voucherTemplateAdd(Model model, Long voucherTemplateId, HttpSession session) {
+        VoucherTemplate voucherTemplate = new VoucherTemplate();
+        if (voucherTemplateId != null) {
+            voucherTemplate = voucherService.queryVoucherTemplate(voucherTemplateId);
+        }
+        model.addAttribute("voucherTemplate", voucherTemplate);
+        return view("voucherTemplateAdd");
+    }
+
+    @RequestMapping("/voucherTemplateDetailList")
+    @ResponseBody
+    public Map<String, Object> voucherTemplateDetailList(HttpSession session, Long voucherTemplateId) {
+        List<VoucherTemplateDetail> list = new ArrayList<VoucherTemplateDetail>();
+        if (voucherTemplateId != null) {
+            AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+            list = voucherService.queryVoucherTemplateDetailList(voucherTemplateId, accountBook.getId());
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("total", list != null && list.size() > 0 ? list.size() : 0);
+        map.put("rows", list);
+        return map;
+    }
+
+    @RequestMapping("/checkTemplateName")
+    @ResponseBody
+    public Map<String, Object> checkTemplateName(HttpSession session, String name, Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            if (StringUtils.isNoneBlank(name) && voucherService.checkTemplateName(name, id)) {
+                map.put("result", "success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", e.getMessage());
+        }
+        return map;
+    }
+
+    @RequestMapping("/deleteTemplate")
+    @ResponseBody
+    public Map<String, Object> deleteTemplate(Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            if (id!=null) {
+                voucherService.deleteTemplate(id);
+                map.put("result", "success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", e.getMessage());
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/saveTemplate", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> saveTemplate(HttpSession session, Model model, HttpServletRequest request,
+            VoucherTemplate voucherTemplate) {
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+
+            /** 组织凭证明细数据 **/
+            List<VoucherTemplateDetail> details = new ArrayList<VoucherTemplateDetail>();
+            String[] subjectCodeArr = request.getParameterValues("subjectCode");
+            if (subjectCodeArr != null) {
+                String[] summaryArr = request.getParameterValues("summary");
+                String[] debitArr = request.getParameterValues("debit");
+                String[] crebitArr = request.getParameterValues("credit");
+                VoucherTemplateDetail voucherTemplateDetail;
+                boolean addFlag;
+                for (int i = 0; i < subjectCodeArr.length; i++) {
+                    if (StringUtils.isNotBlank(debitArr[i]) && StringUtils.isNotBlank(crebitArr[i])) {
+                        throw new RuntimeException("同一凭证分录中借方金额、贷方金额只能存在一个");
+                    }
+                    voucherTemplateDetail = new VoucherTemplateDetail();
+                    addFlag = false;
+                    if (StringUtils.isNotBlank(summaryArr[i])) {
+                        addFlag = true;
+                        voucherTemplateDetail.setSummary(summaryArr[i]);
+                    }
+                    if (StringUtils.isNotBlank(subjectCodeArr[i])) {
+                        addFlag = true;
+                        voucherTemplateDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
+                    }
+                    if (StringUtils.isNotBlank(debitArr[i])) {
+                        addFlag = true;
+                        voucherTemplateDetail.setDebit(new BigDecimal(debitArr[i]));
+                    }
+                    if (StringUtils.isNotBlank(crebitArr[i])) {
+                        addFlag = true;
+                        voucherTemplateDetail.setCredit(new BigDecimal(crebitArr[i]));
+                    }
+                    if (addFlag) {
+                        details.add(voucherTemplateDetail);
+                    }
+                }
+            }
+            /** 保存 **/
+            voucherService.saveTemplate(voucherTemplate, details);
+            map.put("result", "保存成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("message", "系统异常！");
+        }
+        return map;
     }
 }

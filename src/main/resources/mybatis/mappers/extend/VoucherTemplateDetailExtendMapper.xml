@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ahyc.yjz.mapper.extend.VoucherTemplateDetailExtendMapper">
+
+  <select id="selectTemplateDetailList" parameterType="java.util.Map" resultType="java.util.Map">
+    <![CDATA[
+    SELECT 	
+   		t.summary,
+   		t.subject_code as subjectCode,
+		CONCAT(
+			t.subject_code,
+			' ',
+			a.subject_name
+		) AS subjectTextName,
+		t.debit,
+		t.credit
+    FROM voucher_template_detail t, account_subject a
+	WHERE
+		t.subject_code = a.subject_code
+		AND a.book_id = #{bookId,jdbcType=BIGINT}
+		AND t.template_id = #{voucherTemplateId,jdbcType=BIGINT}
+	ORDER BY
+		t.id ASC
+	]]>
+  </select>
+</mapper>
