@@ -1,6 +1,6 @@
-<script type="text/javascript"  src="resources/js/topbar.js" async="true"></script>
-<script type="text/javascript"  src="resources/js/welcome.js" async="true"></script>
-<script type="text/javascript"  src="resources/js/voucher.js"></script>
+<script type="text/javascript" src="resources/js/topbar.js" async="true"></script>
+<script type="text/javascript" src="resources/js/welcome.js" async="true"></script>
+<script type="text/javascript" src="resources/js/voucher.js"></script>
 <script type="text/javascript" src="resources/js/book.js"></script>
 <script type="text/javascript" src="resources/js/carryOver.js"></script>
 <script type="text/javascript" src="resources/js/east.js"></script>
@@ -17,7 +17,7 @@
 
 <#--凭证查询相关js-->
 <script src="resources/public/easyui/src/datagrid-groupview.js"></script>
-<script type="text/javascript" src="resources/js/research/voucher/main.js"></script>
+<script type="text/javascript" src="resources/js/search/voucher/main.js"></script>
 
 
 

@@ -189,6 +189,92 @@ Account_Subject = function () {
             });
 
         },
+
+        /**
+         * 专门给其他功能提供的会计科目查询页面.
+         */
+        init_search_subjects: function (callback) {
+
+            $("#account_subject_search_tabs").tabs({
+                border: false,
+                cache: true,
+                onSelect: function (title) {
+                    Account_Subject.subject_search_tab_onselect(callback);
+                }
+            });
+
+            setTimeout(function () {
+                Account_Subject.subject_search_tab_onselect(callback);
+            }, 0);
+        },
+
+        subject_search_tab_onselect: function (callback) {
+
+            var $accountSubject_tabs = $("#account_subject_search_tabs");
+            var id = $accountSubject_tabs.tabs('getSelected').panel('options').id;
+            var category_id = id.replace("account_subject_search_category_", "").replace(",", "");
+
+            //判断是否已经加载数据.
+            if ($("#" + id).html()) {
+                return;
+            }
+
+            /**
+             * 以下内容加载树形数据.
+             */
+            var table_id = category_id + "_search_table";
+            $accountSubject_tabs.tabs('getSelected').html("<table id='" + table_id + "' style='width: 100%;'></table>");
+            $("#" + table_id).treegrid({
+                url: 'account/subject/category/' + category_id + '/subjects',
+                idField: 'subject_code',
+                treeField: 'subject_code',
+                fitColumns: true,
+                border: false,
+                columns: [
+                    [
+                        {title: '编码', field: 'subject_code', width: 200},
+                        {title: '名称', field: 'subject_name', width: 300},
+                        {title: '分类', field: 'category_datail_subject_name', width: 200},
+                        {title: '方向', field: 'direction', width: 100, formatter: function (value) {
+                            return value == 1 ? '<span style="color: green;">借</span>' : '<span style="color: red;">贷</span>';
+                        }}
+                    ]
+                ],
+                onDblClickRow: function (row) {
+                    callback(row);
+                    setTimeout(function () {
+                        $('#default_win').window("close");
+                    }, 0);
+                },
+                loadFilter: function (data) {
+                    var d = [];
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].id != -1) {
+                            d.push(data[i]);
+                        }
+                    }
+                    return d;
+                }
+            });
+        },
+
+        /**
+         * 调用可查看会计科目，双击返回会计科目编码.
+         *
+         * @param callback
+         */
+        open_subject_search_win: function (callback) {
+
+            App.openWin("会计科目", 600, 400, "account/subject/search",
+                function () {
+                    Account_Subject.init_search_subjects(callback);
+                }
+
+            );
+
+        },
+
         init: function () {
 
             this.init_tab();

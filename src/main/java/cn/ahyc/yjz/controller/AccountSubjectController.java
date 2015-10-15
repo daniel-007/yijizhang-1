@@ -209,6 +209,25 @@ public class AccountSubjectController extends BaseController {
 
 
     /**
+     * 提供给其他功能的查询页面
+     *
+     * @param model
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = ("/search"))
+    public String search(Model model, HttpSession session) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        Long bookId = period.getBookId();
+
+        List<AccountSubject> templates = accountSubjectService.getCategoriesByCode(category_subject_code, bookId);
+        model.addAttribute("categories", templates);
+
+        return view("accountSubject/search");
+    }
+
+    /**
      * 新增 修改页面入口.
      *
      * @param categoryId
