@@ -30,6 +30,13 @@ public class SubjectBalanceController extends BaseController {
         this.pathPrefix = "module/subjectBalance/";
 	}
 
+    /**
+     * 查看科目余额表.
+     * @param subjectCode
+     * @param periodId
+     * @param session
+     * @return
+     */
     @RequestMapping("/subjectBalanceList")
     @ResponseBody
     public Map<String, Object> subjectBalanceList(Long subjectCode, Long periodId, HttpSession session) {

@@ -7,7 +7,8 @@
 				<span style="font-size: 12px;">
 					活动账套：
 					<#if CURRENT_ACCOUNT_BOOK??>${CURRENT_ACCOUNT_BOOK.bookName}<input id="currentAccountBookId" type="hidden" value="${CURRENT_ACCOUNT_BOOK.id}"/></#if>
-                    &#8194;<#if CURRENT_PERIOD??>第${CURRENT_PERIOD.currentPeriod}期<input id="currentPeriodId" type="hidden" value="${CURRENT_PERIOD.id}"/></#if>
+                    &#8194;<#if CURRENT_YEAR??>${CURRENT_YEAR}</#if>
+					<#if CURRENT_PERIOD??>第${CURRENT_PERIOD.currentPeriod}期<input id="currentPeriodId" type="hidden" value="${CURRENT_PERIOD.id}"/></#if>
                     &#8194;&#8194;&#8194;
 					<input id="accountBookList" style="border-radius: 0px;display: none;"/>
                     <a id="switchBtn" href="javascript:void(0);">切换</a>
@@ -26,8 +27,37 @@
 			<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
 				<input type="hidden" id="redirectFlag" value="true"/>
                 <li><a id="logoutLink" href="javascript:void(0);"><i class="fa fa-user"></i>&#8194;<@security.authentication property="name"/></a></li>
+				<div id="passwordWin" class="easyui-window"
+					 title="<i class='fa fa-lock'></i>&#8194;修改密码"
+                     style="width:400px;height:220px"
+                     data-options="modal:true,collapsible:false,maximizable:false,resizable:false,closed:true,
+                     	onLoad:function(){
+                            $('#old_passwd').next('span').find('input').focus();
+                        },
+                        onClose:function(){
+                            $('#passwordForm_msg').hide();
+                            $('#passwordForm').form('reset');
+                        }">
+					<form id="passwordForm" method="post">
+						<div style="padding-top: 20px; text-align: center;">
+							<div id="passwordForm_msg" style="margin-bottom:10px;width: 100%;display: none;">
+
+							</div>
+							<div style="margin-bottom:10px;width: 100%;">
+								<input id="old_passwd" name="old_passwd" class="easyui-textbox" type="password" style="width:80%;height:30px;padding:12px"
+									   data-options="required:true,missingMessage:'请输入旧密码',validType:'minLength[5]',prompt:'旧密码'">
+							</div>
+							<div style="margin-bottom:10px;width: 100%;">
+								<input id="new_passwd" name="new_passwd" class="easyui-textbox" type="password" style="width:80%;height:30px;padding:12px"
+									   data-options="required:true,missingMessage:'请输入新密码',validType:'minLength[5]',prompt:'新密码'">
+							</div>
+							<div style="width: 100%;">
+								<a id="savePasswdBtn" href="javascript:TopBar.savePassWd();" class="button button-raised button-rounded" style="width:80%;"><i class="fa fa-floppy-o"></i> 保&#8194;&#8194;存</a>
+							</div>
+						</div>
+					</form>
+				</div>
 			</@security.authorize>
 		</ul>
 	</div>
 </div>
-<div id="passwordWin"></div>

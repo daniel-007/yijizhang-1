@@ -41,167 +41,167 @@ import cn.ahyc.yjz.util.Constant;
  */
 @Controller
 @RequestMapping("/voucher")
-public class VoucherController extends BaseController{
+public class VoucherController extends BaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VoucherController.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(VoucherController.class);
 
-    @Autowired
-    private VoucherService voucherService;
+		@Autowired
+		private VoucherService voucherService;
 
-    @Autowired
-    private PeriodService periodService;
+		@Autowired
+		private PeriodService periodService;
 
-	public VoucherController() {
-	    this.pathPrefix="module/voucher/";
-	}
+		public VoucherController() {
+				this.pathPrefix = "module/voucher/";
+		}
 
-	@RequestMapping("/main")
-    public String voucher(Model model, Long voucherId, HttpSession session) {
-        Voucher voucher = new Voucher();
-        Period voucherPeriod = null;
-        if (voucherId != null) {
-            voucher = voucherService.queryVoucher(voucherId);
-            voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
-            model.addAttribute("currentPeriod", voucherPeriod.getCurrentPeriod());
-        }
-        model.addAttribute("voucher", voucher);
-        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
-        model.addAttribute("sessionBook", accountBook.getInitYear());
-        model.addAttribute("sessionPeriod", period.getCurrentPeriod());
-        model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(period.getId()));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
-        String systemtime = dateFormat.format(new Date());
-        model.addAttribute("voucherTime", systemtime.startsWith(sessiontime) ? systemtime : sessiontime + "-01");
-	    return view("voucher");
-	}
-	
-    @RequestMapping("/voucherDetailList")
-    @ResponseBody
-    public Map<String, Object> voucherDetailList(Long voucherId, HttpSession session) {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
-        if (voucherId != null) {
-            long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
-            list = voucherService.queryVoucherDetailList(voucherId, bookId);
-            footerlist.add(voucherService.queryDetailTotal(voucherId));
-        } else {
-            footerlist.add(new HashMap<String, Object>());
-        }
+		@RequestMapping("/main")
+		public String voucher(Model model, Long voucherId, HttpSession session) {
+				Voucher voucher = new Voucher();
+				Period voucherPeriod = null;
+				if (voucherId != null) {
+						voucher = voucherService.queryVoucher(voucherId);
+						voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
+						model.addAttribute("currentPeriod", voucherPeriod.getCurrentPeriod());
+				}
+				model.addAttribute("voucher", voucher);
+				Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+				AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+				model.addAttribute("sessionBook", accountBook.getInitYear());
+				model.addAttribute("sessionPeriod", period.getCurrentPeriod());
+				model.addAttribute("voucherNo", voucherService.queryNextVoucherNo(period.getId()));
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
+				String systemtime = dateFormat.format(new Date());
+				model.addAttribute("voucherTime", systemtime.startsWith(sessiontime) ? systemtime : sessiontime + "-01");
+				return view("voucher");
+		}
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("total", list != null && list.size() > 0 ? list.size() : 0);
-        map.put("rows", list);
-        map.put("footer", footerlist);
-        return map;
-    }
+		@RequestMapping("/voucherDetailList")
+		@ResponseBody
+		public Map<String, Object> voucherDetailList(Long voucherId, HttpSession session) {
+				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+				List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
+				if (voucherId != null) {
+						long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
+						list = voucherService.queryVoucherDetailList(voucherId, bookId);
+						footerlist.add(voucherService.queryDetailTotal(voucherId));
+				} else {
+						footerlist.add(new HashMap<String, Object>());
+				}
 
-    @RequestMapping("/voucherWordList")
-    @ResponseBody
-    public List<CompanyCommonValue> voucherWordList() {
-        List<CompanyCommonValue> list = voucherService.queryVoucherWordList();
-        return list;
-    }
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("total", list != null && list.size() > 0 ? list.size() : 0);
+				map.put("rows", list);
+				map.put("footer", footerlist);
+				return map;
+		}
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> save(HttpSession session, Model model, HttpServletRequest request, Voucher voucher) {
+		@RequestMapping("/voucherWordList")
+		@ResponseBody
+		public List<CompanyCommonValue> voucherWordList() {
+				List<CompanyCommonValue> list = voucherService.queryVoucherWordList();
+				return list;
+		}
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
+		@RequestMapping(value = "/save", method = RequestMethod.POST)
+		@ResponseBody
+		public Map<String, Object> save(HttpSession session, Model model, HttpServletRequest request, Voucher voucher) {
 
-            Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-            AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
-            if (period.getId().equals(voucher.getPeriodId())) {
-                throw new RuntimeException("当前会计期间id：" + period.getId() + "不等于保存凭证会计期间id：" + voucher.getPeriodId());
-            }
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
-            String voucherTime = dateFormat.format(voucher.getVoucherTime());
-            if (!StringUtils.startsWith(voucherTime, sessiontime)) {
-                throw new RuntimeException("凭证日期" + voucherTime + "不在当前会计期间日期" + sessiontime + "范围内");
-            }
-            voucher.setPeriodId(period.getId());
-            /** 组织凭证明细数据 **/
-            List<VoucherDetail> details = new ArrayList<VoucherDetail>();
-            String[] subjectCodeArr = request.getParameterValues("subjectCode");
-            if (subjectCodeArr != null) {
-                if (subjectCodeArr.length <= 0) {
-                    throw new RuntimeException("必须存在凭证分录");
-                }
-                String[] summaryArr = request.getParameterValues("summary");
-                String[] debitArr = request.getParameterValues("newdebit");
-                String[] crebitArr = request.getParameterValues("newcrebit");
-                VoucherDetail voucherDetail;
-                BigDecimal debit;
-                BigDecimal credit;
-                BigDecimal debitSum = new BigDecimal(0);
-                BigDecimal crebitSum = new BigDecimal(0);
-                for (int i = 0; i < subjectCodeArr.length; i++) {
-                    LOGGER.info("借方：{}|贷方：{}", debitArr[i], crebitArr[i]);
-                    if (StringUtils.isBlank(debitArr[i]) && StringUtils.isBlank(crebitArr[i])) {
-                        throw new RuntimeException("同一凭证分录中借方金额、贷方金额必须存在一个");
-                    }
-                    if (StringUtils.isNotBlank(debitArr[i]) && StringUtils.isNotBlank(crebitArr[i])) {
-                        throw new RuntimeException("同一凭证分录中借方金额、贷方金额只能存在一个");
-                    }
-                    voucherDetail = new VoucherDetail();
-                    voucherDetail.setSummary(summaryArr[i]);
-                    voucherDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
-                    if (StringUtils.isNotBlank(debitArr[i])) {
-                        debit = new BigDecimal(debitArr[i]);
-                        debitSum = debitSum.add(debit);
-                        voucherDetail.setDebit(debit);
-                    }
-                    if (StringUtils.isNotBlank(crebitArr[i])) {
-                        credit = new BigDecimal(crebitArr[i]);
-                        crebitSum = crebitSum.add(credit);
-                        voucherDetail.setCredit(credit);
-                    }
-                    details.add(voucherDetail);
-                }
-                if (debitSum.compareTo(crebitSum) != 0) {
-                    throw new RuntimeException("记账凭证借贷不平衡，借方：" + debitSum + "|贷方：" + crebitSum);
-                }
-            }
-            /** 保存 **/
-            map.put("result", voucherService.save(voucher, details));
-            map.put("message", "保存成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("message", "系统异常！");
-        }
-        return map;
-    }
+				Map<String, Object> map = new HashMap<String, Object>();
+				try {
 
-    @RequestMapping("/accountSubjectList")
-    @ResponseBody
-    public List<AccountSubject> accountSubjectList(HttpSession session) {
-        long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
-        List<AccountSubject> list = voucherService.queryAccountSubjectList(bookId);
-        return list;
-    }
+						Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+						AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+						if (period.getId().equals(voucher.getPeriodId())) {
+								throw new RuntimeException("当前会计期间id：" + period.getId() + "不等于保存凭证会计期间id：" + voucher.getPeriodId());
+						}
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
+						String voucherTime = dateFormat.format(voucher.getVoucherTime());
+						if (!StringUtils.startsWith(voucherTime, sessiontime)) {
+								throw new RuntimeException("凭证日期" + voucherTime + "不在当前会计期间日期" + sessiontime + "范围内");
+						}
+						voucher.setPeriodId(period.getId());
+						/** 组织凭证明细数据 **/
+						List<VoucherDetail> details = new ArrayList<VoucherDetail>();
+						String[] subjectCodeArr = request.getParameterValues("subjectCode");
+						if (subjectCodeArr != null) {
+								if (subjectCodeArr.length <= 0) {
+										throw new RuntimeException("必须存在凭证分录");
+								}
+								String[] summaryArr = request.getParameterValues("summary");
+								String[] debitArr = request.getParameterValues("newdebit");
+								String[] crebitArr = request.getParameterValues("newcrebit");
+								VoucherDetail voucherDetail;
+								BigDecimal debit;
+								BigDecimal credit;
+								BigDecimal debitSum = new BigDecimal(0);
+								BigDecimal crebitSum = new BigDecimal(0);
+								for (int i = 0; i < subjectCodeArr.length; i++) {
+										LOGGER.info("借方：{}|贷方：{}", debitArr[i], crebitArr[i]);
+										if (StringUtils.isBlank(debitArr[i]) && StringUtils.isBlank(crebitArr[i])) {
+												throw new RuntimeException("同一凭证分录中借方金额、贷方金额必须存在一个");
+										}
+										if (StringUtils.isNotBlank(debitArr[i]) && StringUtils.isNotBlank(crebitArr[i])) {
+												throw new RuntimeException("同一凭证分录中借方金额、贷方金额只能存在一个");
+										}
+										voucherDetail = new VoucherDetail();
+										voucherDetail.setSummary(summaryArr[i]);
+										voucherDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
+										if (StringUtils.isNotBlank(debitArr[i])) {
+												debit = new BigDecimal(debitArr[i]);
+												debitSum = debitSum.add(debit);
+												voucherDetail.setDebit(debit);
+										}
+										if (StringUtils.isNotBlank(crebitArr[i])) {
+												credit = new BigDecimal(crebitArr[i]);
+												crebitSum = crebitSum.add(credit);
+												voucherDetail.setCredit(credit);
+										}
+										details.add(voucherDetail);
+								}
+								if (debitSum.compareTo(crebitSum) != 0) {
+										throw new RuntimeException("记账凭证借贷不平衡，借方：" + debitSum + "|贷方：" + crebitSum);
+								}
+						}
+						/** 保存 **/
+						map.put("result", voucherService.save(voucher, details));
+						map.put("message", "保存成功");
+				} catch (Exception e) {
+						e.printStackTrace();
+						map.put("message", "系统异常！");
+				}
+				return map;
+		}
 
-    @RequestMapping("/help")
-    public String help() {
-        return view("help");
-    }
+		@RequestMapping("/accountSubjectList")
+		@ResponseBody
+		public List<AccountSubject> accountSubjectList(HttpSession session) {
+				long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
+				List<AccountSubject> list = voucherService.queryAccountSubjectList(bookId);
+				return list;
+		}
 
-    @RequestMapping("/subjectBalance")
-    public String subjectBalance(Model model, String subjectCode, Long voucherId, HttpSession session) {
-        Period voucherPeriod = null;
-        if (voucherId != null) {
-            Voucher voucher = voucherService.queryVoucher(voucherId);
-            voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
-        }
-        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
-        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-        model.addAttribute("currentPeriod",
-                voucherPeriod != null ? voucherPeriod.getCurrentPeriod() : period.getCurrentPeriod());
-        model.addAttribute("moneyCode", accountBook.getMoneyCode());
-        model.addAttribute("subjectName", subjectCode);
-        model.addAttribute("subjectCode", StringUtils.split(subjectCode, " ")[0]);
-        return view("subjectBalance");
-    }
+		@RequestMapping("/help")
+		public String help() {
+				return view("help");
+		}
+
+		@RequestMapping("/subjectBalance")
+		public String subjectBalance(Model model, String subjectCode, Long voucherId, HttpSession session) {
+				Period voucherPeriod = null;
+				if (voucherId != null) {
+						Voucher voucher = voucherService.queryVoucher(voucherId);
+						voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
+				}
+				AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+				Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+				model.addAttribute("currentPeriod",
+							voucherPeriod != null ? voucherPeriod.getCurrentPeriod() : period.getCurrentPeriod());
+				model.addAttribute("moneyCode", accountBook.getMoneyCode());
+				model.addAttribute("subjectName", subjectCode);
+				model.addAttribute("subjectCode", StringUtils.split(subjectCode, " ")[0]);
+				return view("subjectBalance");
+		}
 }

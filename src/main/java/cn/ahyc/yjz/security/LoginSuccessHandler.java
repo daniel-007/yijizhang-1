@@ -50,8 +50,10 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 						accountBookId = accountBook==null?accountBookId:accountBook.getId();
 				}
 				//把上次操作的账套ID放到Session里面，登录的时候，默认操作的账套ID是上次操作的账套
-				request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBookService.selectAccountBookById(accountBookId));
-				request.getSession().setAttribute(Constant.CURRENT_PERIOD,periodService.selectCurrentPeriod(accountBookId));
+				AccountBook accountBook = accountBookService.selectAccountBookById(accountBookId);
+				request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBook);
+				request.getSession().setAttribute(Constant.CURRENT_YEAR, accountBook.getInitYear()+"年");
+				request.getSession().setAttribute(Constant.CURRENT_PERIOD, periodService.selectCurrentPeriod(accountBookId));
 
 				//保存本次的登录历史
 				LoginHistory loginHistory = new LoginHistory();
