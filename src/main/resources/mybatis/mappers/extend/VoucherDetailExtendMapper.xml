@@ -98,7 +98,7 @@
         AND t2.voucher_id = t1.id
         AND t3.book_id = t.book_id
         AND t3.subject_code = t2.subject_code
-    ORDER BY t1.voucher_time DESC
+    ORDER BY t1.voucher_no
   </select>
 
 
@@ -113,8 +113,8 @@
             AND t2.voucher_id = t1.id
             AND t3.book_id = t.book_id
             AND t3.subject_code = t2.subject_code
-        ORDER BY t1.voucher_time DESC
-        ) tt
+        ORDER BY t1.voucher_no
+        )
     WHERE tt.voucher LIKE #{keyword}
         OR tt.summary LIKE #{keyword}
         OR tt.subject_code LIKE #{keyword}
