@@ -6,7 +6,6 @@ package cn.ahyc.yjz.config;
  * @date: 15/9/25
  */
 
-import cn.ahyc.yjz.security.LoginFailureHandler;
 import cn.ahyc.yjz.security.LoginSuccessHandler;
 import cn.ahyc.yjz.service.AccountBookService;
 import cn.ahyc.yjz.service.LoginHistoryService;
@@ -53,12 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				return loginSuccessHandler;
 		}
 
-		@Bean
-		public LoginFailureHandler loginFailureHandler(){
-				return  new LoginFailureHandler();
-		}
-
-
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 				http.csrf().csrfTokenRepository(csrfTokenRepository());
@@ -66,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 							.anyRequest().fullyAuthenticated()
 							.and().formLogin()
 							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())
-							.failureUrl("/login?error").failureHandler(loginFailureHandler())
+							.failureUrl("/login?error")
 							.loginPage("/login").permitAll()
 							.and().logout().logoutSuccessUrl("/login?logout").invalidateHttpSession(true).permitAll()
 							.and().sessionManagement().maximumSessions(10).expiredUrl("/login?expired");

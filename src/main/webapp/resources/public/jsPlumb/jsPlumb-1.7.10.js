@@ -1660,7 +1660,7 @@
             /* test to see if the parent needs to be scrolled
              if (scroll) {
              var pnsl = dragEl.parentNode.scrollLeft, pnst = dragEl.parentNode.scrollTop;
-             console.log("scroll!", pnsl, pnst);
+             console.actionLog("scroll!", pnsl, pnst);
              }*/
         };
         this.destroy = function() {
@@ -3853,7 +3853,7 @@
             // prepare a final set of parameters to create connection with
             var _p = _prepareConnectionParams(params, referenceParams), jpc;
             // TODO probably a nicer return value if the connection was not made.  _prepareConnectionParams
-            // will return null (and log something) if either endpoint was full.  what would be nicer is to
+            // will return null (and actionLog something) if either endpoint was full.  what would be nicer is to
             // create a dedicated 'error' object.
             if (_p) {
                 if (_p.source == null && _p.sourceEndpoint == null) {

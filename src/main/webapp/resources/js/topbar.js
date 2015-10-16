@@ -2,6 +2,10 @@ TopBar = function(){
 
     return {
 
+        init:function(){
+            this.bindEvent();
+        },
+
         bindEvent: function () {
 
             //绑定注销按钮事件
@@ -16,6 +20,7 @@ TopBar = function(){
                         border: false
                     });
                 },
+
                 onShow: function(){
                     var t = $(this);
                     t.tooltip('tip').unbind().bind('mouseenter', function(){
@@ -23,9 +28,10 @@ TopBar = function(){
                     }).bind('mouseleave', function(){
                         t.tooltip('hide');
                     });
+
                     //绑定事件
                     $('#passwordLink').click(function(){
-                        TopBar.openPasswordWin();
+                        $('#passwordWin').panel('open');
                     });
                 }
             });
@@ -88,36 +94,13 @@ TopBar = function(){
             });
         },
 
-        //打开修改密码弹窗
-        openPasswordWin:function(){
-            $('#passwordWin').window({
-                title:'<i class="fa fa-lock"></i>&#8194;修改密码',
-                width:400,
-                height:220,
-                collapsible:false,
-                maximizable:false,
-                resizable:false,
-                modal:true,
-                href:'/password',
-                onLoad:function(){
-                    //保存密码按钮单击事件
-                    $('#savePasswdBtn').click(function(){
-                        TopBar.savePassWd();
-                    });
-                },
-                onClose:function(){
-                    $('#passwordForm_msg').hide();
-                    $('#passwordForm').form('reset');
-                }
-            });
-        },
-
         //保存密码
         savePassWd:function(){
 
             $f = $('#passwordForm');
             $o = $('#old_passwd');
             $n = $('#new_passwd');
+            $m = $('#passwordForm_msg');
             if(!$f.form('validate')){
                 if(!$o.textbox('validate')){
                     $o.focus();
@@ -127,7 +110,9 @@ TopBar = function(){
                 return;
             }
 
-            $m = $('#passwordForm_msg');
+            //去掉a标签中的onclick事件
+            $('#savePasswdBtn').removeAttr('href');
+            $("#savePasswdBtn>i").addClass("fa-spinner",true);
             $.ajax({
                 url: "/password/save",
                 context: document.body,
@@ -137,6 +122,8 @@ TopBar = function(){
                     'newPasswd': $.trim($n.val())
                 },
                 success:function(data){
+                    $('#savePasswdBtn').attr('href',"javascript:TopBar.savePassWd();");
+                    $("#savePasswdBtn>i").removeClass("fa-spinner",true);
                     $m.html('<label style="width:80%;"><i class="fa fa-info-circle"></i>&#8194;'+data.msg+'</label>')
                         .css({"color":data.success?"#009966":"#CC3333"})
                         .show();
@@ -147,13 +134,11 @@ TopBar = function(){
                     }
                 }
             });
-
-
         }
     };
 
 }();
 
 $(function(){
-    TopBar.bindEvent();
+    TopBar.init();
 });

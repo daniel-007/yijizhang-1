@@ -34,6 +34,7 @@ public class CashierController  extends BaseController{
 	private AccountSubjectService accountSubjectService;
 	@Autowired
 	private CashierService cashierService;
+
 	/**
 	 * 初始化页面.
 	 *
@@ -50,13 +51,11 @@ public class CashierController  extends BaseController{
 		return view("main");
 	}
 
-	/**
-	 * 检查账套名称是否已经存在.
-	 *
-	 * @param name
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
+		/**
+		 * 检查账套名称是否已经存在.
+		 * @param session
+		 * @return
+		 */
 	@RequestMapping("/is/balance")
 	@ResponseBody
 	public Boolean isBalance(HttpSession session) {
@@ -67,13 +66,12 @@ public class CashierController  extends BaseController{
 		map=accountSubjectService.balance(bookId, category_subject_code);
 		return (Boolean) map.get("isBalance");
 	}
-	
-	/**
-	 * 结账
-	 *
-	 * @param name
-	 * @return
-	 */
+
+		/**
+		 * 结账.
+		 * @param session
+		 * @return
+		 */
 	@RequestMapping("/submit")
 	@ResponseBody
 	public Map<String,Object> cashierSubmit(HttpSession session) {

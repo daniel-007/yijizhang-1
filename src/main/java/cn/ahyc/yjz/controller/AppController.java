@@ -16,6 +16,7 @@
 
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.LoginHistory;
 import cn.ahyc.yjz.service.AccountBookService;
 import cn.ahyc.yjz.service.LoginHistoryService;
@@ -100,15 +101,6 @@ public class AppController {
       }
 
       /**
-       * 修改密码页面.
-       * @return
-       */
-      @RequestMapping("/password")
-      public String password(){
-            return "common/password";
-      }
-
-      /**
        * 修改保存密码.
        * @return
        */
@@ -161,8 +153,10 @@ public class AppController {
             if(result<=0){
                   return false;
             }else{
-                  request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBookService.selectAccountBookById(id));
-                  request.getSession().setAttribute(Constant.CURRENT_PERIOD,periodService.selectCurrentPeriod(id));
+                  AccountBook accountBook = accountBookService.selectAccountBookById(id);
+                  request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBook);
+                  request.getSession().setAttribute(Constant.CURRENT_YEAR, accountBook.getInitYear()+"年");
+                  request.getSession().setAttribute(Constant.CURRENT_PERIOD, periodService.selectCurrentPeriod(id));
                   return true;
             }
       }

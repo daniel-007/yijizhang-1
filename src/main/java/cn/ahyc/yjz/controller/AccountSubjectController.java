@@ -139,6 +139,7 @@ public class AccountSubjectController extends BaseController {
 
 
     /**
+     * 删除会计科目.
      * @param subjectId
      * @return
      */
