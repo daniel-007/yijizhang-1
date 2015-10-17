@@ -4,7 +4,7 @@
         <i class="fa fa-home"></i><br/>
         <small style="font-size:12px;">首页</small>
     </button>
-    <button onClick="App.addTab('记账','voucher/main',true);"
+    <button onClick="App.addVoucherTab('记账','voucher/main',true);"
             class="button button-glow button-primary button-box button-giant button-longshadow-left">
         <i class="fa fa-pencil-square-o"></i><br/>
         <small style="font-size:12px;">记账</small>

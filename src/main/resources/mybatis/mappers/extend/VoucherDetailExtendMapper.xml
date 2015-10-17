@@ -50,11 +50,14 @@
     <![CDATA[
     SELECT 	
    		t.summary,
+   		t.subject_code AS subjectCode,
+   		t.debit as newdebit,
+   		t.credit as newcrebit,
 		CONCAT(
 			t.subject_code,
 			' ',
 			a.subject_name
-		) AS subjectCode,
+		) AS subjectTextName,
 		IF(t.debit<0,'-','') as dpn,
 		IF(t.credit<0,'-','') as crpn,
 		NULLIF(SUBSTRING(LPAD(ABS(t.debit), 12, 'a'), 1, 1),'a') AS dHundredMillion,

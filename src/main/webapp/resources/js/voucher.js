@@ -13,7 +13,7 @@ Voucher=function(){
 	
 	return {
 		//凭证页面初始化
-		init:function(id,period,book,voucherWord) {
+		init:function(id,period,book,voucherWord,templateId) {
 			book=book.replace(',','');
 			//新增
 			$('#voucherAdd,#voucherMm1Add').on('click', function() {
@@ -116,7 +116,7 @@ Voucher=function(){
 			});
 			//凭证字
 			$('#voucherWord').combobox({
-			    url:'voucher/voucherWordList',
+			    url:'companyCommonValue/voucherWordList',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -146,10 +146,10 @@ Voucher=function(){
 				singleSelect:true,
 				fitColumns: true,
 				//fit:true,
-				//toolbar: '#tb',
+				toolbar: '#voucherMenu,#voucherDgTd',
 				onClickCell:Voucher.onClickCell,
 				url:'voucher/voucherDetailList',
-				queryParams:{voucherId:id},
+				queryParams:{voucherId:id,voucherTemplateId:templateId},
 				method:'get',
 				showFooter:true,
 				columns:[[
@@ -210,9 +210,7 @@ Voucher=function(){
 						{field:'crCent',title:'分',width:5,align:'center',editor:'textbox',editor:{type:'textMax',options:{num:1,direction:'cr',field:'crCent'}},formatter:Voucher.formatCredit}
 				      ]],
 				onLoadSuccess:function(data){
-					if(data&&data.total>=5){
-						console.log('not null');
-					} else {
+					if(!(data&&data.total>=5)){
 						var len = data&&data.total>0?5-data.total:5;
 				        for(i=0;i<len;++i){
 				        	$('#voucherDg').datagrid('appendRow',{});
@@ -242,10 +240,10 @@ Voucher=function(){
         //初始化总计金额
         initFooterCells:function(){
 			var row = $('#voucherDg').datagrid('getFooterRows')[0];
-			footerdebit = Voucher.cellSetValue(row['debit']);
-			footercrebit = Voucher.cellSetValue(row['credit']);
-			debit = Voucher.cellSetValue(row['debit']);
-			crebit = Voucher.cellSetValue(row['credit']);
+			footerdebit = Voucher.cellSetRealNum(row['debit']);
+			footercrebit = Voucher.cellSetRealNum(row['credit']);
+			debit = Voucher.cellSetRealNum(row['debit']);
+			crebit = Voucher.cellSetRealNum(row['credit']);
 			Voucher.changeRowMoney(debit,"d");
 			Voucher.changeRowMoney(crebit,"cr");
 			Voucher.footerDX();
@@ -361,7 +359,6 @@ Voucher=function(){
 					$.messager.alert('警告', "无凭证分录!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
 					return;
 				}
-				console.log(params);
 				if(!balanceFlag){// 借贷平衡
 					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
 					return;
@@ -373,34 +370,33 @@ Voucher=function(){
 	                data:$("#voucherFm").serialize()+params,
 	                success: function(data){
 	                    if(data.result){
+	                    	$('#voucherSave').linkbutton('myenable');
 	                        if(!$("#id").val()){
 	                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
 	                        		if(isAdd){//新增
 	    	                        	Voucher.add();
 	    	                        }
-	                        		$('#voucherSave').linkbutton('enable');
 	                        	});
 	                        }else{
 	                        	if(isAdd){//新增
 		                        	Voucher.add();
 		                        }
-	                        	$('#voucherSave').linkbutton('enable');
 	                        }
 	                    }else{
+	                    	$('#voucherSave').linkbutton('myenable');
 	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
-	                        	$('#voucherSave').linkbutton('enable');
 	                        });
 	                    }
 	                },
 	                error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                	$('#voucherSave').linkbutton('enable');
+	                	$('#voucherSave').linkbutton('myenable');
                     }
 	            });
 		    }else{
 		    	$('#voucherSave').linkbutton('myenable');
 		    }
 		},
-		//保存
+		//保存为模式凭证
 		tempSave:function(){
 			alert("template save");
 		},
@@ -410,6 +406,12 @@ Voucher=function(){
 			var rows = $('#voucherDg').datagrid('getRows');
 			for(i=0;i<rows.length;++i){
 				if(rows[i].subjectCode){
+					if(!rows[i].newdebit||(rows[i].newdebit&&rows[i].newdebit==0)){
+						rows[i].newdebit='';
+					}
+					if(!rows[i].newcrebit||(rows[i].newcrebit&&rows[i].newcrebit==0)){
+						rows[i].newcrebit='';
+					}
 					params+='&'+JSON.stringify(rows[i]);
 				}
 			}
@@ -477,7 +479,6 @@ Voucher=function(){
 				row['newcrebit']='';
 				row['new'+direction+'ebit']=pval;
 			}
-			console.log("pval:"+pval);
 			return pval;
 		},
 		//单行Editor金额合计
@@ -520,6 +521,7 @@ Voucher=function(){
 			}
 			return pval;
 		},
+		//金额得到焦点事件
 		cellFocus:function(direction){
 			if(cellFocusFlag!=direction){
 				var rows=$('#voucherDg').datagrid('getRows');
@@ -542,10 +544,8 @@ Voucher=function(){
         cellkeyUp:function(event,tthis,num,direction,field){
         	var rows=$('#voucherDg').datagrid('getRows');
         	if(event.keyCode==46){//Delete按键
-        		console.log("delete");
         		Voucher.changeEditorMoney(0,direction);
         	} else if(event.keyCode==8){//Backspace按键
-        		console.log("backspace");
         	} else if(Voucher.endWith(tthis.value,'-')||Voucher.startWith(tthis.value,'-')){//"-"录入
         		if(rows[editIndex][direction+'pn']=='-'){
         			rows[editIndex][direction+'pn']='';
@@ -588,7 +588,6 @@ Voucher=function(){
         	}
         	//重新组合金额
         	var rowmoney=Voucher.getEditorMoney(direction);
-        	console.log(rowmoney);
         	if(Voucher.endWith(field,'Angle')||Voucher.endWith(field,'Cent')){
 				$($('#voucherDg').datagrid('getEditor', {index:editIndex,field:direction+'Cent'}).target).focus();
 			}else if(!rows[editIndex][field]||event.keyCode==46){
@@ -599,11 +598,12 @@ Voucher=function(){
         	//合计
 			Voucher.totalSum(direction);
         },
+        // 合计
         totalSum:function(direction){
         	var rows=$('#voucherDg').datagrid('getRows');
         	var money=0;
 			for(i=0;i<rows.length;++i){
-				money=parseInt(money)+Voucher.getMoney(direction,rows[i])*100;
+				money=Voucher.accAdd(parseInt(money),Voucher.accMul(Voucher.getMoney(direction,rows[i]),100));
 			}
 			if(direction=='d'){
 				debit=money;
@@ -613,13 +613,19 @@ Voucher=function(){
     			crebit=money;
     			Voucher.changeRowMoney(crebit,direction);
     			Voucher.footerDX();
-    		}else{
-    			console.log("editor direction error");
     		}
         },
         //检查value为空或不是数字时置为0
         cellSetValue:function(value){
         	if(value&&Voucher.checkNum(value)){
+        		return value;
+        	}else {
+        		return 0;
+        	}
+        },
+        //检查value为空或不是实数时置为0
+        cellSetRealNum:function(value){
+        	if(value&&Voucher.isRealNum(value)){
         		return value;
         	}else {
         		return 0;
@@ -780,6 +786,27 @@ Voucher=function(){
     		else
     		  return false;
     		return true;
+		},
+		//乘法函数，用来得到精确的乘法结果
+		//说明：javascript的乘法结果会有误差，在两个浮点数相乘的时候会比较明显。这个函数返回较为精确的乘法结果。
+		//调用：accMul(arg1,arg2)
+		//返回值：arg1乘以arg2的精确结果
+		accMul:function(arg1,arg2){
+			var m=0,s1=arg1.toString(),s2=arg2.toString();
+			try{m+=s1.split(".")[1].length}catch(e){}
+			try{m+=s2.split(".")[1].length}catch(e){}
+			return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m)
+		},
+		//加法函数，用来得到精确的加法结果
+		//说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
+		//调用：accAdd(arg1,arg2)
+		//返回值：arg1加上arg2的精确结果
+		accAdd:function(arg1,arg2){
+			var r1,r2,m;
+			try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+			try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+			m=Math.pow(10,Math.max(r1,r2))
+			return (arg1*m+arg2*m)/m
 		}
 	};
 }();

@@ -8,13 +8,15 @@ VoucherTemplate=function(){
 	return {
 		//模式凭证页面初始化
 		init:function() {
-			
+			//关闭
 			$('#templateClose').click(function(){
 				$('#default_win').window('close');
 			});
+			//新增
 			$('#templateAdd').click(function(){
 				VoucherTemplate.templateAdd();
 			});
+			//修改
 			$('#templateEdit').click(function(){
 				var row = $('#voucherTemplateDg').datagrid('getSelected');
 				if (!row){
@@ -23,6 +25,7 @@ VoucherTemplate=function(){
 				}
 				VoucherTemplate.templateAdd(row.id,row.name);
 			});
+			//删除
 			$('#templateRemove').click(function(){
 				var row = $('#voucherTemplateDg').datagrid('getSelected');
 				if (!row){
@@ -31,9 +34,11 @@ VoucherTemplate=function(){
 				}
 				VoucherTemplate.templateRemove(row.id);
 			});
+			//类别编辑
 			$('#templateTypeEdit').click(function(){
-				
+				CompanyCommonValue.openWindow($("#voucherTem_win"),'模式凭证类别','2');
 			});
+			//显示模式
 			$('#templateShow').click(function(){
 				
 			});
@@ -75,8 +80,9 @@ VoucherTemplate=function(){
 				singleSelect:true,
 				fitColumns: true,
 				//fit:true,
-				toolbar: '#voucherTemplateTb',
+				toolbar: '#voucherTemplateMenu,#voucherTemplateTb',
 				onClickCell:VoucherTemplate.onClickCell,
+				onDblClickRow:VoucherTemplate.onDblClickRow,
 				url:'voucher/voucherTemplateDetailList',
 				queryParams:{voucherTemplateId:id},
 				method:'get',
@@ -128,10 +134,7 @@ VoucherTemplate=function(){
 							}}}
 				      ]],
 				onLoadSuccess:function(data){
-					if(data&&data.total>=1){
-						console.log('not null');
-					} else {
-						console.log('null');
+					if(!(data&&data.total>=1)){
 			        	$('#voucherTemplateDetailDg').datagrid('appendRow',{});
 					}
 					templateEditIndex = undefined;
@@ -141,7 +144,7 @@ VoucherTemplate=function(){
 			
 			//类别
 			$('#typeName').combobox({
-			    url:'voucher/voucherTemplateTypeList',
+			    url:'companyCommonValue/voucherTemplateTypeList',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -153,7 +156,7 @@ VoucherTemplate=function(){
 			});
 			//模式类别
 			$('#voucherTemplateWord').combobox({
-			    url:'voucher/voucherWordList',
+			    url:'companyCommonValue/voucherWordList',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -178,24 +181,30 @@ VoucherTemplate=function(){
 		},
 		templateRemove:function(id){
 			$('#templateRemove').linkbutton('mydisable');
-			$.ajax({
-                url: "voucher/deleteTemplate",
-                type:'get',
-                data:{id:id},
-                success: function(data){
-                	$('#templateRemove').linkbutton('myenable');
-                	if(data.result){
-                    	$.messager.alert('提示', "保存成功!", 'info',function(){
-                    		$('#voucherTemplateDg').datagrid('reload');
-                    	});
-                    }else{
-                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
-                    }
-                },
-                error:function(){
-                	$('#templateRemove').linkbutton('myenable');
-            	}
-            });
+			$.messager.confirm('确认', '确定删除选中模式凭证?', function(r){
+				if (r){
+					$.ajax({
+		                url: "voucher/deleteTemplate",
+		                type:'get',
+		                data:{id:id},
+		                success: function(data){
+		                	$('#templateRemove').linkbutton('myenable');
+		                	if(data.result){
+		                    	$.messager.alert('提示', "删除成功!", 'info',function(){
+		                    		$('#voucherTemplateDg').datagrid('reload');
+		                    	});
+		                    }else{
+		                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
+		                    }
+		                },
+		                error:function(){
+		                	$('#templateRemove').linkbutton('myenable');
+		            	}
+		            });
+				}else {
+					$('#templateRemove').linkbutton('myenable');
+				}
+			});
 		},
 		endEditing:function(){
             if (templateEditIndex == undefined){return true}
@@ -312,11 +321,20 @@ VoucherTemplate=function(){
 				if(!rows[i].credit||(rows[i].credit&&rows[i].credit==0)){
 					rows[i].credit='';
 				}
+				if(!rows[i].summary){
+					rows[i].summary='';
+				}
+				if(!rows[i].subjectCode){
+					rows[i].subjectCode='';
+				}
 				params+='&'+JSON.stringify(rows[i]);
 			}
 			params=params.replace(/{/g,'').replace(/}/g,'').replace(/","/g,'&').replace(/"/g,'').replace(/:/g,'=');
 			params=params.replace(/,/g,'&').replace(/undefined/g,'');
 			return params;
+		},
+		onDblClickRow:function(index,row){
+			
 		}
 	};
 }();
