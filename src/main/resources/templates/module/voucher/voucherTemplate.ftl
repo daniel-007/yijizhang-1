@@ -1,5 +1,5 @@
 <div class="easyui-layout" data-options="fit:true">
-	<div data-options="region:'east',title:'操作'" style="width:120px;overflow: hidden;">
+	<div data-options="region:'east'" style="width:120px;overflow: hidden;">
         <div id="button_container" style="width:120px;text-align: center;">
             <div style="margin:20px 0;"></div>
             <a id="templateClose" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" style="width: 80%;">关闭</a>

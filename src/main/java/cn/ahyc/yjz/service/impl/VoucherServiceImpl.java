@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.ahyc.yjz.mapper.base.CompanyCommonValueMapper;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
@@ -24,9 +23,6 @@ import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherTemplateDetailExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherTemplateExtendMapper;
 import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.CompanyCommonValue;
-import cn.ahyc.yjz.model.CompanyCommonValueExample;
-import cn.ahyc.yjz.model.CompanyCommonValueExample.Criteria;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
 import cn.ahyc.yjz.model.VoucherDetailExample;
@@ -44,9 +40,6 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Autowired
     private VoucherDetailExtendMapper voucherDetailExtendMapper;
-
-    @Autowired
-    private CompanyCommonValueMapper companyCommonValueMapper;
 
     @Autowired
     private AccountSubjectExtendMapper accountSubjectExtendMapper;
@@ -96,14 +89,6 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public int queryNextVoucherNo(Long periodId) {
         return voucherExtendMapper.selectMaxVoucherNo(periodId) + 1;
-    }
-
-    @Override
-    public List<CompanyCommonValue> queryVoucherWordList(Long typeId) {
-        CompanyCommonValueExample example = new CompanyCommonValueExample();
-        Criteria criteria = example.createCriteria();
-        criteria.andTypeIdEqualTo(typeId);
-        return companyCommonValueMapper.selectByExample(example);
     }
 
     @Override

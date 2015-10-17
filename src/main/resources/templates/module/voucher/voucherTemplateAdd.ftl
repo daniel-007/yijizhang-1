@@ -1,19 +1,35 @@
 <div class="easyui-layout" data-options="fit:true">
-	<div data-options="region:'north'" style="height:50px;overflow: hidden;">
-        <div style="padding:10px;">
-			<a id="templateAddAdd" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">新增</a>
-		    <a id="templateSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">保存</a>
-		    <a id="templateReject" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true">取消修改</a>
-		    <a id="templateAppend" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">插入行</a>
-		    <a id="templateRemoveit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除行</a>
-		</div>
-    </div>
 	<div data-options="region:'center',border:false">
 		<form id="voucherTemplateFm" method="post">
 			<input type="hidden" id="voucherTemplateId" name="id" value="${voucherTemplate.id?default('')}"/>
 			<table id="voucherTemplateDetailDg"></table>
 		</form>
 	</div>
+</div>
+
+<div id="voucherTemplateMenu" style="padding:2px 5px;">
+	<table cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				<a id="templateAddAdd" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">新增</a>
+		    </td>
+		    <td>
+				<a id="templateSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">保存</a>
+		    </td>
+		    <td>
+				<a id="templateReject" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true">取消修改</a>
+		    </td>
+			<td>
+				<div class="datagrid-btn-separator"></div>
+			</td>
+		    <td>
+				<a id="templateAppend" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">插入行</a>
+		    </td>
+		    <td>
+				<a id="templateRemoveit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除行</a>
+			</td>
+		</tr>
+	</table>
 </div>
 
 <div id="voucherTemplateTb" style="padding:10px;">

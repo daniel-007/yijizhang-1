@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
 import cn.ahyc.yjz.model.VoucherTemplate;
@@ -24,14 +23,6 @@ public interface VoucherService {
      * @param details
      */
     String save(Voucher voucher, List<VoucherDetail> details);
-
-    /**
-     * 获取凭证字列表
-     * 
-     * @param typeId
-     * @return
-     */
-    List<CompanyCommonValue> queryVoucherWordList(Long typeId);
 
     /**
      * 获取凭证明细列表
