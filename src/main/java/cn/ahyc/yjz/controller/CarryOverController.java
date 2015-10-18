@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.service.CarryOverService;
 import cn.ahyc.yjz.service.CompanyCommonValueService;
-import cn.ahyc.yjz.service.VoucherService;
 
 /**
  * 结转损益. Created by john Hu on 15-9-22. CarryOverController
@@ -24,51 +23,6 @@ import cn.ahyc.yjz.service.VoucherService;
 @RequestMapping("/account/carryOver")
 public class CarryOverController extends BaseController {
 
-<<<<<<< HEAD
-		@Autowired
-		private VoucherService voucherService;
-		@Autowired
-		private CarryOverService carryOverService;
-
-		/**
-		 * 初始化页面.
-		 *
-		 * @return
-		 */
-		@RequestMapping(value = ("/main"))
-		public String main(Model model) {
-				return view("main");
-		}
-
-		/**
-		 * 凭证字.
-		 *
-		 * @return
-		 */
-		@RequestMapping(value = ("/category/detail"))
-		@ResponseBody
-		public List<CompanyCommonValue> getCategoryDetail() {
-				List<CompanyCommonValue> categoryDetails = voucherService.queryVoucherWordList(1L);
-				return categoryDetails;
-		}
-
-		/**
-		 * 结转损益.
-		 *
-		 * @return
-		 */
-		@RequestMapping(value = ("/complete"))
-		@ResponseBody
-		public Map<String, String> complete(String summary, String voucherWord, HttpSession session) {
-				Map<String, String> map = new HashMap<String, String>();
-				//保存业务数据
-				String result = carryOverService.CarryoverSubmit(summary, voucherWord, session);
-				map.put("result", result);
-				return map;
-		}
-=======
-	@Autowired
-	private VoucherService voucherService;
 	@Autowired
 	private CarryOverService carryOverService;
     @Autowired
@@ -107,5 +61,4 @@ public class CarryOverController extends BaseController {
 			map.put("result", result);
 			return map;
 	}
->>>>>>> dev
 }
