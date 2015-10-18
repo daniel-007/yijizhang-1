@@ -13,14 +13,14 @@ Voucher=function(){
 	
 	return {
 		//凭证页面初始化
-		init:function(id,period,book,voucherWord,templateId) {
+		init:function(id,period,book,voucherWord,templateId,isreversal) {
 			book=book.replace(',','');
 			//新增
-			$('#voucherAdd,#voucherMm1Add').on('click', function() {
+			$('#voucherAdd,#voucherMm1Add').click(function() {
 				Voucher.add();
 			});
 			//从模式凭证新增
-			$('#voucherTempAdd,#voucherTempMm1Add').on('click', function() {
+			$('#voucherTempAdd,#voucherTempMm1Add').click(function() {
 				$("#default_win").window({
 					title : '<i class="fa fa-info-circle"></i>模式凭证',
 					width : 677,
@@ -32,15 +32,26 @@ Voucher=function(){
 				});
 			});
 			//保存并新增
-			$('#voucherSave,#voucherMm2Save2').on('click', function() {
-				Voucher.save(1);
+			$('#voucherSave,#voucherMm2Save2').click(function() {
+				Voucher.save(1,id);
 			});
 			//保存
-			$('#voucherMm2Save1').on('click', function() {
-				Voucher.save();
+			$('#voucherMm2Save1').click(function() {
+				Voucher.save('',id);
 			});
 			//保存为模式凭证
-			$('#voucherTempSave,#voucherTempMm2Save').on('click', function() {
+			$('#voucherTempSave,#voucherTempMm2Save').click(function() {
+				var name;
+				var rows=$('#voucherDg').datagrid('getRows');
+				var ed = $('#voucherDg').datagrid('getEditor', {index:0,field:'summary'});
+				var voucherWord = $('#voucherWord').combobox('getValue');
+				if(ed&&$(ed.target).textbox('getText')){
+					name=$(ed.target).textbox('getText');
+				}else if(!ed&&rows&&rows.length>0&&rows[0].summary){
+					name=rows[0].summary;
+				}else{
+					name=voucherWord+$('#voucherNo').numberspinner('getValue');
+				}
 				$("#default_win").window({
 					title : '<i class="fa fa-info-circle"></i>保存为模式凭证',
 					width : 325,
@@ -48,26 +59,27 @@ Voucher=function(){
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/voucherTemplate'
+					href : 'voucher/voucherTemplateSave',
+					queryParams:{name:name,voucherWord:voucherWord}
 				});
 			});
 			//取消修改
-			$('#voucherReject').on('click', function() {
+			$('#voucherReject').click(function() {
 				Voucher.reject();
 			});
 			//插入行
-			$('#voucherAppend').on('click', function() {
+			$('#voucherAppend').click(function() {
 				Voucher.append();
 			});
 			//删除行
-			$('#voucherRemoveit').on('click', function() {
+			$('#voucherRemoveit').click(function() {
 				Voucher.removeit();
 			});
 			//明细 TODO
-			$('#voucherSubjectDetail').on('click', function() {
+			$('#voucherSubjectDetail').click(function() {
 			});
 			//科目余额
-			$('#voucherSubjectBalance').on('click', function() {
+			$('#voucherSubjectBalance').click(function() {
 				var subjectCode;
 				if(editIndex>=0){
 					var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
@@ -103,7 +115,7 @@ Voucher=function(){
 				});
 			});
 			//凭证编制说明
-			$('#voucherHelp').on('click', function() {
+			$('#voucherHelp').click(function() {
 				$("#default_win").window({
 					title : '<i class="fa fa-info-circle"></i>凭证编制说明',
 					width : 650,
@@ -114,6 +126,10 @@ Voucher=function(){
 					href : 'voucher/help'
 				});
 			});
+			//凭证字编辑
+			$('#voucherWordEdit').click(function() {
+				CompanyCommonValue.openWindow('#default_win','凭证字','1','#voucherWord');
+			});
 			//凭证字
 			$('#voucherWord').combobox({
 			    url:'companyCommonValue/voucherWordList',
@@ -123,17 +139,24 @@ Voucher=function(){
 			    editable:false,
 			    required:true,
 			    onLoadSuccess:function(){
-			    	$('#voucherWord').combobox('setValue', voucherWord);
+			    	if(voucherWord){
+			    		$('#voucherWord').combobox('setValue', voucherWord);
+			    	}else{
+			    		$('#voucherWord').combobox('setValue', '记');
+			    	}
 			    }
 			});
 			//日期
 			$('#voucherTime').datebox({
 				formatter:Voucher.myformatter,
 				parser:Voucher.myparser,
-				editable:false
+				required:true,
+				editable:false,
+				validType:{
+					mydate:[book,period]
+				}
 			}).datebox('calendar').calendar({
                 validator: function(date){
-                    var now = new Date();
                     var d1 = new Date(book, period-1, 1);
                     var d2 = new Date(book, period, 1);
                     return d1<=date && date<d2;
@@ -149,7 +172,7 @@ Voucher=function(){
 				toolbar: '#voucherMenu,#voucherDgTd',
 				onClickCell:Voucher.onClickCell,
 				url:'voucher/voucherDetailList',
-				queryParams:{voucherId:id,voucherTemplateId:templateId},
+				queryParams:{voucherId:id,voucherTemplateId:templateId,isreversal:isreversal},
 				method:'get',
 				showFooter:true,
 				columns:[[
@@ -346,59 +369,75 @@ Voucher=function(){
         	tab.panel('refresh');
         },
         //保存
-		save:function(isAdd){
-			$('#voucherSave').linkbutton('mydisable');
+		save:function(isAdd,id){
+			$voucherSave=$('#voucherSave');
+			$voucherSave.linkbutton('mydisable');
 			if (Voucher.endEditing()){
 				if(!$('#voucherFm').form('validate')){// 表单验证
-					$('#voucherSave').linkbutton('myenable');
+					$voucherSave.linkbutton('myenable');
 					return;
 				}
 				// 凭证分录数据
 				var params=Voucher.getChanges();
 				if(!params){
-					$.messager.alert('警告', "无凭证分录!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
+					$.messager.alert('警告', "无凭证分录!", 'warning',function(){$voucherSave.linkbutton('myenable');});
 					return;
 				}
 				if(!balanceFlag){// 借贷平衡
-					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$('#voucherSave').linkbutton('myenable');});
+					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$voucherSave.linkbutton('myenable');});
 					return;
 				}
-				// 提交保存
+				// 检查凭证号
+				$voucherNo = $('#voucherNo');
+				var no = $voucherNo.numberspinner('getValue'); 
 	            $.ajax({
-	                url: "voucher/save",
-	                type:'post',
-	                data:$("#voucherFm").serialize()+params,
+	                url: "voucher/checkNo",
+	                type:'get',
+	                data:{no:no,id:id},
 	                success: function(data){
 	                    if(data.result){
-	                    	$('#voucherSave').linkbutton('myenable');
-	                        if(!$("#id").val()){
-	                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
-	                        		if(isAdd){//新增
-	    	                        	Voucher.add();
-	    	                        }
-	                        	});
-	                        }else{
-	                        	if(isAdd){//新增
-		                        	Voucher.add();
-		                        }
-	                        }
-	                    }else{
-	                    	$('#voucherSave').linkbutton('myenable');
-	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
-	                        });
+	                    	$voucherSave.linkbutton('myenable');
+	                    	$voucherNo.numberspinner('setValue', data.result);
+	                    	$.messager.alert('警告', '凭证号'+no+'重复，凭证保存不成功。系统重新编号为'+data.result, 'warning');
+	                    	return;
 	                    }
+						// 提交保存
+			            $.ajax({
+			                url: "voucher/save",
+			                type:'post',
+			                data:$("#voucherFm").serialize()+params,
+			                success: function(data){
+			                    if(data.result){
+			                    	$voucherSave.linkbutton('myenable');
+			                        if(!$("#id").val()){
+			                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
+			                        		if(isAdd){//新增
+			    	                        	Voucher.add();
+			    	                        }
+			                        	});
+			                        }else{
+			                        	if(isAdd){//新增
+				                        	Voucher.add();
+				                        }
+			                        }
+			                    }else{
+			                    	$voucherSave.linkbutton('myenable');
+			                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
+			                        });
+			                    }
+			                },
+			                error: function(XMLHttpRequest, textStatus, errorThrown) {
+			                	$voucherSave.linkbutton('myenable');
+		                    }
+			            });
 	                },
 	                error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                	$('#voucherSave').linkbutton('myenable');
+	                	$voucherSave.linkbutton('myenable');
                     }
 	            });
 		    }else{
-		    	$('#voucherSave').linkbutton('myenable');
+		    	$voucherSave.linkbutton('myenable');
 		    }
-		},
-		//保存为模式凭证
-		tempSave:function(){
-			alert("template save");
 		},
 		//表格修改数据
 		getChanges:function(){
@@ -411,6 +450,9 @@ Voucher=function(){
 					}
 					if(!rows[i].newcrebit||(rows[i].newcrebit&&rows[i].newcrebit==0)){
 						rows[i].newcrebit='';
+					}
+					if(!rows[i].summary){
+						rows[i].summary='';
 					}
 					params+='&'+JSON.stringify(rows[i]);
 				}
@@ -442,7 +484,7 @@ Voucher=function(){
         //新增
         add:function(){
         	var tab = $TC.tabs('getSelected');  // get selected panel
-        	tab.panel('refresh', 'voucher/main'+"?&time="+new Date().getTime());
+        	tab.panel('refresh', 'voucher/main'+"?time="+new Date().getTime());
         },
 		getParamValue:function(pval,value){
         	if(value&&Voucher.checkNum(value)){
@@ -475,8 +517,8 @@ Voucher=function(){
 				pval="-"+pval;
 			}
 			if(pval){
-				row['newdebit']='';
-				row['newcrebit']='';
+				//row['newdebit']='';
+				//row['newcrebit']='';
 				row['new'+direction+'ebit']=pval;
 			}
 			return pval;
@@ -839,5 +881,14 @@ $.extend($.fn.validatebox.defaults.rules, {
             return param[0] >= value.length;     
         },     
         message: '请输入最大{0}位字符.'    
-    }     
+    },
+    mydate: {
+        validator: function(value, param){
+        	var date = Voucher.myparser(value);
+        	var d1 = new Date(param[0], param[1]-1, 1);
+            var d2 = new Date(param[0], param[1], 1);
+            return d1<=date && date<d2;
+        },
+        message: '时间超出{0}年{1}月范围.'
+    }
 });

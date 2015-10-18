@@ -65,4 +65,23 @@ public class CompanyCommonValueServiceImpl implements CompanyCommonValueService 
         companyCommonValueMapper.deleteByPrimaryKey(id);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.CompanyCommonValueService#check(java.lang.String,
+     * java.lang.Long, java.lang.Long)
+     */
+    @Override
+    public boolean check(String name, Long id, Long type) {
+        CompanyCommonValueExample example = new CompanyCommonValueExample();
+        cn.ahyc.yjz.model.CompanyCommonValueExample.Criteria criteria = example.createCriteria();
+        criteria.andShowValueEqualTo(name);
+        criteria.andTypeIdEqualTo(type);
+        if (id != null) {
+            criteria.andIdNotEqualTo(id);
+        }
+        return companyCommonValueMapper.countByExample(example) < 1;
+    }
+
 }

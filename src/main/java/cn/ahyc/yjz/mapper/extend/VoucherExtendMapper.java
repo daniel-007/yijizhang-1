@@ -3,6 +3,13 @@ package cn.ahyc.yjz.mapper.extend;
 import cn.ahyc.yjz.mapper.base.VoucherMapper;
 import cn.ahyc.yjz.model.Voucher;
 
+/**
+ * @ClassName: VoucherExtendMapper
+ * @Description: TODO
+ * @author chengjiarui 1256064203@qq.com
+ * @date 2015年10月18日 上午10:13:18
+ * 
+ */
 public interface VoucherExtendMapper extends VoucherMapper{
 
     /**

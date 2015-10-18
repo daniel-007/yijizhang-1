@@ -33,6 +33,7 @@ import cn.ahyc.yjz.model.VoucherTemplate;
 import cn.ahyc.yjz.model.VoucherTemplateDetail;
 import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.service.VoucherService;
+import cn.ahyc.yjz.service.VoucherTemplateService;
 import cn.ahyc.yjz.util.Constant;
 
 /**
@@ -52,6 +53,9 @@ public class VoucherController extends BaseController{
     @Autowired
     private PeriodService periodService;
 
+    @Autowired
+    private VoucherTemplateService voucherTemplateService;
+
 	public VoucherController() {
 	    this.pathPrefix="module/voucher/";
 	}
@@ -66,16 +70,27 @@ public class VoucherController extends BaseController{
      * @return
      */
 	@RequestMapping("/main")
-    public String voucher(Model model, Long voucherId, Long voucherTemplateId, HttpSession session) {
+    public String voucher(Model model, Long voucherId, Long voucherTemplateId,Long isreversal, HttpSession session) {
         if (voucherTemplateId != null) {// 从模式凭证新增
             VoucherTemplate template = voucherService.queryVoucherTemplate(voucherTemplateId);
+            model.addAttribute("templateId", template.getId());
+            template.setId(null);
             model.addAttribute("voucher", template);
-        } else if (voucherId != null) {// 修改
+        } else if (voucherId != null) {// 修改、查看、冲销
             Voucher voucher = voucherService.queryVoucher(voucherId);
-            Period voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
-            model.addAttribute("currentPeriod", voucherPeriod.getCurrentPeriod());
+            model.addAttribute("voucherId", voucher.getId());
+            if (isreversal != null) {// 冲销
+                model.addAttribute("isreversal", isreversal);
+                voucher.setId(null);
+                voucher.setVoucherNo(null);
+                voucher.setVoucherTime(null);
+                voucher.setPeriodId(null);
+            } else {
+                Period voucherPeriod = periodService.queryPeriod(voucher.getPeriodId());
+                model.addAttribute("currentPeriod", voucherPeriod.getCurrentPeriod());
+            }
             model.addAttribute("voucher", voucher);
-        } else {
+        } else {// 新增
             model.addAttribute("voucher", new Voucher());
         }
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
@@ -94,19 +109,25 @@ public class VoucherController extends BaseController{
      * 凭证明细列表
      * 
      * @param voucherId
+     * @param voucherTemplateId
      * @param session
      * @return
      */
     @RequestMapping("/voucherDetailList")
     @ResponseBody
-    public Map<String, Object> voucherDetailList(Long voucherId, HttpSession session) {
+    public Map<String, Object> voucherDetailList(Long voucherId, Long voucherTemplateId, Long isreversal,
+            HttpSession session) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
-        if (voucherId != null) {
+        if (voucherTemplateId != null) {// 从模式凭证新增
             long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
-            list = voucherService.queryVoucherDetailList(voucherId, bookId);
-            footerlist.add(voucherService.queryDetailTotal(voucherId));
-        } else {
+            list = voucherTemplateService.queryDetailList(voucherTemplateId, bookId);
+            footerlist.add(voucherTemplateService.queryDetailTotal(voucherTemplateId));
+        } else if (voucherId != null) {// 修改、查看
+            long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
+            list = voucherService.queryVoucherDetailList(voucherId, bookId, isreversal);
+            footerlist.add(voucherService.queryDetailTotal(voucherId, isreversal));
+        } else {// 新增
             footerlist.add(new HashMap<String, Object>());
         }
 
@@ -114,6 +135,31 @@ public class VoucherController extends BaseController{
         map.put("total", list != null && list.size() > 0 ? list.size() : 0);
         map.put("rows", list);
         map.put("footer", footerlist);
+        return map;
+    }
+
+    /**
+     * 凭证号检查
+     * 
+     * @param session
+     * @param no
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/checkNo")
+    @ResponseBody
+    public Map<String, Object> checkNo(HttpSession session, Integer no, Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+            int maxNo = voucherService.checkNo(no, period.getId(), id);
+            if (maxNo > 0) {
+                map.put("result", maxNo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("message", "系统异常！");
+        }
         return map;
     }
 
@@ -143,6 +189,9 @@ public class VoucherController extends BaseController{
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
+            if (voucher.getVoucherTime() == null) {
+                throw new RuntimeException("凭证日期不能为空");
+            }
             String voucherTime = dateFormat.format(voucher.getVoucherTime());
             if (!StringUtils.startsWith(voucherTime, sessiontime)) {
                 throw new RuntimeException("凭证日期" + voucherTime + "不在当前会计期间日期" + sessiontime + "范围内");
@@ -249,7 +298,7 @@ public class VoucherController extends BaseController{
     }
 
     /**
-     * 模式凭证页面
+     * 模式凭证列表页面
      * 
      * @param model
      * @return
@@ -260,7 +309,7 @@ public class VoucherController extends BaseController{
     }
 
     /**
-     * 模式凭证列表
+     * 模式凭证列表数据
      * 
      * @param session
      * @return
@@ -291,6 +340,21 @@ public class VoucherController extends BaseController{
         }
         model.addAttribute("voucherTemplate", voucherTemplate);
         return view("voucherTemplateAdd");
+    }
+
+    /**
+     * 模式凭证保存页面
+     * 
+     * @param model
+     * @param name
+     * @param voucherWord
+     * @return
+     */
+    @RequestMapping("/voucherTemplateSave")
+    public String voucherTemplateSave(Model model, String name, String voucherWord) {
+        model.addAttribute("name", name);
+        model.addAttribute("voucherWord", voucherWord);
+        return view("voucherTemplateSave");
     }
 
     /**
@@ -362,54 +426,68 @@ public class VoucherController extends BaseController{
     /**
      * 保存模式凭证
      * 
-     * @param session
      * @param model
      * @param request
      * @param voucherTemplate
+     * @param wordFlag
+     * @param numFlag
+     * @param summaryFlag
+     * @param subjectFlag
+     * @param dFlag
+     * @param crFlag
+     * @param checkFlag
      * @return
      */
     @RequestMapping(value = "/saveTemplate", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> saveTemplate(HttpSession session, Model model, HttpServletRequest request,
-            VoucherTemplate voucherTemplate) {
+    public Map<String, Object> saveTemplate(Model model, HttpServletRequest request, VoucherTemplate voucherTemplate,
+            String wordFlag, String numFlag, String summaryFlag, String subjectFlag, String dFlag, String crFlag,
+            String checkFlag) {
 
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-
+            if (!"1".equals(wordFlag) && StringUtils.isNotBlank(checkFlag)) {
+                voucherTemplate.setVoucherWord(null);
+            }
+            if (!"1".equals(numFlag) && StringUtils.isNotBlank(checkFlag)) {
+                voucherTemplate.setBillNum(null);
+            }
             /** 组织凭证明细数据 **/
             List<VoucherTemplateDetail> details = new ArrayList<VoucherTemplateDetail>();
             String[] subjectCodeArr = request.getParameterValues("subjectCode");
-            if (subjectCodeArr != null) {
-                String[] summaryArr = request.getParameterValues("summary");
-                String[] debitArr = request.getParameterValues("debit");
-                String[] crebitArr = request.getParameterValues("credit");
-                VoucherTemplateDetail voucherTemplateDetail;
-                boolean addFlag;
-                for (int i = 0; i < subjectCodeArr.length; i++) {
-                    if (StringUtils.isNotBlank(debitArr[i]) && StringUtils.isNotBlank(crebitArr[i])) {
-                        throw new RuntimeException("同一凭证分录中借方金额、贷方金额只能存在一个");
-                    }
-                    voucherTemplateDetail = new VoucherTemplateDetail();
-                    addFlag = false;
-                    if (StringUtils.isNotBlank(summaryArr[i])) {
-                        addFlag = true;
-                        voucherTemplateDetail.setSummary(summaryArr[i]);
-                    }
-                    if (StringUtils.isNotBlank(subjectCodeArr[i])) {
-                        addFlag = true;
-                        voucherTemplateDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
-                    }
-                    if (StringUtils.isNotBlank(debitArr[i])) {
-                        addFlag = true;
-                        voucherTemplateDetail.setDebit(new BigDecimal(debitArr[i]));
-                    }
-                    if (StringUtils.isNotBlank(crebitArr[i])) {
-                        addFlag = true;
-                        voucherTemplateDetail.setCredit(new BigDecimal(crebitArr[i]));
-                    }
-                    if (addFlag) {
-                        details.add(voucherTemplateDetail);
-                    }
+            String[] summaryArr = request.getParameterValues("summary");
+            String[] debitArr = request.getParameterValues("newdebit");
+            String[] crebitArr = request.getParameterValues("newcrebit");
+            VoucherTemplateDetail voucherTemplateDetail;
+            boolean addFlag;
+            boolean bsummaryFlag = "1".equals(summaryFlag) || StringUtils.isBlank(checkFlag);
+            boolean bsubjectFlag = "1".equals(subjectFlag) || StringUtils.isBlank(checkFlag);
+            boolean bdFlag = "1".equals(dFlag) || StringUtils.isBlank(checkFlag);
+            boolean bcrFlag = "1".equals(crFlag) || StringUtils.isBlank(checkFlag);
+            for (int i = 0; i < subjectCodeArr.length; i++) {
+                if (StringUtils.isNotBlank(debitArr[i]) && StringUtils.isNotBlank(crebitArr[i])) {
+                    throw new RuntimeException("同一凭证分录中借方金额、贷方金额只能存在一个");
+                }
+                voucherTemplateDetail = new VoucherTemplateDetail();
+                addFlag = false;
+                if (StringUtils.isNotBlank(summaryArr[i]) && bsummaryFlag) {
+                    addFlag = true;
+                    voucherTemplateDetail.setSummary(summaryArr[i]);
+                }
+                if (StringUtils.isNotBlank(subjectCodeArr[i]) && bsubjectFlag) {
+                    addFlag = true;
+                    voucherTemplateDetail.setSubjectCode(Long.valueOf(subjectCodeArr[i]));
+                }
+                if (StringUtils.isNotBlank(debitArr[i]) && bdFlag) {
+                    addFlag = true;
+                    voucherTemplateDetail.setDebit(new BigDecimal(debitArr[i]));
+                }
+                if (StringUtils.isNotBlank(crebitArr[i]) && bcrFlag) {
+                    addFlag = true;
+                    voucherTemplateDetail.setCredit(new BigDecimal(crebitArr[i]));
+                }
+                if (addFlag) {
+                    details.add(voucherTemplateDetail);
                 }
             }
             /** 保存 **/

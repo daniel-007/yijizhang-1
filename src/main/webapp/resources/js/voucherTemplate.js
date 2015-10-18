@@ -2,15 +2,15 @@
  * 记账模式凭证的JS脚本文件。
  */
 VoucherTemplate=function(){
-	var templateEditIndex = undefined;
+	var templateEditIndex = undefined;//编辑行索引
 	var templateSubjectData;//会计科目代码下来框数据
 	
 	return {
-		//模式凭证页面初始化
+		//模式凭证列表页面初始化
 		init:function() {
 			//关闭
 			$('#templateClose').click(function(){
-				$('#default_win').window('close');
+				VoucherTemplate.close();
 			});
 			//新增
 			$('#templateAdd').click(function(){
@@ -36,19 +36,20 @@ VoucherTemplate=function(){
 			});
 			//类别编辑
 			$('#templateTypeEdit').click(function(){
-				CompanyCommonValue.openWindow($("#voucherTem_win"),'模式凭证类别','2');
+				CompanyCommonValue.openWindow('#voucherTem_win','模式凭证类别','2');
 			});
 			//显示模式
 			$('#templateShow').click(function(){
 				
 			});
-			
+			//模式凭证列表
 			$('#voucherTemplateDg').datagrid({
 				singleSelect:true,
 				fitColumns: true,
 				fit:true,
 				url:'voucher/voucherTemplateList',
 				method:'get',
+				onDblClickRow:VoucherTemplate.onDblClickRow,
 				columns:[[
 							{field:'name',title:'名称',width:60,halign:'center'},
 							{field:'voucherWord',title:'凭证字',width:60,halign:'center'},
@@ -58,12 +59,76 @@ VoucherTemplate=function(){
         },
         //模式凭证编辑页面初始化
 		addInit:function(id,typeName,voucherWord) {
+			//编辑页面表格
+			$('#voucherTemplateDetailDg').datagrid({
+				singleSelect:true,
+				fitColumns: true,
+				//fit:true,
+				toolbar: '#voucherTemplateMenu,#voucherTemplateTb',
+				onClickCell:VoucherTemplate.onClickCell,
+				url:'voucher/voucherTemplateDetailList',
+				queryParams:{voucherTemplateId:id},
+				method:'get',
+				showFooter:true,
+				columns:[[
+				          {field:'summary',title:'摘要',width:60,halign:'center',editor:{type:'textbox',options:{multiline:true,validType:'voucherMaxLength[80]'}}},
+		        		  {field:'subjectCode',title:'会计科目',width:40,halign:'center',formatter:function(value,row){return row.subjectTextName;
+        		  					},editor:{
+				        				  type:'combobox',
+				        				  options:{
+				        					  valueField:'subjectCode',
+				        					  textField:'subjectTextName',
+				        					  method:'get',
+				        					  url:'/voucher/accountSubjectList',
+				        					  onBeforeLoad:function(){
+				        						  if(templateSubjectData){
+				        							  $(this).combobox('loadData',templateSubjectData); 
+				        							  return false;
+				        						  }
+				        					  },
+				        					  onLoadSuccess:function(){
+				        						  if(!templateSubjectData){
+				        							  templateSubjectData=$(this).combobox('getData');
+				        						  }
+				        					  }
+				        				  }}},
+        				  {field:'newdebit',title:'借方金额',width:20,editor:{
+				        					  type:'numberbox',
+				        					  options:{
+				        						  precision:2,
+				        						  min:-999999999.99,
+				        						  max:999999999.99
+				        					  }}},
+					  	  {field:'newcrebit',title:'贷方金额',width:20,editor:{
+				        						  type:'numberbox',
+				        						  options:{
+				        							  precision:2,
+				        							  min:-999999999.99,
+				        							  max:999999999.99
+				        						  }}}
+				        					  ]],
+				onLoadSuccess:function(data){
+					if(!(data&&data.total>=1)){
+					  $('#voucherTemplateDetailDg').datagrid('appendRow',{});
+					}
+					templateEditIndex = undefined;
+					$('#voucherTemplateDetailDg').datagrid('fitColumns');
+				}
+			});
+			//新增
 			$('#templateAddAdd').click(function(){
 				VoucherTemplate.templateAdd();
 			});
+			//保存
 			$('#templateSave').click(function(){
-				VoucherTemplate.save();
+				if (!VoucherTemplate.endEditing()){
+					return;
+				}
+				var voucherTemplateName = $('#voucherTemplateName').textbox('getValue');
+				var voucherTemplateId = $('#voucherTemplateId').val();
+				VoucherTemplate.save('#templateSave','#voucherTemplateFm',voucherTemplateName,voucherTemplateId,'#voucherTemplateDetailDg',1);
 			});
+			//取消修改
 			$('#templateReject').click(function(){
 				$('#voucherTem_win').panel('refresh');
 			});
@@ -75,74 +140,11 @@ VoucherTemplate=function(){
 			$('#templateRemoveit').click(function() {
 				VoucherTemplate.removeit();
 			});
-			
-			$('#voucherTemplateDetailDg').datagrid({
-				singleSelect:true,
-				fitColumns: true,
-				//fit:true,
-				toolbar: '#voucherTemplateMenu,#voucherTemplateTb',
-				onClickCell:VoucherTemplate.onClickCell,
-				onDblClickRow:VoucherTemplate.onDblClickRow,
-				url:'voucher/voucherTemplateDetailList',
-				queryParams:{voucherTemplateId:id},
-				method:'get',
-				showFooter:true,
-				columns:[[
-						{field:'summary',title:'摘要',width:60,halign:'center',
-							editor:{
-								type:'textbox',
-								options:{
-									multiline:true,
-									validType:'voucherMaxLength[80]'
-								}}},
-						{field:'subjectCode',title:'会计科目',width:40,halign:'center',
-							formatter:function(value,row){
-	                            return row.subjectTextName;
-	                        },
-							editor:{
-								type:'combobox',
-								options:{
-								    valueField:'subjectCode',
-								    textField:'subjectTextName',
-								    method:'get',
-								    url:'/voucher/accountSubjectList',
-								    onBeforeLoad:function(){
-								    	if(templateSubjectData){
-								    		$(this).combobox('loadData',templateSubjectData); 
-								    		return false;
-								    	}
-								    },
-								    onLoadSuccess:function(){
-								    	if(!templateSubjectData){
-								    		templateSubjectData=$(this).combobox('getData');
-								    	}
-								    }
-						        }}},
-						{field:'debit',title:'借方金额',width:20,editor:{
-							type:'numberbox',
-							options:{
-								precision:2,
-								min:-999999999.99,
-								max:999999999.99
-							}}},
-						{field:'credit',title:'贷方金额',width:20,editor:{
-							type:'numberbox',
-							options:{
-								precision:2,
-								min:-999999999.99,
-								max:999999999.99
-							}}}
-				      ]],
-				onLoadSuccess:function(data){
-					if(!(data&&data.total>=1)){
-			        	$('#voucherTemplateDetailDg').datagrid('appendRow',{});
-					}
-					templateEditIndex = undefined;
-					$('#voucherTemplateDetailDg').datagrid('fitColumns');
-				}
+			//模式类别编辑
+			$('#typeNameEdit').click(function() {
+				CompanyCommonValue.openWindow('#voucherTemAdd_win','模式凭证类别','2','#typeName');
 			});
-			
-			//类别
+			//模式类别
 			$('#typeName').combobox({
 			    url:'companyCommonValue/voucherTemplateTypeList',
 			    method:'get',
@@ -154,19 +156,52 @@ VoucherTemplate=function(){
 			    	$('#typeName').combobox('setValue', typeName);
 			    }
 			});
-			//模式类别
+			//凭证字
 			$('#voucherTemplateWord').combobox({
 			    url:'companyCommonValue/voucherWordList',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
 			    editable:false,
-			    required:true,
 			    onLoadSuccess:function(){
-			    	$('#voucherTemplateWord').combobox('setValue', voucherWord);
+			    	if(voucherWord){
+			    		$('#voucherTemplateWord').combobox('setValue', voucherWord);
+			    	}else{
+			    		$('#voucherTemplateWord').combobox('clear');
+			    	}
 			    }
 			});
 		},
+		//保存为模式凭证页面初始化
+		saveInit:function(){
+			//模式类别编辑
+			$('#voucherTemplateSaveTypeNameEdit').click(function() {
+				CompanyCommonValue.openWindow('#voucherTemSave_win','模式凭证类别','2','#voucherTemplateSaveTypeName');
+			});
+			//模式类别
+			$('#voucherTemplateSaveTypeName').combobox({
+			    url:'companyCommonValue/voucherTemplateTypeList',
+			    method:'get',
+			    valueField:'showValue',
+			    textField:'showValue',
+			    editable:false,
+			    required:true
+			});
+			//确定
+			$('#voucherTemplateSaveSubmit').click(function() {
+				var voucherTemplateName = $('#voucherTemplateSaveName').textbox('getValue');
+				VoucherTemplate.save('#voucherTemplateSaveSubmit','#voucherTemplateSaveFm',voucherTemplateName,'','#voucherDg',2);
+			});
+			//取消
+			$('#voucherTemplateSaveReject').click(function() {
+				VoucherTemplate.close();
+			});
+		},
+		//取消窗口
+		close:function(){
+			$('#default_win').window('close');
+		},
+		//模式凭证新增
 		templateAdd:function(id,name){
 			$("#voucherTem_win").window({
 				title : '<i class="fa fa-info-circle"></i>'+(name?'模式凭证 - '+name:'新增凭证模式'),
@@ -179,6 +214,7 @@ VoucherTemplate=function(){
 				queryParams:{voucherTemplateId:id}
 			});
 		},
+		//模式凭证删除
 		templateRemove:function(id){
 			$('#templateRemove').linkbutton('mydisable');
 			$.messager.confirm('确认', '确定删除选中模式凭证?', function(r){
@@ -206,6 +242,7 @@ VoucherTemplate=function(){
 				}
 			});
 		},
+		//结束行编辑
 		endEditing:function(){
             if (templateEditIndex == undefined){return true}
             if ($('#voucherTemplateDetailDg').datagrid('validateRow', templateEditIndex)){
@@ -228,6 +265,7 @@ VoucherTemplate=function(){
                 return false;
             }
         },
+        //编辑行
 		onClickCell:function(index, field){
             if (templateEditIndex != index){
                 if (VoucherTemplate.endEditing()){
@@ -242,43 +280,40 @@ VoucherTemplate=function(){
                 }
             }
         },
+        //插入行
         append:function(){
             if (VoucherTemplate.endEditing()){
                 $('#voucherTemplateDetailDg').datagrid('appendRow',{});
                 //templateEditIndex = $('#voucherTemplateDetailDg').datagrid('getRows').length-1;
             }
         },
+        //删除行
         removeit:function(){
             if (templateEditIndex == undefined){return}
             $('#voucherTemplateDetailDg').datagrid('cancelEdit', templateEditIndex).datagrid('deleteRow', templateEditIndex);
             templateEditIndex = undefined;
         },
-        save:function(){
-        	$('#templateSave').linkbutton('mydisable');
-			if (!VoucherTemplate.endEditing()){
-				$('#templateSave').linkbutton('myenable');
-				return;
-			}
-			if(!$('#voucherTemplateFm').form('validate')){// 表单验证
-				$('#templateSave').linkbutton('myenable');
+        //保存模式凭证
+        save:function(savebutton,fm,voucherTemplateName,voucherTemplateId,dgtarget,reloadFlag){
+        	$(savebutton).linkbutton('mydisable');
+			if(!$(fm).form('validate')){// 表单验证
+				$(savebutton).linkbutton('myenable');
 				return;
 			}
 			// 凭证分录数据
-			var params=VoucherTemplate.getChanges();
+			var params=VoucherTemplate.getChanges(dgtarget);
 			if(params=='moneyerror'){
-				$('#templateSave').linkbutton('myenable');
+				$(savebutton).linkbutton('myenable');
 				$.messager.alert('警告', "借贷双方不能同时有金额!", 'warning');
         		return;
 			}
-			var voucherTemplateName = $('#voucherTemplateName').textbox('getValue');
-			var voucherTemplateId = $('#voucherTemplateId').val();
 			$.ajax({
                 url: "voucher/checkTemplateName",
                 type:'get',
                 data:{name:voucherTemplateName,id:voucherTemplateId},
                 success: function(data){
                 	if(!data.result){
-                		$('#templateSave').linkbutton('myenable');
+                		$(savebutton).linkbutton('myenable');
                 		$.messager.alert('警告', "模式凭证名称不能重复!", 'warning');
                 		return;
                 	}
@@ -286,40 +321,44 @@ VoucherTemplate=function(){
     	            $.ajax({
     	                url: "voucher/saveTemplate",
     	                type:'post',
-    	                data:$("#voucherTemplateFm").serialize()+params,
+    	                data:$(fm).serialize()+params,
     	                success: function(data){
-    	                	$('#templateSave').linkbutton('myenable');
+    	                	$(savebutton).linkbutton('myenable');
     	                    if(data.result){
                             	$.messager.alert('提示', "保存成功!", 'info',function(){
-                            		$('#voucherTemplateDg').datagrid('reload');
+                            		if(reloadFlag==1){
+                            			$('#voucherTemplateDg').datagrid('reload');
+                            		}else if(reloadFlag==2){
+                            			VoucherTemplate.close();
+                            		}
                             	});
     	                    }else{
     	                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
     	                    }
     	                },
     	                error: function(XMLHttpRequest, textStatus, errorThrown) {
-    	                	$('#templateSave').linkbutton('myenable');
+    	                	$(savebutton).linkbutton('myenable');
                         }
     	            });
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                	$('#templateSave').linkbutton('myenable');
+                	$(savebutton).linkbutton('myenable');
                 }
 			});
         },
 		//表格修改数据
-		getChanges:function(){
+		getChanges:function(dgtarget){
 			var params='';
-			var rows = $('#voucherTemplateDetailDg').datagrid('getRows');
+			var rows = $(dgtarget).datagrid('getRows');
 			for(i=0;i<rows.length;++i){
-				if(rows[i].debit&&rows[i].credit&&!(rows[i].debit==0||rows[i].credit==0)){
+				if(rows[i].newdebit&&rows[i].newcrebit&&!(rows[i].newdebit==0||rows[i].newcrebit==0)){
 					return "moneyerror";
 				}
-				if(!rows[i].debit||(rows[i].debit&&rows[i].debit==0)){
-					rows[i].debit='';
+				if(!rows[i].newdebit||(rows[i].newdebit&&rows[i].newdebit==0)){
+					rows[i].newdebit='';
 				}
-				if(!rows[i].credit||(rows[i].credit&&rows[i].credit==0)){
-					rows[i].credit='';
+				if(!rows[i].newcrebit||(rows[i].newcrebit&&rows[i].newcrebit==0)){
+					rows[i].newcrebit='';
 				}
 				if(!rows[i].summary){
 					rows[i].summary='';
@@ -333,8 +372,11 @@ VoucherTemplate=function(){
 			params=params.replace(/,/g,'&').replace(/undefined/g,'');
 			return params;
 		},
+		//模式凭证新增
 		onDblClickRow:function(index,row){
-			
+			VoucherTemplate.close();
+        	var tab = $TC.tabs('getSelected');  // get selected panel
+        	tab.panel('refresh', 'voucher/main?voucherTemplateId='+row.id+'&time='+new Date().getTime());
 		}
 	};
 }();

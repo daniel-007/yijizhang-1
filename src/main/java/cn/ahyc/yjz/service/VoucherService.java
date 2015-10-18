@@ -14,6 +14,13 @@ import cn.ahyc.yjz.model.VoucherDetail;
 import cn.ahyc.yjz.model.VoucherTemplate;
 import cn.ahyc.yjz.model.VoucherTemplateDetail;
 
+/**
+ * @ClassName: VoucherService
+ * @Description: TODO
+ * @author chengjiarui 1256064203@qq.com
+ * @date 2015年10月18日 上午10:12:35
+ * 
+ */
 public interface VoucherService {
 
     /**
@@ -29,9 +36,10 @@ public interface VoucherService {
      * 
      * @param voucherId
      * @param bookId
+     * @param isreversal
      * @return
      */
-    List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId);
+    List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId, Long isreversal);
 
     /**
      * 查询记账凭证
@@ -62,9 +70,10 @@ public interface VoucherService {
      * 查询凭证分录合计
      * 
      * @param voucherId
+     * @param isreversal
      * @return
      */
-    Map<String, Object> queryDetailTotal(Long voucherId);
+    Map<String, Object> queryDetailTotal(Long voucherId, Long isreversal);
 
     /**
      * 查询模式凭证列表
@@ -113,4 +122,22 @@ public interface VoucherService {
      * @param id
      */
     void deleteTemplate(Long id);
+
+    /**
+     * 检查凭证号
+     * 
+     * @param no
+     * @param periodId
+     * @param id
+     * @return
+     */
+    int checkNo(Integer no, Long periodId, Long id);
+
+    /**
+     * 删除凭证
+     * 
+     * @param voucherId
+     * @param periodId
+     */
+    void delete(Long voucherId, Long periodId);
 }

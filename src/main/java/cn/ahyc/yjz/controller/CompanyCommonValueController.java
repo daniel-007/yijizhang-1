@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,6 +95,29 @@ public class CompanyCommonValueController extends BaseController {
     public List<CompanyCommonValue> voucherTemplateTypeList() {
         List<CompanyCommonValue> list = companyCommonValueService.queryListByType(2L);// 2L：模式凭证类别
         return list;
+    }
+
+    /**
+     * 检查是否已存在
+     * 
+     * @param session
+     * @param name
+     * @param id
+     * @return
+     */
+    @RequestMapping("/check")
+    @ResponseBody
+    public Map<String, Object> check(HttpSession session, String name, Long id, Long type) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            if (StringUtils.isNoneBlank(name) && companyCommonValueService.check(name, id, type)) {
+                map.put("result", "success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", e.getMessage());
+        }
+        return map;
     }
 
     /**

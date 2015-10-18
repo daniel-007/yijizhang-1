@@ -26,12 +26,20 @@ import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
 import cn.ahyc.yjz.model.VoucherDetailExample;
+import cn.ahyc.yjz.model.VoucherExample;
 import cn.ahyc.yjz.model.VoucherTemplate;
 import cn.ahyc.yjz.model.VoucherTemplateDetail;
 import cn.ahyc.yjz.model.VoucherTemplateDetailExample;
 import cn.ahyc.yjz.model.VoucherTemplateExample;
 import cn.ahyc.yjz.service.VoucherService;
 
+/**
+ * @ClassName: VoucherServiceImpl
+ * @Description: TODO
+ * @author chengjiarui 1256064203@qq.com
+ * @date 2015年10月18日 上午10:08:41
+ * 
+ */
 @Service
 public class VoucherServiceImpl implements VoucherService {
 
@@ -53,6 +61,12 @@ public class VoucherServiceImpl implements VoucherService {
     @Autowired
     private VoucherTemplateDetailExtendMapper voucherTemplateDetailExtendMapper;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#save(cn.ahyc.yjz.model.Voucher,
+     * java.util.List)
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String save(Voucher voucher, List<VoucherDetail> details) {
@@ -65,7 +79,7 @@ public class VoucherServiceImpl implements VoucherService {
             voucherExtendMapper.updateByPrimaryKeySelective(voucher);
             /** 删除凭证明细 **/
             VoucherDetailExample example = new VoucherDetailExample();
-            cn.ahyc.yjz.model.VoucherDetailExample.Criteria criteria = example.createCriteria();
+            VoucherDetailExample.Criteria criteria = example.createCriteria();
             criteria.andVoucherIdEqualTo(voucherId);
             voucherDetailExtendMapper.deleteByExample(example);
         } else {
@@ -86,45 +100,98 @@ public class VoucherServiceImpl implements VoucherService {
         return voucher.getVoucherWord() + "字第" + voucherNo + "号";
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#queryNextVoucherNo(java.lang.Long)
+     */
     @Override
     public int queryNextVoucherNo(Long periodId) {
         return voucherExtendMapper.selectMaxVoucherNo(periodId) + 1;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#queryVoucherDetailList(java.lang.Long,
+     * java.lang.Long, java.lang.Long)
+     */
     @Override
-    public List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId) {
+    public List<Map<String, Object>> queryVoucherDetailList(Long voucherId, Long bookId, Long isreversal) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("voucherId", voucherId);
         param.put("bookId", bookId);
+        param.put("isreversal", isreversal);
         return voucherDetailExtendMapper.selectDetailList(param);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#queryVoucher(java.lang.Long)
+     */
     @Override
     public Voucher queryVoucher(Long voucherId) {
         return voucherExtendMapper.selectByPrimaryKey(voucherId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#queryAccountSubjectList(java.lang.
+     * Long)
+     */
     @Override
     public List<AccountSubject> queryAccountSubjectList(Long bookId) {
         return accountSubjectExtendMapper.selectLastChildSubject(bookId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#queryDetailTotal(java.lang.Long,
+     * java.lang.Long)
+     */
     @Override
-    public Map<String, Object> queryDetailTotal(Long voucherId) {
-        return voucherDetailExtendMapper.selectDetailTotal(voucherId);
+    public Map<String, Object> queryDetailTotal(Long voucherId, Long isreversal) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("voucherId", voucherId);
+        param.put("isreversal", isreversal);
+        return voucherDetailExtendMapper.selectDetailTotal(param);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#queryVoucherTemplateList()
+     */
     @Override
     public List<VoucherTemplate> queryVoucherTemplateList() {
         VoucherTemplateExample example = new VoucherTemplateExample();
         return voucherTemplateExtendMapper.selectByExample(example);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#queryVoucherTemplate(java.lang.Long)
+     */
     @Override
     public VoucherTemplate queryVoucherTemplate(Long voucherTemplateId) {
         return voucherTemplateExtendMapper.selectByPrimaryKey(voucherTemplateId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#queryVoucherTemplateDetailList(java.
+     * lang.Long, java.lang.Long)
+     */
     @Override
     public List<VoucherTemplateDetail> queryVoucherTemplateDetailList(Long voucherTemplateId, Long bookId) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -133,6 +200,12 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherTemplateDetailExtendMapper.selectTemplateDetailList(map);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#saveTemplate(cn.ahyc.yjz.model.
+     * VoucherTemplate, java.util.List)
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveTemplate(VoucherTemplate voucherTemplate, List<VoucherTemplateDetail> details) {
@@ -155,6 +228,13 @@ public class VoucherServiceImpl implements VoucherService {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.VoucherService#checkTemplateName(java.lang.String,
+     * java.lang.Long)
+     */
     @Override
     public boolean checkTemplateName(String name, Long id) {
         VoucherTemplateExample example = new VoucherTemplateExample();
@@ -166,6 +246,11 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherTemplateExtendMapper.countByExample(example) < 1;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#deleteTemplate(java.lang.Long)
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteTemplate(Long id) {
@@ -173,11 +258,53 @@ public class VoucherServiceImpl implements VoucherService {
         deleteTemplateDetails(id);
     }
 
+    /**
+     * 删除模式凭证明细
+     * 
+     * @param id
+     */
     @Transactional(rollbackFor = Exception.class)
     public void deleteTemplateDetails(Long id) {
         VoucherTemplateDetailExample example = new VoucherTemplateDetailExample();
         cn.ahyc.yjz.model.VoucherTemplateDetailExample.Criteria criteria = example.createCriteria();
         criteria.andTemplateIdEqualTo(id);
         voucherTemplateDetailExtendMapper.deleteByExample(example);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#checkNo(java.lang.Integer,
+     * java.lang.Long, java.lang.Long)
+     */
+    @Override
+    public int checkNo(Integer no, Long periodId, Long id) {
+        VoucherExample example = new VoucherExample();
+        cn.ahyc.yjz.model.VoucherExample.Criteria criteria = example.createCriteria();
+        criteria.andVoucherNoEqualTo(no);
+        criteria.andPeriodIdEqualTo(periodId);
+        if (id != null) {
+            criteria.andIdNotEqualTo(id);
+        }
+        return voucherExtendMapper.countByExample(example) < 1 ? -1 : queryNextVoucherNo(id);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.VoucherService#delete(java.lang.Long,
+     * java.lang.Long)
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long voucherId, Long periodId) {
+        VoucherDetailExample example = new VoucherDetailExample();
+        VoucherDetailExample.Criteria criteria = example.createCriteria();
+        criteria.andVoucherIdEqualTo(voucherId);
+        voucherDetailExtendMapper.deleteByExample(example);
+        voucherExtendMapper.deleteByPrimaryKey(voucherId);
+        /** 科目余额统计 **/
+        subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(periodId);
+        subjectBalanceExtendMapper.collectSubjectBalance(periodId);
     }
 }

@@ -1,6 +1,6 @@
 <div class="easyui-layout" data-options="fit:true">
 	<div data-options="region:'east'" style="width:120px;overflow: hidden;">
-        <div id="button_container" style="width:120px;text-align: center;">
+        <div style="width:120px;text-align: center;">
             <div style="margin:20px 0;"></div>
             <a id="commonValueAdd" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="width: 80%">新增</a>
             <div style="margin:10px 0;"></div>

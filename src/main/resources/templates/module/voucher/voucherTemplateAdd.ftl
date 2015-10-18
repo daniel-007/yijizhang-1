@@ -35,8 +35,9 @@
 <div id="voucherTemplateTb" style="padding:10px;">
 	名称：<input id="voucherTemplateName" class="easyui-textbox" type="text" name="name" value="${voucherTemplate.name?default('')}" data-options="required:true,validType:'voucherMaxLength[20]'"></input>
 	类别：<select id="typeName" name="typeName" style="width:100px;"></select>
+	<a id="typeNameEdit" href="javascript:void(0)" class="button button-glow button-square button-tiny"><i class="fa fa-book"></i></a>
 	凭证字：<select id="voucherTemplateWord" name="voucherWord" style="width:100px;"></select>
-	附单据：<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${voucherTemplate.billNum?default('0')}" data-options="required:true,min:0">
+	附单据：<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${voucherTemplate.billNum?default('0')}" data-options="min:0">
 </div>
 
 <div id="voucherTemAdd_win"></div>

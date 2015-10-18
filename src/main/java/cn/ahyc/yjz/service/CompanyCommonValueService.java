@@ -40,4 +40,14 @@ public interface CompanyCommonValueService {
      * @param id
      */
     void delete(Long id);
+
+    /**
+     * 检查是否已存在
+     * 
+     * @param name
+     * @param id
+     * @param type
+     * @return
+     */
+    boolean check(String name, Long id, Long type);
 }

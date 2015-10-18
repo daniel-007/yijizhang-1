@@ -15,6 +15,7 @@ CompanyCommonValue=function(){
 				method:'get',
 				queryParams:{type:type},
 				onDblClickRow:CompanyCommonValue.edit,
+				showFooter:false,
 				columns:[[
 							{field:'showValue',title:winTitle,width:60,halign:'center'}
 						]]
@@ -29,25 +30,27 @@ CompanyCommonValue=function(){
 			});
 			//修改
 			$('#commonValueEdit').click(function(){
+				CompanyCommonValue.reject();
 				var row = $('#commonValueDg').datagrid('getSelected');
 				if (!row){
-					$.messager.alert('警告', "请选择一个模式凭证类别!", 'warning');
+					$.messager.alert('警告', '请选择一个'+winTitle+'!', 'warning');
 					return;
 				}
 				CompanyCommonValue.edit('',row);
 			});
 			//删除
 			$('#commonValueDelete').click(function(){
+				CompanyCommonValue.reject();
 				var row = $('#commonValueDg').datagrid('getSelected');
 				if (!row){
-					$.messager.alert('警告', "请选择一个模式凭证类别!", 'warning');
+					$.messager.alert('警告', '请选择一个'+winTitle+'!', 'warning');
 					return;
 				}
-				CompanyCommonValue.remove(row.id);
+				CompanyCommonValue.remove(row.id,winTitle);
 			});
 			//确定
 			$('#commonValueSubmit').click(function(){
-				CompanyCommonValue.save();
+				CompanyCommonValue.save(winTitle,type);
 			});
 			//取消
 			$('#commonValueReject').click(function(){
@@ -70,9 +73,9 @@ CompanyCommonValue=function(){
 			$('#commonValueSubmit').linkbutton('myenable');
 		},
 		// 删除
-		remove:function(id){
+		remove:function(id,winTitle){
 			$('#commonValueDelete').linkbutton('mydisable');
-			$.messager.confirm('确认', '确定删除选中模式凭证类别?', function(r){
+			$.messager.confirm('确认', '确定删除选中'+winTitle+'?', function(r){
 				if (r){
 					$.ajax({
 		                url: "companyCommonValue/delete",
@@ -98,35 +101,52 @@ CompanyCommonValue=function(){
 			});
 		},
 		// 提交保存
-		save:function(){
+		save:function(winTitle,type){
 			$('#commonValueSubmit').linkbutton('mydisable');
 			if(!$('#commonValueFm').form('validate')){// 表单验证
 				$('#commonValueSubmit').linkbutton('myenable');
 				return;
 			}
-            $.ajax({
-                url: "companyCommonValue/save",
-                type:'post',
-                data:$('#commonValueFm').serialize(),
+			var commonValueShowValue = $('#commonValueShowValue').textbox('getValue');
+			var commonValueId = $('#commonValueId').val();
+			$.ajax({
+                url: "companyCommonValue/check",
+                type:'get',
+                data:{name:commonValueShowValue,id:commonValueId,type:type},
                 success: function(data){
-                	$('#commonValueSubmit').linkbutton('myenable');
-                    if(data.result){
-                    	$.messager.alert('提示', "保存成功!", 'info',function(){
-                    		$('#commonValueDg').datagrid('reload');
-                    		CompanyCommonValue.reject();
-                    	});
-                    }else{
-                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
-                    }
+                	if(!data.result){
+                		$('#commonValueSubmit').linkbutton('myenable');
+                		$.messager.alert('警告', winTitle+'已存在!', 'warning');
+                		return;
+                	}
+		        	$.ajax({
+		                url: "companyCommonValue/save",
+		                type:'post',
+		                data:$('#commonValueFm').serialize(),
+		                success: function(data){
+		                	$('#commonValueSubmit').linkbutton('myenable');
+		                    if(data.result){
+		                    	$.messager.alert('提示', "保存成功!", 'info',function(){
+		                    		$('#commonValueDg').datagrid('reload');
+		                    		CompanyCommonValue.reject();
+		                    	});
+		                    }else{
+		                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
+		                    }
+		                },
+		                error: function(XMLHttpRequest, textStatus, errorThrown) {
+		                	$('#commonValueSubmit').linkbutton('myenable');
+		                }
+		            });
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                 	$('#commonValueSubmit').linkbutton('myenable');
                 }
-            });
+			});
 		},
 		//打开配置值窗口
-		openWindow:function(target,winTitle,type){
-			target.window({
+		openWindow:function(target,winTitle,type,eventTraget){
+			$(target).window({
 				title:'<i class="fa fa-info-circle"></i>'+winTitle,
 				width:422,
 				height:477,
@@ -134,7 +154,12 @@ CompanyCommonValue=function(){
 				collapsible:false,
 				shadow:true,
 				href:'companyCommonValue/main',
-				queryParams:{type:type,winTitle:winTitle}
+				queryParams:{type:type,winTitle:winTitle},
+				onClose:function(){
+					if(eventTraget){
+						$(eventTraget).combobox('reload'); 
+					}
+				}
 			});
 		}
     }
