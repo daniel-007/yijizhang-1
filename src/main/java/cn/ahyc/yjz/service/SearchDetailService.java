@@ -11,5 +11,5 @@ public interface SearchDetailService {
 	 * @param bookId
 	 * @return
 	 */
-	 List<Map> submitNow(String startPeriod, String endPeriod,String startSubjectCode,String endSubjectCode,HttpSession session);
+	 List<Map> submitNow(String startPeriod, String endPeriod,String subjectCode,HttpSession session);
 }

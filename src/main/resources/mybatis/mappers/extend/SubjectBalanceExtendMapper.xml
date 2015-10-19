@@ -203,8 +203,7 @@
 			p.id = #{periodId,jdbcType=BIGINT}
 		AND t2.subject_code = #{subjectCode,jdbcType=BIGINT}
 		AND p.book_id = t2.book_id
-  </select>
-  
+  </select>  
   <select id="selectBalanceList" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
 			IF (isNull(t.groupConcat),'',t.subject_code) AS subject_code,
@@ -283,5 +282,32 @@
 		</if>
 		ORDER BY
 			CASE WHEN groupConcat IS NULL THEN 1 ELSE 0 END, groupConcat ASC
+  </select>
+  <select id="selectBalanceBySubjectCode" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+		  a.direction,
+		  CASE
+		    WHEN a.direction = 1 
+		    THEN '借' 
+		    ELSE '贷' 
+		  END AS direction_value,
+		 IFNULL(CASE
+		    WHEN a.direction = 1 
+		    THEN d.initial_debit_balance 
+		    ELSE d.initial_credit_balance 
+		  END,0) AS balance  
+		FROM
+		  account_subject a 
+		  LEFT JOIN period b 
+		    ON a.book_id = b.book_id 
+		    AND b.current_period =  #{currentPeriod,jdbcType=INTEGER}
+		  LEFT JOIN subject_balance d 
+		    ON (
+		      a.book_id = d.book_id 
+		      AND b.id = d.period_id 
+		      AND a.subject_code = d.subject_code
+		    ) 
+		WHERE a.subject_code =  #{subjectCode,jdbcType=BIGINT}
+		  AND a.book_id =#{bookId,jdbcType=BIGINT}
   </select>
 </mapper>
