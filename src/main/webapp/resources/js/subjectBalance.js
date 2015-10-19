@@ -51,6 +51,9 @@ SubjectBalance=function(){
         	});
         },
         submit:function(){
+        	if(!$('#balanceListFm').form('validate')){// 表单验证
+				return;
+			}
     		var periodFrom=$('#periodFrom').numberspinner('getValue');
     		var periodTo=$('#periodTo').numberspinner('getValue');
     		var level=$('#level').numberspinner('getValue');
@@ -87,17 +90,27 @@ SubjectBalance=function(){
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
-        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center'},
-        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
-        			          {field:'initial_debit_balance',title:'期初借方金额',width:60,align:'right',halign:'center'},
-        			          {field:'initial_credit_balance',title:'期初贷方金额',width:60,align:'right',halign:'center'},
-        			          {field:'period_debit_occur',title:'本期借方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'period_credit_occur',title:'本期贷方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'year_debit_occur',title:'本年累计借方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'year_credit_occur',title:'本年累计贷方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'terminal_debit_balance',title:'期末借方金额',width:60,align:'right',halign:'center'},
-        			          {field:'terminal_credit_balance',title:'期末贷方金额',width:60,align:'right',halign:'center'}
-        			          ]]
+        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center',rowspan:2},
+        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center',rowspan:2},
+        			          {title:'期初余额',colspan:2},
+        			          {title:'本期发生额',colspan:2},
+        			          {title:'本年累计发生额',colspan:2},
+        			          {title:'期末余额',colspan:2}
+      				      ],[
+        			          {field:'initial_debit_balance',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'initial_credit_balance',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'period_debit_occur',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'period_credit_occur',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'year_debit_occur',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'year_credit_occur',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_debit_balance',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_credit_balance',title:'贷方',width:60,align:'right',halign:'center'}
+    			          ]],
+		            rowStyler: function(index,row){
+			      		if (row.subject_name=='合计'){
+			      			return 'background-color:#FFFF99;';
+			      		}
+			      	}
         		});
         	} else {
         		$('#balanceListDg').datagrid({
@@ -111,18 +124,28 @@ SubjectBalance=function(){
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
-        			          {field:'current_period',title:'期间',width:20,align:'left',halign:'center'},
-        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center'},
-        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
-        			          {field:'initial_debit_balance',title:'期初借方金额',width:60,align:'right',halign:'center'},
-        			          {field:'initial_credit_balance',title:'期初贷方金额',width:60,align:'right',halign:'center'},
-        			          {field:'period_debit_occur',title:'本期借方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'period_credit_occur',title:'本期贷方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'year_debit_occur',title:'本年累计借方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'year_credit_occur',title:'本年累计贷方发生额',width:60,align:'right',halign:'center'},
-        			          {field:'terminal_debit_balance',title:'期末借方金额',width:60,align:'right',halign:'center'},
-        			          {field:'terminal_credit_balance',title:'期末贷方金额',width:60,align:'right',halign:'center'}
-        			          ]]
+        			          {field:'current_period',title:'期间',width:20,align:'left',halign:'center',rowspan:2},
+        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center',rowspan:2},
+        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center',rowspan:2},
+        			          {title:'期初余额',colspan:2},
+        			          {title:'本期发生额',colspan:2},
+        			          {title:'本年累计发生额',colspan:2},
+        			          {title:'期末余额',colspan:2}
+      				      ],[
+        			          {field:'initial_debit_balance',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'initial_credit_balance',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'period_debit_occur',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'period_credit_occur',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'year_debit_occur',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'year_credit_occur',title:'贷方',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_debit_balance',title:'借方',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_credit_balance',title:'贷方',width:60,align:'right',halign:'center'}
+    			          ]],
+		            rowStyler: function(index,row){
+			      		if (row.subject_name=='合计'){
+			      			return 'background-color:#FFFF99;';
+			      		}
+			      	}
         		});
         	}
         },
