@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 		 */
 		@Override
 		public boolean modifyPasswd(String username, String newPassword) {
-				Map map = new HashMap<>();
+				Map map = new HashMap();
 				map.put("username",username);
 				map.put("password",passwordEncoder.encode(newPassword));
 				int result = userExtendMapper.updatePassword(map);

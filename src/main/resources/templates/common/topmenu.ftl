@@ -38,7 +38,7 @@
     </button>
     <div id="bb_menu" style="display: none;">
         <ul class="fc_menu_ul">
-            <li><a id="zcfz" href="#">资产负债表</a></li>
+            <li><a href="javascript:App.addTab('资产负债表','balance/sheet/main',true);">资产负债表</a></li>
             <li><a href="#">利润表</a></li>
             <li><a href="#">现金流量表</a></li>
         </ul>
