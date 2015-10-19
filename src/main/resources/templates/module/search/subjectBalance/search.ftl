@@ -18,11 +18,11 @@
 				</tr>
 				<tr>	
 					<td>会计科目：</td>
-					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeFrom" name="subjectCodeFrom" style="width:80px;" value="${subjectCodeFrom?default('')}" data-options="min:0,precision:2,validType:'voucherMaxLength[30]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeFrom" name="subjectCodeFrom" style="width:80px;" value="${subjectCodeFrom?default('')}" data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td>至：</td>
-					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeTo" name="subjectCodeTo" style="width:80px;" value="${subjectCodeTo?default('')}" data-options="min:0,precision:2,validType:'voucherMaxLength[30]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeTo" name="subjectCodeTo" style="width:80px;" value="${subjectCodeTo?default('')}" data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td colspan="4">

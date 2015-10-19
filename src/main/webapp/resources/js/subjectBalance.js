@@ -108,7 +108,7 @@ SubjectBalance=function(){
     			          ]],
 		            rowStyler: function(index,row){
 			      		if (row.subject_name=='合计'){
-			      			return 'background-color:#FFFF99;';
+			      			return 'background-color:#6293BB;color:#fff;';
 			      		}
 			      	}
         		});
@@ -143,7 +143,7 @@ SubjectBalance=function(){
     			          ]],
 		            rowStyler: function(index,row){
 			      		if (row.subject_name=='合计'){
-			      			return 'background-color:#FFFF99;';
+			      			return 'background-color:#6293BB;color:#fff;';
 			      		}
 			      	}
         		});
