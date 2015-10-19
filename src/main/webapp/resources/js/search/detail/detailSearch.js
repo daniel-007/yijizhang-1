@@ -67,10 +67,10 @@ Search_Detail = function (){
 	                ],
 	                onDblClickCell: function(index,field,value){
 	            		var selected_row = $("#search_detail_container").find("#detail_data_table").datagrid('getSelected');
-	            		if(selected_row.voucherId==undefined){
+	            		if(!selected_row.voucherId){
 	            			return;
 	            		}
-	            		App.addTab('记账', 'voucher/main?voucherId=' + selected_row.voucherId + '&isreversal=true', true);
+	            		 App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.voucherId, true);
 	            	}
 			});
 		 },
