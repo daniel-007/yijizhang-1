@@ -37,7 +37,6 @@ import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * AppController
