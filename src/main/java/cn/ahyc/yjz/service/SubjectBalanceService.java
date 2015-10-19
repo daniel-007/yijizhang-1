@@ -33,7 +33,7 @@ public interface SubjectBalanceService {
      * @param valueNotNull
      * @return
      */
-    List<Map<String, Object>> querySubjectBalanceList(Long bookId, Long periodFrom, Long periodTo, Long level,
+    List<Map<String, Object>> querySubjectBalanceList(Long bookId, Integer periodFrom, Integer periodTo, Long level,
             Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull);
 
 }

@@ -43,12 +43,12 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
      * 
      * @see
      * cn.ahyc.yjz.service.SubjectBalanceService#querySubjectBalanceList(java.
-     * lang.Long, java.lang.Long, java.lang.Long, java.lang.Long,
+     * lang.Long, java.lang.Integer, java.lang.Integer, java.lang.Long,
      * java.lang.Long, java.lang.Long, java.lang.Long)
      */
     @Override
-    public List<Map<String, Object>> querySubjectBalanceList(Long bookId, Long periodFrom, Long periodTo, Long level,
-            Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull) {
+    public List<Map<String, Object>> querySubjectBalanceList(Long bookId, Integer periodFrom, Integer periodTo,
+            Long level, Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("bookId", bookId);
         map.put("periodFrom", periodFrom);

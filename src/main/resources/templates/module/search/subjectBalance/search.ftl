@@ -8,9 +8,9 @@
 			<table cellpadding="5">
 				<tr>
 					<td>会计期间：</td>
-					<td><input class="easyui-numberspinner" id="periodFrom" name="periodFrom" style="width:80px;" value="${periodFrom?default('1')}" data-options="required:true,min:1"></input></td>
+					<td><input class="easyui-numberspinner" id="periodFrom" name="periodFrom" style="width:80px;" value="${periodFrom?default('1')}" data-options="min:1"></input></td>
 					<td>至：</td>
-					<td><input class="easyui-numberspinner" id="periodTo" name="periodTo" style="width:80px;" value="${periodTo?default('1')}" data-options="required:true,min:1,max:12"></input></td>
+					<td><input class="easyui-numberspinner" id="periodTo" name="periodTo" style="width:80px;" value="${periodTo?default('1')}" data-options="min:1,max:12"></input></td>
 				</tr>
 				<tr>	
 					<td>科目级别：</td>
@@ -18,11 +18,11 @@
 				</tr>
 				<tr>	
 					<td>会计科目：</td>
-					<td colspan="3"><input class="easyui-textbox" id="subjectCodeFrom" name="subjectCodeFrom" style="width:80px;" value="${subjectCodeFrom?default('')}" data-options="validType:'voucherMaxLength[80]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeFrom" name="subjectCodeFrom" style="width:80px;" value="${subjectCodeFrom?default('')}" data-options="min:0,precision:2,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td>至：</td>
-					<td colspan="3"><input class="easyui-textbox" id="subjectCodeTo" name="subjectCodeTo" style="width:80px;" value="${subjectCodeTo?default('')}" data-options="validType:'voucherMaxLength[80]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="subjectCodeTo" name="subjectCodeTo" style="width:80px;" value="${subjectCodeTo?default('')}" data-options="min:0,precision:2,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td colspan="4">

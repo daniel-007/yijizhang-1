@@ -286,7 +286,7 @@ public class VoucherServiceImpl implements VoucherService {
         if (id != null) {
             criteria.andIdNotEqualTo(id);
         }
-        return voucherExtendMapper.countByExample(example) < 1 ? -1 : queryNextVoucherNo(id);
+        return voucherExtendMapper.countByExample(example) < 1 ? -1 : queryNextVoucherNo(periodId);
     }
 
     /*
