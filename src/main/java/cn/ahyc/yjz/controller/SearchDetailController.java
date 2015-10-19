@@ -36,7 +36,7 @@ public class SearchDetailController  extends BaseController{
 	public String main(Model model,String subjectCode,HttpSession session) {
 		Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         model.addAttribute("period", period);
-        model.addAttribute("subjectCode", subjectCode);
+        model.addAttribute("subjectCode",subjectCode);
 		return view("main");
 	}
 	

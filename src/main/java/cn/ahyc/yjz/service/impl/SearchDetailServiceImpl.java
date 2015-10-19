@@ -41,7 +41,7 @@ public class SearchDetailServiceImpl implements SearchDetailService{
 		//查询明细账
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("bookId", bookId);
-		param.put("subjectCode", subjectCode);
+		param.put("subjectCode", subjectCode.concat("%"));
 		param.put("startPeriod", Integer.parseInt(startPeriod));
 		param.put("endPeriod", Integer.parseInt(endPeriod));
 		List<Map> queryList=voucherDetailExtendMapper.searchDetail(param);
