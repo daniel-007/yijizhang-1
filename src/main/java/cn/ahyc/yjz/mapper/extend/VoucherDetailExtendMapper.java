@@ -57,4 +57,10 @@ public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
      * @param periodId
      */
     void resetVoucherNo(Long periodId);
+    /**
+     * 明细账查询.
+     *
+     * @param periodId
+     */
+    List<Map> searchDetail(Map param);
 }

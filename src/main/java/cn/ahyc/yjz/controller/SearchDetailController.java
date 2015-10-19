@@ -33,9 +33,10 @@ public class SearchDetailController  extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = ("/main"))
-	public String main(Model model,HttpSession session) {
+	public String main(Model model,String subjectCode,HttpSession session) {
 		Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         model.addAttribute("period", period);
+        model.addAttribute("subjectCode", subjectCode);
 		return view("main");
 	}
 	
@@ -46,8 +47,7 @@ public class SearchDetailController  extends BaseController{
 	 */
 	@RequestMapping(value = ("/submitNow"))
 	@ResponseBody
-	public  List<Map> submitNow(String startPeriod,String endPeriod,String startSubjectCode,String endSubjectCode,HttpSession session) {
-	
-		 return searchDetailService.submitNow(startPeriod, endPeriod,startSubjectCode,endSubjectCode,session);
+	public  List<Map> submitNow(String startPeriod,String endPeriod,String subjectCode,HttpSession session) {
+		 return searchDetailService.submitNow(startPeriod, endPeriod,subjectCode,session);
 	}
 }
