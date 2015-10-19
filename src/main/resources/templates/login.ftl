@@ -32,48 +32,47 @@
     <link rel="stylesheet" type="text/css" href="resources/css/base.css">
 </head>
 <body class="easyui-layout">
-<div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
-<#include "./common/topbar.ftl"/>
-</div>
-<div data-options="region:'center',border:false">
-    <form name="loginForm" id='loginForm' action="/login" method="POST">
-        <div style="width:400px;margin:10% auto;padding:30px 70px 20px 70px">
-            <div style="margin-bottom:10px;color: #CC6600;"><#if failureMsg??><i
-                    class="fa fa-exclamation-circle"></i> ${failureMsg}</#if></div>
-            <div style="margin-bottom:10px">
-                <input id="username" name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px"
-                       value="admin"
-                       data-options="required:true,missingMessage:'请输入登录账号',prompt:'账号',iconCls:'icon-man',iconWidth:38">
+    <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
+        <#include "./common/topbar.ftl"/>
+    </div>
+    <div data-options="region:'center',border:false">
+        <form name="loginForm" id='loginForm' action="/login" method="POST">
+            <div style="width:400px;margin:10% auto;padding:30px 70px 20px 70px">
+                <div style="margin-bottom:10px;color: #CC6600;"><#if failureMsg??><i class="fa fa-exclamation-circle"></i> ${failureMsg}</#if></div>
+                <div style="margin-bottom:10px">
+                    <input id="username" name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px"
+                           value="admin"
+                           data-options="required:true,missingMessage:'请输入登录账号',prompt:'账号',iconCls:'icon-man',iconWidth:38">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input id="password" name="password" class="easyui-textbox" type="password"
+                           style="width:100%;height:40px;padding:12px"
+                           value="admin"
+                           data-options="required:true,missingMessage:'请输入登录密码',prompt:'密码',iconCls:'icon-lock',iconWidth:38">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </div>
+                <div>
+                    <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton"
+                       data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
+                        <span style="font-size:14px;">登&#8194;&#8194;录</span>
+                    </a>
+                </div>
             </div>
-            <div style="margin-bottom:20px">
-                <input id="password" name="password" class="easyui-textbox" type="password"
-                       style="width:100%;height:40px;padding:12px"
-                       value="admin"
-                       data-options="required:true,missingMessage:'请输入登录密码',prompt:'密码',iconCls:'icon-lock',iconWidth:38">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            </div>
-            <div>
-                <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton"
-                   data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
-                    <span style="font-size:14px;">登&#8194;&#8194;录</span>
-                </a>
-            </div>
-        </div>
-    </form>
-</div>
-<div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
-<#include "./common/copyright.ftl" />
-</div>
-<script>
-    $(function () {
-        //sessionTimeout之后Tab里面的页面跳转到登录页面，形成了嵌套
-        // 自己都很瞧不上的垃圾的解决方案。
-        if ($('#redirectFlag').val() == 'true') {
-            $.messager.alert('提示信息', '您的登录信息已过期，请重新登录！', 'info', function () {
-                document.location.reload();
-            });
-        }
-    });
-</script>
+        </form>
+    </div>
+    <div data-options="region:'south',border:false" style="height:30px;overflow: hidden;">
+        <#include "./common/copyright.ftl" />
+    </div>
+    <script>
+        $(function () {
+            //sessionTimeout之后Tab里面的页面跳转到登录页面，形成了嵌套
+            // 自己都很瞧不上的垃圾的解决方案。
+            if ($('#redirectFlag').val() == 'true') {
+                $.messager.alert('提示信息', '您的登录信息已过期，请重新登录！', 'info', function () {
+                    document.location.reload();
+                });
+            }
+        });
+    </script>
 </body>
 </html>

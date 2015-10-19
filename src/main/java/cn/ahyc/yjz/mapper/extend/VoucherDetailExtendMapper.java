@@ -1,11 +1,18 @@
 package cn.ahyc.yjz.mapper.extend;
 
-import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
-import cn.ahyc.yjz.model.VoucherDetail;
-
 import java.util.List;
 import java.util.Map;
 
+import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
+import cn.ahyc.yjz.model.VoucherDetail;
+
+/**
+ * @ClassName: VoucherDetailExtendMapper
+ * @Description: TODO
+ * @author chengjiarui 1256064203@qq.com
+ * @date 2015年10月18日 上午10:13:24
+ * 
+ */
 public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
 
 
@@ -23,7 +30,7 @@ public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
      * @param voucherId
      * @return
      */
-    Map<String, Object> selectDetailTotal(Long voucherId);
+    Map<String, Object> selectDetailTotal(Map<String, Object> param);
 
     /**
      * 查询凭证分录列表

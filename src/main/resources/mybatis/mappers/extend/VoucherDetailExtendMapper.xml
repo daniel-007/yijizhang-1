@@ -36,27 +36,67 @@
 	ORDER BY a.id ASC
   </select>
 
-  <select id="selectDetailTotal" parameterType="java.lang.Long" resultType="java.util.Map">
+  <select id="selectDetailTotal" parameterType="java.util.Map" resultType="java.util.Map">
     SELECT 	
     	"合计：" as summary,
-    	CONVERT (sum(t.debit) * 100, DECIMAL) AS debit,
-		CONVERT (sum(t.credit) * 100, DECIMAL) AS credit
+		<if test="isreversal != null">
+		<![CDATA[
+			CONVERT (
+				CONCAT(
+					IF (sum(t.debit) > 0, '-', ''),
+					ABS(sum(t.debit)) * 100
+				),
+				DECIMAL
+			) AS debit,
+			CONVERT (
+				CONCAT(
+					IF (sum(t.credit) > 0, '-', ''),
+					ABS(sum(t.credit)) * 100
+				),
+				DECIMAL
+			) AS credit
+		]]>
+		</if>
+		<if test="isreversal == null">
+	    	CONVERT (sum(t.debit) * 100, DECIMAL) AS debit,
+			CONVERT (sum(t.credit) * 100, DECIMAL) AS credit
+		</if>
     from voucher_detail t
 	WHERE
 		t.voucher_id = #{voucherId,jdbcType=BIGINT}
   </select>
 
   <select id="selectDetailList" parameterType="java.util.Map" resultType="java.util.Map">
-    <![CDATA[
     SELECT 	
    		t.summary,
+   		t.subject_code AS subjectCode,
 		CONCAT(
 			t.subject_code,
 			' ',
 			a.subject_name
-		) AS subjectCode,
-		IF(t.debit<0,'-','') as dpn,
-		IF(t.credit<0,'-','') as crpn,
+		) AS subjectTextName,
+		<if test="isreversal != null">
+		<![CDATA[
+			CONCAT(
+					IF (t.debit > 0, '-', ''),
+					ABS(t.debit)
+				) as newdebit,
+			CONCAT(
+					IF (t.credit > 0, '-', ''),
+					ABS(t.credit)
+				) as newcrebit,
+			IF(t.debit>0,'-','') as dpn,
+			IF(t.credit>0,'-','') as crpn,
+		]]>
+		</if>
+		<if test="isreversal == null">
+		<![CDATA[
+			t.debit as newdebit,
+   			t.credit as newcrebit,
+			IF(t.debit<0,'-','') as dpn,
+			IF(t.credit<0,'-','') as crpn,
+		]]>
+		</if>
 		NULLIF(SUBSTRING(LPAD(ABS(t.debit), 12, 'a'), 1, 1),'a') AS dHundredMillion,
 		NULLIF(SUBSTRING(LPAD(ABS(t.debit), 12, 'a'), 2, 1),'a') AS dTenMillions,
 		NULLIF(SUBSTRING(LPAD(ABS(t.debit), 12, 'a'), 3, 1),'a') AS dMillions,
@@ -86,7 +126,6 @@
 		AND t.voucher_id = #{voucherId,jdbcType=BIGINT}
 	ORDER BY
 		t.id ASC
-	]]>
   </select>
 
   <select id="selectVoucherDetailForSearch" resultType="java.util.Map" parameterType="java.lang.Long" >

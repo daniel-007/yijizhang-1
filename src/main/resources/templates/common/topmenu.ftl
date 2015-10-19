@@ -4,7 +4,7 @@
         <i class="fa fa-home"></i><br/>
         <small style="font-size:12px;">首页</small>
     </button>
-    <button onClick="App.addTab('记账','voucher/main',true);"
+    <button onClick="App.addVoucherTab('记账','voucher/main',true);"
             class="button button-glow button-primary button-box button-giant button-longshadow-left">
         <i class="fa fa-pencil-square-o"></i><br/>
         <small style="font-size:12px;">记账</small>
@@ -20,7 +20,7 @@
             <li><a href="#">总账</a></li>
             <li><a href="javascript:App.addTab('明细账','search/detail/main',true)">明细账</a></li>
             <li><a href="#">多栏账</a></li>
-            <li><a href="#">科目余额表</a></li>
+            <li><a href="javascript:App.addTab('科目余额表','search/subjectBalance/main',true)">科目余额表</a></li>
             <li><a href="#">凭证汇总表</a></li>
             <li><a href="#">试算平衡表</a></li>
         </ul>
@@ -44,17 +44,13 @@
         </ul>
     </div>
 
-    <button onClick="App.addTab('设置','voucher/main',true);"
-            class="button button-glow button-primary button-box button-giant button-longshadow-left">
-        <i class="fa fa-cog"></i><br/>
-        <small style="font-size:12px;">设置</small>
-    </button>
+	<#--<button onClick="App.addTab('设置','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-left">-->
+		<#--<i class="fa fa-cog"></i><br/><small style="font-size:12px;">设置</small>-->
+	<#--</button>-->
 
-    <button onClick="App.addTab('日志','voucher/main',true);"
-            class="button button-glow button-primary button-box button-giant button-longshadow-right">
-        <i class="fa fa-file-text-o"></i><br/>
-        <small style="font-size:12px;">日志</small>
-    </button>
+	<button onClick="App.addTab('日志','action/log/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-right">
+		<i class="fa fa-file-text-o"></i><br/><small style="font-size:12px;">日志</small>
+	</button>
 </div>
 <script>
     $(function () {

@@ -14,23 +14,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.ahyc.yjz.model.CompanyCommonValue;
 import cn.ahyc.yjz.service.CarryOverService;
-import cn.ahyc.yjz.service.VoucherService;
+import cn.ahyc.yjz.service.CompanyCommonValueService;
 
 /**
  * 结转损益. Created by john Hu on 15-9-22. CarryOverController
  */
 @Controller
 @RequestMapping("/account/carryOver")
-public class CarryOverController  extends BaseController {
-	
-	public CarryOverController() {
-		this.pathPrefix = this.pathPrefix + "carryOver/";
-	}
+public class CarryOverController extends BaseController {
 
 	@Autowired
-	private VoucherService voucherService;
-	@Autowired
 	private CarryOverService carryOverService;
+    @Autowired
+    private CompanyCommonValueService companyCommonValueService;
 	/**
 	 * 初始化页面.
 	 *
@@ -48,7 +44,7 @@ public class CarryOverController  extends BaseController {
     @RequestMapping(value = ("/category/detail"))
     @ResponseBody
     public List<CompanyCommonValue> getCategoryDetail() {
-    	List<CompanyCommonValue> categoryDetails=voucherService.queryVoucherWordList();
+        List<CompanyCommonValue> categoryDetails = companyCommonValueService.queryListByType(1L);
         return categoryDetails;
     }
     /**

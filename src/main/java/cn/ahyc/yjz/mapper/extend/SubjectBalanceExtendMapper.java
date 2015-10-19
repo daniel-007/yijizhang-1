@@ -45,4 +45,12 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
      * @return
      */
     List<Map<String, Object>> selectSubjectBalanceList(Map<String, Object> map);
+
+    /**
+     * 查询科目余额
+     * 
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> selectBalanceList(Map<String, Object> map);
 }

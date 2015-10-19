@@ -66,6 +66,17 @@ App=function(){
 				});
 			}
 		},
+		
+		/** 凭证增加新的tab */
+		addVoucherTab:function(title,href,closable){
+			$TC = $('#tabContainer');
+			if($TC.tabs('exists',title)){
+				$TC.tabs('select',title);
+				$TC.tabs('getSelected').panel('refresh', href);
+			}else{
+				App.addTab(title,href,closable);
+			}
+		},
 
 		/**
 		 * 选择tab

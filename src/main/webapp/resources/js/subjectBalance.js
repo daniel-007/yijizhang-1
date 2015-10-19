@@ -10,8 +10,7 @@ SubjectBalance=function(){
 				singleSelect:true,
 				fitColumns: true,
 				fit:true,
-				onClickCell:Voucher.onClickCell,
-				url:'subjectBalance/subjectBalanceList',
+				url:'search/subjectBalance/subjectBalanceList',
 				queryParams:{subjectCode:id},
 				method:'get',
 				columns:[[
@@ -27,8 +26,109 @@ SubjectBalance=function(){
 				]]
 			});
         },
+        searchInit:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
+        	$('#balanceListSubmit').click(function(){
+        		SubjectBalance.submit();
+        	});
+        	$('#balanceListReject').click(function(){
+        		$("#default_win").window('close');
+        	});
+        },
         //页面初始化
-        init:function(){
+        init:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
+        	SubjectBalance.dgInit(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
+        	$('#balanceListSearch').click(function(){
+				$("#default_win").window({
+					title : '<i class="fa fa-info-circle"></i>科目余额表',
+					width : 333,
+					height : 289,
+					modal : true,
+					collapsible : false,
+					shadow : true,
+					href : 'search/subjectBalance/search',
+					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+				});
+        	});
+        },
+        submit:function(){
+    		var periodFrom=$('#periodFrom').numberspinner('getValue');
+    		var periodTo=$('#periodTo').numberspinner('getValue');
+    		var level=$('#level').numberspinner('getValue');
+    		var subjectCodeFrom=$("#subjectCodeFrom").textbox('getValue');
+    		var subjectCodeTo=$("#subjectCodeTo").textbox('getValue');
+    		var valueNotNull=$('#valueNotNull').prop('checked')?1:'';
+         	var tab = $TC.tabs('getSelected');
+         	$('#tabContainer').tabs('update', {
+         		tab: tab,
+         		options: {
+         			href: 'search/subjectBalance/main2',
+         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+         			onLoad:function(){
+         				$("#default_win").window('close');
+         			}
+         		}
+         	});
+         	tab.panel('refresh');
+        },
+        refresh:function(){
+        	var tab = $TC.tabs('getSelected');
+        	tab.panel('refresh');
+        },
+        dgInit:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
+        	if(periodFrom&&periodTo&&periodFrom==periodTo){
+        		$('#balanceListDg').datagrid({
+        			heigth:400,
+        			singleSelect:true,
+        			fitColumns: true,
+        			fit:true,
+        			toolbar: '#balanceListMenu',
+        			onClickCell:SubjectBalance.onClickCell,
+        			url:'search/subjectBalance/subjectBalanceList',
+        			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+        			method:'get',
+        			columns:[[
+        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center'},
+        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
+        			          {field:'initial_debit_balance',title:'期初借方金额',width:60,align:'right',halign:'center'},
+        			          {field:'initial_credit_balance',title:'期初贷方金额',width:60,align:'right',halign:'center'},
+        			          {field:'period_debit_occur',title:'本期借方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'period_credit_occur',title:'本期贷方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'year_debit_occur',title:'本年累计借方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'year_credit_occur',title:'本年累计贷方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_debit_balance',title:'期末借方金额',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_credit_balance',title:'期末贷方金额',width:60,align:'right',halign:'center'}
+        			          ]]
+        		});
+        	} else {
+        		$('#balanceListDg').datagrid({
+        			heigth:400,
+        			singleSelect:true,
+        			fitColumns: true,
+        			fit:true,
+        			toolbar: '#balanceListMenu',
+        			onClickCell:SubjectBalance.onClickCell,
+        			url:'search/subjectBalance/subjectBalanceList',
+        			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+        			method:'get',
+        			columns:[[
+        			          {field:'current_period',title:'期间',width:20,align:'left',halign:'center'},
+        			          {field:'subject_code',title:'科目代码',width:60,align:'left',halign:'center'},
+        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
+        			          {field:'initial_debit_balance',title:'期初借方金额',width:60,align:'right',halign:'center'},
+        			          {field:'initial_credit_balance',title:'期初贷方金额',width:60,align:'right',halign:'center'},
+        			          {field:'period_debit_occur',title:'本期借方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'period_credit_occur',title:'本期贷方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'year_debit_occur',title:'本年累计借方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'year_credit_occur',title:'本年累计贷方发生额',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_debit_balance',title:'期末借方金额',width:60,align:'right',halign:'center'},
+        			          {field:'terminal_credit_balance',title:'期末贷方金额',width:60,align:'right',halign:'center'}
+        			          ]]
+        		});
+        	}
+        },
+        //打开明细账 TODO
+        onClickCell:function(){
+        	
         }
 	};
 }();

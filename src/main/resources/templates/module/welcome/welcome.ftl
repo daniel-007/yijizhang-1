@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="jtk-node" id="flowchartWindow2">
-                <button id="btn_jiz" onClick="App.addTab('记账凭证-新增','voucher/main',true);" class="button button-action button-box button-jumbo">
+                <button id="btn_jiz" onClick="App.addVoucherTab('记账','voucher/main',true);" class="button button-action button-box button-jumbo">
                     <div><i class="fa fa-pencil-square-o"></i></div>
                     <div><small style="font-size:12px;"><@spring.message code="welcome.jiz"/></small></div>
                 </button>

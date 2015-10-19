@@ -1,8 +1,11 @@
 package cn.ahyc.yjz.controller;
 
-import cn.ahyc.yjz.model.Period;
-import cn.ahyc.yjz.service.SearchVoucherService;
-import cn.ahyc.yjz.util.Constant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.ahyc.yjz.model.Period;
+import cn.ahyc.yjz.service.SearchVoucherService;
+import cn.ahyc.yjz.service.VoucherService;
+import cn.ahyc.yjz.util.Constant;
 
 /**
  * 凭证查询控制器.
@@ -29,6 +32,8 @@ public class SearchVoucherContrller extends BaseController {
     @Autowired
     private SearchVoucherService searchVoucherService;
 
+    @Autowired
+    private VoucherService voucherService;
 
     /**
      * 删除凭证.
@@ -45,7 +50,7 @@ public class SearchVoucherContrller extends BaseController {
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
 
         try {
-//            searchVoucherService.delete(voucherId);
+            voucherService.delete(voucherId, period.getId());
         } catch (Exception e) {
             map.put("success", false);
             map.put("msg", e.getMessage());

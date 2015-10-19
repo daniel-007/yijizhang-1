@@ -160,7 +160,7 @@ Search_Voucher = function () {
 
                 var selected_row = $("#search_voucher_container").find("#data_table").datagrid('getSelected');
                 if (selected_row) {
-                    App.addTab('记账', 'voucher/main?voucherId=' + selected_row.id + '&isreversal=true', true);
+                    App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.id + '&isreversal=1', true);
                 } else {
                     $.messager.alert("警告", "请选择一条记录。", "warning");
                 }
@@ -172,7 +172,7 @@ Search_Voucher = function () {
 
                 var selected_row = $("#search_voucher_container").find("#data_table").datagrid('getSelected');
                 if (selected_row) {
-                    App.addTab('记账', 'voucher/main?voucherId=' + selected_row.id, true);
+                    App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.id, true);
                 } else {
                     $.messager.alert("警告", "请选择一条记录。", "warning");
                 }
