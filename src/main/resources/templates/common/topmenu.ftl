@@ -54,20 +54,33 @@
 </div>
 <script>
     $(function () {
+        var d1=dialog({
+            content: $('#cz_menu').html(),
+            quickClose: true
+        });
+        var d2 = dialog({
+            content: $('#bb_menu').html(),
+            quickClose: true
+        });
         $('#cz_bubble').click(function () {
-            var d = dialog({
-                content: $('#cz_menu').html(),
-                quickClose: true
-            });
-            d.show(document.getElementById('cz_bubble'));
+//            d1 = dialog({
+//                content: $('#cz_menu').html(),
+//                quickClose: true
+//            });
+            d1.show(document.getElementById('cz_bubble'));
         });
 
         $('#bb_bubble').click(function () {
-            var d = dialog({
-                content: $('#bb_menu').html(),
-                quickClose: true
-            });
-            d.show(document.getElementById('bb_bubble'));
+//            d2 = dialog({
+//                content: $('#bb_menu').html(),
+//                quickClose: true
+//            });
+            d2.show(document.getElementById('bb_bubble'));
+        });
+
+        $('ul.fc_menu_ul>li>a').click(function(){
+            d1.close();
+            d2.close();
         });
 
     });

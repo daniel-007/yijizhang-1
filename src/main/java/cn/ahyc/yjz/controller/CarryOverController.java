@@ -23,47 +23,49 @@ import cn.ahyc.yjz.service.CompanyCommonValueService;
 @RequestMapping("/account/carryOver")
 public class CarryOverController extends BaseController {
 
-	@Autowired
-	private CarryOverService carryOverService;
-    @Autowired
-    private CompanyCommonValueService companyCommonValueService;
+		@Autowired
+		private CarryOverService carryOverService;
+		@Autowired
+		private CompanyCommonValueService companyCommonValueService;
 
-    public CarryOverController() {
-        this.pathPrefix = this.pathPrefix + "carryOver/";
-    }
+		public CarryOverController() {
+				this.pathPrefix = this.pathPrefix + "carryOver/";
+		}
 
-	/**
-	 * 初始化页面.
-	 *
-	 * @return
-	 */
-	@RequestMapping(value = ("/main"))
-	public String main(Model model) {
-		return view("main");
-	}
-	/**
-	 * 凭证字.
-	 *
-	 * @return
-	 */
-    @RequestMapping(value = ("/category/detail"))
-    @ResponseBody
-    public List<CompanyCommonValue> getCategoryDetail() {
-        List<CompanyCommonValue> categoryDetails = companyCommonValueService.queryListByType(1L);
-        return categoryDetails;
-    }
-    /**
-	 * 结转损益.
-	 *
-	 * @return
-	 */
-    @RequestMapping(value = ("/complete"))
-	@ResponseBody
-	public Map<String, String> complete( String summary, String voucherWord,HttpSession session) {
-			Map<String, String> map = new HashMap<String, String>();
-			//保存业务数据
-			String result =carryOverService.CarryoverSubmit(summary, voucherWord,session);
-			map.put("result", result);
-			return map;
-	}
+		/**
+		 * 初始化页面.
+		 *
+		 * @return
+		 */
+		@RequestMapping(value = ("/main"))
+		public String main(Model model) {
+				return view("main");
+		}
+
+		/**
+		 * 凭证字.
+		 *
+		 * @return
+		 */
+		@RequestMapping(value = ("/category/detail"))
+		@ResponseBody
+		public List<CompanyCommonValue> getCategoryDetail() {
+				List<CompanyCommonValue> categoryDetails = companyCommonValueService.queryListByType(1L);
+				return categoryDetails;
+		}
+
+		/**
+		 * 结转损益.
+		 *
+		 * @return
+		 */
+		@RequestMapping(value = ("/complete"))
+		@ResponseBody
+		public Map<String, String> complete(String summary, String voucherWord, HttpSession session) {
+				Map<String, String> map = new HashMap<String, String>();
+				//保存业务数据
+				String result = carryOverService.CarryoverSubmit(summary, voucherWord, session);
+				map.put("result", result);
+				return map;
+		}
 }
