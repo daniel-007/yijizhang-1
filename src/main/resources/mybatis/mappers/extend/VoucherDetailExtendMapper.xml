@@ -188,11 +188,25 @@
 	    SUM(b.debit) AS debit,
 	    SUM(b.credit) AS credit,
 	    a.id AS voucherId,
-	    d.summary,
+	    c.summary,
 	    d.subject_name 
 	  FROM
 	    `voucher` a,
 	    voucher_detail b,
+	     (SELECT 
+	      a.voucher_id,
+	      a.summary 
+	    FROM
+	      voucher_detail a 
+	      LEFT JOIN voucher b 
+	        ON a.voucher_id = b.id 
+	      LEFT JOIN period c 
+	        ON b.period_id = c.id 
+	      LEFT JOIN account_subject d 
+	        ON a.subject_code = d.subject_code 
+	        AND c.book_id = d.book_id 
+	    GROUP BY a.voucher_id 
+	    ORDER BY a.id ASC) c,
 	    (SELECT 
 	      a.voucher_id,
 	      a.summary,
@@ -211,6 +225,7 @@
 	  WHERE b.`subject_code` like #{subjectCode}
 	    AND a.`id` = b.`voucher_id` 
 	    AND a.id = d.voucher_id 
+	    AND a.id = c.voucher_id 
 	    AND a.period_id IN 
 	    (SELECT 
 	      p.id 
