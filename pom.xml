@@ -8,6 +8,11 @@
 		<version>1.2.6.RELEASE</version>
 	</parent>
 	<artifactId>yijizhang</artifactId>
+	<developers>
+		<developer>
+			<email>sanlai_lee@qq.com</email>
+		</developer>
+	</developers>
 	<properties>
 		<main.basedir>${basedir}/../..</main.basedir>
 		<java.version>1.8</java.version>
@@ -16,6 +21,9 @@
 		<mybatis.spring.version>1.2.3</mybatis.spring.version>
 		<urlrewrite.version>4.0.3</urlrewrite.version>
 		<jasypt.version>1.9.2</jasypt.version>
+		<tomcat-jdbc.version>8.0.23</tomcat-jdbc.version>
+		<commons-lang3.version>3.4</commons-lang3.version>
+		<el-api.version>3.0.0</el-api.version>
 	</properties>
 	<build>
 		<plugins>
@@ -118,27 +126,17 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
-			<version>8.0.23</version>
+			<version>${tomcat-jdbc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.2.0</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>javax.el-api</artifactId>
-			<version>3.0.0</version>
+			<version>${el-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.tuckey</groupId>

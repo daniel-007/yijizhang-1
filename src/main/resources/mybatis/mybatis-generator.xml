@@ -56,7 +56,7 @@
 		<!--<table tableName="dict_type" domainObjectName="DictType" />-->
 		<!--<table tableName="dict_value" domainObjectName="DictValue" />-->
 		<!--<table tableName="period" domainObjectName="Period" />-->
-		<!--<table tableName="subject_balance" domainObjectName="SubjectBalance" />-->
+		<table tableName="subject_balance" domainObjectName="SubjectBalance" />
 		<!--<table tableName="subject_length" domainObjectName="SubjectLength" />-->
 		<!--<table tableName="voucher" domainObjectName="Voucher" />-->
 		<!--<table tableName="voucher_detail" domainObjectName="VoucherDetail" />-->
@@ -64,6 +64,6 @@
 		<!--<table tableName="voucher_template_detail" domainObjectName="VoucherTemplateDetail" />-->
 		<!--<table tableName="login_history" domainObjectName="LoginHistory"/>-->
 		<!--<table tableName="users" domainObjectName="User" />-->
-		<table tableName="action_log" domainObjectName="ActionLog" />
+		<!--<table tableName="action_log" domainObjectName="ActionLog" />-->
 	</context>
 </generatorConfiguration>
