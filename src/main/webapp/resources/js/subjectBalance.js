@@ -10,7 +10,7 @@ SubjectBalance=function(){
 				singleSelect:true,
 				fitColumns: true,
 				fit:true,
-				url:'search/subjectBalance/subjectBalanceList',
+				url:'search/subjectbalance/list',
 				queryParams:{subjectCode:id},
 				method:'get',
 				columns:[[
@@ -45,7 +45,7 @@ SubjectBalance=function(){
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'search/subjectBalance/search',
+					href : 'search/subjectbalance/search',
 					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
 				});
         	});
@@ -64,7 +64,7 @@ SubjectBalance=function(){
          	$('#tabContainer').tabs('update', {
          		tab: tab,
          		options: {
-         			href: 'search/subjectBalance/main2',
+         			href: 'search/subjectbalance/filter',
          			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
          			onLoad:function(){
          				$("#default_win").window('close');
@@ -86,7 +86,7 @@ SubjectBalance=function(){
         			fit:true,
         			toolbar: '#balanceListMenu',
         			onDblClickRow:SubjectBalance.onDblClickRow,
-        			url:'search/subjectBalance/subjectBalanceList',
+        			url:'search/subjectbalance/list',
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
@@ -120,7 +120,7 @@ SubjectBalance=function(){
         			fit:true,
         			toolbar: '#balanceListMenu',
         			onDblClickRow:SubjectBalance.onDblClickRow,
-        			url:'search/subjectBalance/subjectBalanceList',
+        			url:'search/subjectbalance/list',
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
@@ -151,7 +151,9 @@ SubjectBalance=function(){
         },
         //打开明细账
         onDblClickRow:function(index,row){
-        	App.addVoucherTab('明细账','search/detail/main?subjectCode='+row.subject_code,true);
+        	if(row.subject_code){
+        		App.addVoucherTab('明细账','search/detail/main?subjectCode='+row.subject_code,true);
+        	}
         }
 	};
 }();

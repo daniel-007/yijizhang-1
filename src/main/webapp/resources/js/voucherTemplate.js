@@ -36,7 +36,7 @@ VoucherTemplate=function(){
 			});
 			//类别编辑
 			$('#templateTypeEdit').click(function(){
-				CompanyCommonValue.openWindow('#voucherTem_win','模式凭证类别','2');
+				CompanyCommonValue.openWindow('模式凭证类别','2');
 			});
 			//显示模式
 			$('#templateShow').click(function(){
@@ -47,7 +47,7 @@ VoucherTemplate=function(){
 				singleSelect:true,
 				fitColumns: true,
 				fit:true,
-				url:'voucher/voucherTemplateList',
+				url:'voucher/template/list',
 				method:'get',
 				onDblClickRow:VoucherTemplate.onDblClickRow,
 				columns:[[
@@ -66,7 +66,7 @@ VoucherTemplate=function(){
 				//fit:true,
 				toolbar: '#voucherTemplateMenu,#voucherTemplateTb',
 				onClickCell:VoucherTemplate.onClickCell,
-				url:'voucher/voucherTemplateDetailList',
+				url:'voucher/template/detail/list',
 				queryParams:{voucherTemplateId:id},
 				method:'get',
 				showFooter:true,
@@ -79,7 +79,7 @@ VoucherTemplate=function(){
 				        					  valueField:'subjectCode',
 				        					  textField:'subjectTextName',
 				        					  method:'get',
-				        					  url:'/voucher/accountSubjectList',
+				        					  url:'/voucher/subjectlist',
 				        					  onBeforeLoad:function(){
 				        						  if(templateSubjectData){
 				        							  $(this).combobox('loadData',templateSubjectData); 
@@ -142,11 +142,11 @@ VoucherTemplate=function(){
 			});
 			//模式类别编辑
 			$('#typeNameEdit').click(function() {
-				CompanyCommonValue.openWindow('#voucherTemAdd_win','模式凭证类别','2','#typeName');
+				CompanyCommonValue.openWindow('模式凭证类别','2','#typeName');
 			});
 			//模式类别
 			$('#typeName').combobox({
-			    url:'companyCommonValue/voucherTemplateTypeList',
+			    url:'company/common/value/templatetypelist',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -158,7 +158,7 @@ VoucherTemplate=function(){
 			});
 			//凭证字
 			$('#voucherTemplateWord').combobox({
-			    url:'companyCommonValue/voucherWordList',
+			    url:'company/common/value/voucherwordlist',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -176,11 +176,11 @@ VoucherTemplate=function(){
 		saveInit:function(){
 			//模式类别编辑
 			$('#voucherTemplateSaveTypeNameEdit').click(function() {
-				CompanyCommonValue.openWindow('#voucherTemSave_win','模式凭证类别','2','#voucherTemplateSaveTypeName');
+				CompanyCommonValue.openWindow('模式凭证类别','2','#voucherTemplateSaveTypeName');
 			});
 			//模式类别
 			$('#voucherTemplateSaveTypeName').combobox({
-			    url:'companyCommonValue/voucherTemplateTypeList',
+			    url:'company/common/value/templatetypelist',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -210,7 +210,7 @@ VoucherTemplate=function(){
 				modal : true,
 				collapsible : false,
 				shadow : true,
-				href : 'voucher/voucherTemplateAdd',
+				href : 'voucher/template/add',
 				queryParams:{voucherTemplateId:id}
 			});
 		},
@@ -220,7 +220,7 @@ VoucherTemplate=function(){
 			$.messager.confirm('确认', '确定删除选中模式凭证?', function(r){
 				if (r){
 					$.ajax({
-		                url: "voucher/deleteTemplate",
+		                url: "voucher/template/delete",
 		                type:'get',
 		                data:{id:id},
 		                success: function(data){
@@ -308,7 +308,7 @@ VoucherTemplate=function(){
         		return;
 			}
 			$.ajax({
-                url: "voucher/checkTemplateName",
+                url: "voucher/checktemplatename",
                 type:'get',
                 data:{name:voucherTemplateName,id:voucherTemplateId},
                 success: function(data){
@@ -319,7 +319,7 @@ VoucherTemplate=function(){
                 	}
     				// 提交保存
     	            $.ajax({
-    	                url: "voucher/saveTemplate",
+    	                url: "voucher/template/save",
     	                type:'post',
     	                data:$(fm).serialize()+params,
     	                success: function(data){

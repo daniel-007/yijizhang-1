@@ -106,10 +106,14 @@
 				FROM
 					voucher_detail t,
 					voucher v,
-					period p
+					period p,
+					period p1
 				WHERE
 					t.voucher_id = v.id
 				AND p.id = v.period_id
+				AND p.book_id = p1.book_id
+				AND p1.id = #{periodId,jdbcType=BIGINT}
+				AND p.current_period <= p1.current_period
 				GROUP BY
 					t.subject_code,
 					p.book_id

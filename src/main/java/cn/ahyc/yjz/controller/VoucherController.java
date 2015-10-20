@@ -113,7 +113,7 @@ public class VoucherController extends BaseController{
      * @param session
      * @return
      */
-    @RequestMapping("/voucherDetailList")
+    @RequestMapping("/detail/list")
     @ResponseBody
     public Map<String, Object> voucherDetailList(Long voucherId, Long voucherTemplateId, Long isreversal,
             HttpSession session) {
@@ -146,7 +146,7 @@ public class VoucherController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/checkNo")
+    @RequestMapping(value = "/checkno")
     @ResponseBody
     public Map<String, Object> checkNo(HttpSession session, Integer no, Long id) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -253,7 +253,7 @@ public class VoucherController extends BaseController{
      * @param session
      * @return
      */
-    @RequestMapping("/accountSubjectList")
+    @RequestMapping("/subjectlist")
     @ResponseBody
     public List<AccountSubject> accountSubjectList(HttpSession session) {
         long bookId = ((AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK)).getId();
@@ -280,7 +280,7 @@ public class VoucherController extends BaseController{
      * @param session
      * @return
      */
-    @RequestMapping("/subjectBalance")
+    @RequestMapping("/balance")
     public String subjectBalance(Model model, String subjectCode, Long voucherId, HttpSession session) {
         Period voucherPeriod = null;
         if (voucherId != null) {
@@ -303,7 +303,7 @@ public class VoucherController extends BaseController{
      * @param model
      * @return
      */
-    @RequestMapping("/voucherTemplate")
+    @RequestMapping("/template")
     public String voucherTemplate(Model model) {
         return view("voucherTemplate");
     }
@@ -314,7 +314,7 @@ public class VoucherController extends BaseController{
      * @param session
      * @return
      */
-    @RequestMapping("/voucherTemplateList")
+    @RequestMapping("/template/list")
     @ResponseBody
     public Map<String, Object> voucherTemplateList(HttpSession session) {
         List<VoucherTemplate> list = voucherService.queryVoucherTemplateList();
@@ -332,7 +332,7 @@ public class VoucherController extends BaseController{
      * @param session
      * @return
      */
-    @RequestMapping("/voucherTemplateAdd")
+    @RequestMapping("/template/add")
     public String voucherTemplateAdd(Model model, Long voucherTemplateId, HttpSession session) {
         VoucherTemplate voucherTemplate = new VoucherTemplate();
         if (voucherTemplateId != null) {
@@ -350,7 +350,7 @@ public class VoucherController extends BaseController{
      * @param voucherWord
      * @return
      */
-    @RequestMapping("/voucherTemplateSave")
+    @RequestMapping("/template/save")
     public String voucherTemplateSave(Model model, String name, String voucherWord) {
         model.addAttribute("name", name);
         model.addAttribute("voucherWord", voucherWord);
@@ -364,7 +364,7 @@ public class VoucherController extends BaseController{
      * @param voucherTemplateId
      * @return
      */
-    @RequestMapping("/voucherTemplateDetailList")
+    @RequestMapping("/template/detail/list")
     @ResponseBody
     public Map<String, Object> voucherTemplateDetailList(HttpSession session, Long voucherTemplateId) {
         List<VoucherTemplateDetail> list = new ArrayList<VoucherTemplateDetail>();
@@ -386,7 +386,7 @@ public class VoucherController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping("/checkTemplateName")
+    @RequestMapping("/checktemplatename")
     @ResponseBody
     public Map<String, Object> checkTemplateName(HttpSession session, String name, Long id) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -407,7 +407,7 @@ public class VoucherController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping("/deleteTemplate")
+    @RequestMapping("/template/delete")
     @ResponseBody
     public Map<String, Object> deleteTemplate(Long id) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -438,7 +438,7 @@ public class VoucherController extends BaseController{
      * @param checkFlag
      * @return
      */
-    @RequestMapping(value = "/saveTemplate", method = RequestMethod.POST)
+    @RequestMapping(value = "/template/save", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> saveTemplate(Model model, HttpServletRequest request, VoucherTemplate voucherTemplate,
             String wordFlag, String numFlag, String summaryFlag, String subjectFlag, String dFlag, String crFlag,
