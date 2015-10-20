@@ -54,33 +54,38 @@
 </div>
 <script>
     $(function () {
-        var d1=dialog({
+        $('#cz_bubble').tooltip({
+            position: 'bottom',
             content: $('#cz_menu').html(),
-            quickClose: true
+            showEvent: 'click',
+            onShow: function(){
+                var t = $(this);
+                t.tooltip('tip').css({
+                    'padding':'10px 15px 10px 15px',
+                    'font-size':'12px'
+                }).unbind().bind('mouseenter', function(){
+                    t.tooltip('show');
+                }).bind('mouseleave', function(){
+                    t.tooltip('hide');
+                });
+            }
         });
-        var d2 = dialog({
+
+        $('#bb_bubble').tooltip({
+            position: 'bottom',
             content: $('#bb_menu').html(),
-            quickClose: true
-        });
-        $('#cz_bubble').click(function () {
-//            d1 = dialog({
-//                content: $('#cz_menu').html(),
-//                quickClose: true
-//            });
-            d1.show(document.getElementById('cz_bubble'));
-        });
-
-        $('#bb_bubble').click(function () {
-//            d2 = dialog({
-//                content: $('#bb_menu').html(),
-//                quickClose: true
-//            });
-            d2.show(document.getElementById('bb_bubble'));
-        });
-
-        $('ul.fc_menu_ul>li>a').click(function(){
-            d1.close();
-            d2.close();
+            showEvent: 'click',
+            onShow: function(){
+                var t = $(this);
+                t.tooltip('tip').css({
+                    'padding':'10px 15px 10px 15px',
+                    'font-size':'12px'
+                }).unbind().bind('mouseenter', function(){
+                    t.tooltip('show');
+                }).bind('mouseleave', function(){
+                    t.tooltip('hide');
+                });
+            }
         });
 
     });
