@@ -28,14 +28,14 @@ import cn.ahyc.yjz.util.Constant;
  * 
  */
 @Controller
-@RequestMapping("/search/subjectBalance")
+@RequestMapping("/search/subjectbalance")
 public class SubjectBalanceController extends BaseController {
 
     @Autowired
     private SubjectBalanceService subjectBalanceService;
 
     public SubjectBalanceController() {
-        this.pathPrefix = "module/search/subjectBalance/";
+        this.pathPrefix = "module/search/subjectbalance/";
 	}
 
     /**
@@ -52,7 +52,7 @@ public class SubjectBalanceController extends BaseController {
      * @param valueNotNull
      * @return
      */
-    @RequestMapping("/subjectBalanceList")
+    @RequestMapping("/list")
     @ResponseBody
     public Map<String, Object> subjectBalanceList(Long subjectCode, Long periodId, HttpSession session,
             Integer periodFrom, Integer periodTo, Long subjectCodeFrom, Long subjectCodeTo, Long level,
@@ -65,7 +65,7 @@ public class SubjectBalanceController extends BaseController {
             if (periodFrom == null && periodTo == null) {
                 periodFrom = period.getCurrentPeriod();
                 periodTo = period.getCurrentPeriod();
-            } else if (periodFrom != null || periodTo != null) {
+            } else if (!(periodFrom != null && periodTo != null)) {
                 periodFrom = periodFrom != null ? periodFrom : periodTo;
                 periodTo = periodFrom != null ? periodFrom : periodTo;
             }
@@ -114,19 +114,19 @@ public class SubjectBalanceController extends BaseController {
      * @param valueNotNull
      * @return
      */
-    @RequestMapping("/main2")
-    public String main2(Model model, HttpSession session, Integer periodFrom, Integer periodTo, Long subjectCodeFrom,
+    @RequestMapping("/filter")
+    public String filter(Model model, HttpSession session, Integer periodFrom, Integer periodTo, Long subjectCodeFrom,
             Long subjectCodeTo, Long level, Long valueNotNull) {
         if (periodFrom == null && periodTo == null) {
             Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
             model.addAttribute("periodFrom", period.getCurrentPeriod());
             model.addAttribute("periodTo", period.getCurrentPeriod());
-        } else if (periodFrom != null || periodTo != null) {
-            model.addAttribute("periodFrom", periodFrom != null ? periodFrom : periodTo);
-            model.addAttribute("periodTo", periodFrom != null ? periodFrom : periodTo);
-        } else {
+        } else if (periodFrom != null && periodTo != null) {
             model.addAttribute("periodFrom", periodFrom);
             model.addAttribute("periodTo", periodTo);
+        } else {
+            model.addAttribute("periodFrom", periodFrom != null ? periodFrom : periodTo);
+            model.addAttribute("periodTo", periodFrom != null ? periodFrom : periodTo);
         }
         model.addAttribute("level", level != null && level > 0 ? level : 1);
         model.addAttribute("subjectCodeFrom", subjectCodeFrom);

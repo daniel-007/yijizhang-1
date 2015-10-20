@@ -40,8 +40,6 @@
 	</div>
 </div>
 
-<div id="voucherTemSave_win"></div>
-
 <script type="text/javascript">
     $(function(){
         VoucherTemplate.saveInit();

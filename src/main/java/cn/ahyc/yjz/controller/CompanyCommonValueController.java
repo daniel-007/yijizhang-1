@@ -29,14 +29,14 @@ import cn.ahyc.yjz.service.CompanyCommonValueService;
  * 
  */
 @Controller
-@RequestMapping("/companyCommonValue")
+@RequestMapping("/company/common/value")
 public class CompanyCommonValueController extends BaseController {
 
     @Autowired
     private CompanyCommonValueService companyCommonValueService;
 
     public CompanyCommonValueController() {
-        this.pathPrefix = "module/companyCommonValue/";
+        this.pathPrefix = "module/companycommonvalue/";
 	}
 
     /**
@@ -78,7 +78,7 @@ public class CompanyCommonValueController extends BaseController {
      * 
      * @return
      */
-    @RequestMapping("/voucherWordList")
+    @RequestMapping("/voucherwordlist")
     @ResponseBody
     public List<CompanyCommonValue> voucherWordList() {
         List<CompanyCommonValue> list = companyCommonValueService.queryListByType(1L);// 1L：凭证字
@@ -90,7 +90,7 @@ public class CompanyCommonValueController extends BaseController {
      * 
      * @return
      */
-    @RequestMapping("/voucherTemplateTypeList")
+    @RequestMapping("/templatetypelist")
     @ResponseBody
     public List<CompanyCommonValue> voucherTemplateTypeList() {
         List<CompanyCommonValue> list = companyCommonValueService.queryListByType(2L);// 2L：模式凭证类别

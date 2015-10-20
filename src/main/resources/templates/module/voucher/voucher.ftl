@@ -37,7 +37,9 @@
 			</td>
 		    <td>
 			    <a id="voucherSubjectDetail" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-table fa-lg"></i>&#8194;明细</a>
+			    <#if !(currentPeriod??&&currentPeriod!=sessionPeriod)>
 			    <a id="voucherSubjectBalance" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-table fa-lg"></i>&#8194;科目余额</a>
+			    </#if>
 			    <a id="voucherHelp" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-question-circle fa-lg"></i>&#8194;凭证制作说明</a>
 			</td>
 		</tr>

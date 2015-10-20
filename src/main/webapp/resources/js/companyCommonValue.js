@@ -11,7 +11,7 @@ CompanyCommonValue=function(){
 				singleSelect:true,
 				fitColumns: true,
 				fit:true,
-				url:'companyCommonValue/list',
+				url:'company/common/value/list',
 				method:'get',
 				queryParams:{type:type},
 				onDblClickRow:CompanyCommonValue.edit,
@@ -78,7 +78,7 @@ CompanyCommonValue=function(){
 			$.messager.confirm('确认', '确定删除选中'+winTitle+'?', function(r){
 				if (r){
 					$.ajax({
-		                url: "companyCommonValue/delete",
+		                url: "company/common/value/delete",
 		                type:'get',
 		                data:{id:id},
 		                success: function(data){
@@ -110,7 +110,7 @@ CompanyCommonValue=function(){
 			var commonValueShowValue = $('#commonValueShowValue').textbox('getValue');
 			var commonValueId = $('#commonValueId').val();
 			$.ajax({
-                url: "companyCommonValue/check",
+                url: "company/common/value/check",
                 type:'get',
                 data:{name:commonValueShowValue,id:commonValueId,type:type},
                 success: function(data){
@@ -120,7 +120,7 @@ CompanyCommonValue=function(){
                 		return;
                 	}
 		        	$.ajax({
-		                url: "companyCommonValue/save",
+		                url: "company/common/value/save",
 		                type:'post',
 		                data:$('#commonValueFm').serialize(),
 		                success: function(data){
@@ -145,17 +145,18 @@ CompanyCommonValue=function(){
 			});
 		},
 		//打开配置值窗口
-		openWindow:function(target,winTitle,type,eventTraget){
-			$(target).window({
+		openWindow:function(winTitle,type,eventTraget){
+			$('<div></div>').window({
 				title:'<i class="fa fa-info-circle"></i>'+winTitle,
 				width:422,
 				height:477,
 				modal:true,
 				collapsible:false,
 				shadow:true,
-				href:'companyCommonValue/main',
+				href:'company/common/value/main',
 				queryParams:{type:type,winTitle:winTitle},
 				onClose:function(){
+					$(this).panel('destroy');
 					if(eventTraget){
 						$(eventTraget).combobox('reload'); 
 					}
