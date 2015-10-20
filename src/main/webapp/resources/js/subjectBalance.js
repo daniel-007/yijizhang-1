@@ -85,7 +85,7 @@ SubjectBalance=function(){
         			fitColumns: true,
         			fit:true,
         			toolbar: '#balanceListMenu',
-        			onClickCell:SubjectBalance.onClickCell,
+        			onDblClickRow:SubjectBalance.onDblClickRow,
         			url:'search/subjectBalance/subjectBalanceList',
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
@@ -119,7 +119,7 @@ SubjectBalance=function(){
         			fitColumns: true,
         			fit:true,
         			toolbar: '#balanceListMenu',
-        			onClickCell:SubjectBalance.onClickCell,
+        			onDblClickRow:SubjectBalance.onDblClickRow,
         			url:'search/subjectBalance/subjectBalanceList',
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
@@ -149,9 +149,9 @@ SubjectBalance=function(){
         		});
         	}
         },
-        //打开明细账 TODO
-        onClickCell:function(){
-        	
+        //打开明细账
+        onDblClickRow:function(index,row){
+        	App.addVoucherTab('明细账','search/detail/main?subjectCode='+row.subject_code,true);
         }
 	};
 }();

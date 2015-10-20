@@ -229,10 +229,10 @@
 		FROM
 			(
 				SELECT
-				CONCAT(t.current_period,t.subject_code) as groupConcat,
-				t.subject_code,
-				t.subject_name,
-				t.current_period,
+				CONCAT(p.current_period,a.subject_code) as groupConcat,
+				a.subject_code,
+				a.subject_name,
+				p.current_period,
 				FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
 				FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
 				FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
@@ -242,27 +242,13 @@
 				FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
 				FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
 				FROM
-					(
-					SELECT
-						a.subject_code,
-						a.subject_name,
-						p.current_period,
-						sum(t.initial_debit_balance)AS initial_debit_balance,
-						sum(t.initial_credit_balance)AS initial_credit_balance,
-						sum(t.period_debit_occur) AS period_debit_occur,
-						sum(t.period_credit_occur) AS period_credit_occur,
-						sum(t.year_debit_occur) AS year_debit_occur,
-						sum(t.year_credit_occur) AS year_credit_occur,
-						sum(t.terminal_debit_balance) AS terminal_debit_balance,
-						sum(t.terminal_credit_balance) AS terminal_credit_balance
-					FROM
-						account_subject a
-					LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id
+					account_subject a
 					LEFT JOIN period p ON a.book_id = p.book_id
 					<![CDATA[
 					AND p.current_period >= #{periodFrom,jdbcType=BIGINT}
 					AND p.current_period <= #{periodTo,jdbcType=BIGINT}
 					]]>
+					LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id AND t.period_id = p.id
 					WHERE
 						a.`level` = #{level,jdbcType=BIGINT}
 					 	AND a.book_id = #{bookId,jdbcType=BIGINT}
@@ -276,11 +262,8 @@
 						AND CAST(a.subject_code AS CHAR) < CAST(#{subjectCodeTo,jdbcType=BIGINT} AS CHAR)
 						]]>
 						</if>
-					GROUP BY
-						p.current_period,a.subject_code
-				) t
 				GROUP BY
-					CONCAT(t.current_period,t.subject_code) WITH ROLLUP
+					CONCAT(p.current_period,a.subject_code) WITH ROLLUP
 			) t
 		<if test="valueNotNull == null">
 			WHERE
