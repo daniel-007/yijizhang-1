@@ -144,7 +144,8 @@ body, html {
 .fc_menu_ul li a{
     color: #1b9af7;
     text-decoration: none;
-    font-size: 13px;
+    margin: 5px;
+    font-size: 12px;
 }
 
 .fc_menu_ul li a:hover{

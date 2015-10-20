@@ -37,7 +37,6 @@ import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * AppController
@@ -45,7 +44,8 @@ import java.util.Objects;
  * @author sanlai_lee@qq.com
  */
 @Controller
-public class AppController {
+public class AppController extends BaseController{
+
 
       @Autowired
       LoginHistoryService loginHistoryService;
@@ -59,6 +59,10 @@ public class AppController {
       @Autowired
       UserService userService;
 
+      public AppController() {
+            this.pathPrefix = "/";
+      }
+
       /**
        * 跳转到Dashboard视图.
        *
@@ -68,9 +72,7 @@ public class AppController {
       @RequestMapping("/")
       @Secured({"ROLE_ADMIN","ROLE_USER"})
       public String dashboard(Map<String, Object> model) {
-
-
-            return "dashboard";
+            return view("dashboard");
       }
 
 
@@ -97,7 +99,7 @@ public class AppController {
             }else{
                   model.remove("failureMsg");
             }
-            return "login";
+            return view("login");
       }
 
       /**

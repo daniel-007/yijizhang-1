@@ -1,8 +1,10 @@
 <div id="search_detail_container" class="easyui-panel" data-options="fit:true,border:false">
     <div id="tb" class="tabs-header tabs-header-noborder" style="height: 28px;line-height: 28px;padding: 0 5px;">
-     <input id="currentPeriod_hidden" type="hidden" value="${period.currentPeriod?default()}">
+    <form id="formSubmit" action="#" method="post">
+     <input id="current_hidden" type="hidden" value="${currentPeriod?default()}">
+     <input id="subjectCode_hidden" type="hidden" value="${subjectCode?default('')}">
         <div class="datagrid-btn-separator"></div>
-        <a id="search" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
+        <a id="searchDetail" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
         <div style="float: left;font-weight: 700;">
             <i class="fa fa-hand-o-right fa-lg"></i> 会计期间：
             <input id="startPeriod" name="startPeriod" class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 50px;" />
@@ -11,10 +13,12 @@
         </div>
          <div style="float: left;font-weight: 700;">
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-hand-o-right fa-lg"></i>科目代码：
-            <input id="startSubjectCode" name="startSubjectCode"  	style="width: 110px;" />
-            	至
-            <input id="endSubjectCode" name="endSubjectCode"    	style="width: 110px;" />
+            <input id="subjectCode" name="subjectCode"  	style="width: 110px;" />
         </div>
+        <div style="float: right;color: #ff0000;font-weight: 700;">
+            <i class="fa fa-hand-o-right fa-lg"></i> 双击结果中的凭证可弹出详细凭证信息
+        </div>
+    </form>
     </div>
 
     <table id="detail_data_table"></table>

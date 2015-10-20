@@ -28,7 +28,7 @@ Voucher=function(){
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/voucherTemplate'
+					href : 'voucher/template'
 				});
 			});
 			//保存并新增
@@ -59,7 +59,7 @@ Voucher=function(){
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/voucherTemplateSave',
+					href : 'voucher/template/save',
 					queryParams:{name:name,voucherWord:voucherWord}
 				});
 			});
@@ -107,7 +107,7 @@ Voucher=function(){
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/subjectBalance',
+					href : 'voucher/balance',
 					queryParams:{
 						subjectCode:subjectCode,
 						voucherId:id
@@ -128,11 +128,11 @@ Voucher=function(){
 			});
 			//凭证字编辑
 			$('#voucherWordEdit').click(function() {
-				CompanyCommonValue.openWindow('#default_win','凭证字','1','#voucherWord');
+				CompanyCommonValue.openWindow('凭证字','1','#voucherWord');
 			});
 			//凭证字
 			$('#voucherWord').combobox({
-			    url:'companyCommonValue/voucherWordList',
+			    url:'company/common/value/voucherwordlist',
 			    method:'get',
 			    valueField:'showValue',
 			    textField:'showValue',
@@ -171,7 +171,7 @@ Voucher=function(){
 				//fit:true,
 				toolbar: '#voucherMenu,#voucherDgTd',
 				onClickCell:Voucher.onClickCell,
-				url:'voucher/voucherDetailList',
+				url:'voucher/detail/list',
 				queryParams:{voucherId:id,voucherTemplateId:templateId,isreversal:isreversal},
 				method:'get',
 				showFooter:true,
@@ -193,7 +193,7 @@ Voucher=function(){
 								    valueField:'subjectCode',
 								    textField:'subjectTextName',
 								    method:'get',
-								    url:'/voucher/accountSubjectList',
+								    url:'/voucher/subjectlist',
 								    onBeforeLoad:function(){
 								    	if(subjectData){
 								    		$(this).combobox('loadData',subjectData); 
@@ -383,6 +383,14 @@ Voucher=function(){
 					$.messager.alert('警告', "无凭证分录!", 'warning',function(){$voucherSave.linkbutton('myenable');});
 					return;
 				}
+				if(params=='moneyNoneError'){
+					$.messager.alert('警告', "借贷双方必须存在一个金额!", 'warning',function(){$voucherSave.linkbutton('myenable');});
+	        		return;
+				}
+				if(params=='moneyBothError'){
+					$.messager.alert('警告', "借贷双方不能同时有金额!", 'warning',function(){$voucherSave.linkbutton('myenable');});
+	        		return;
+				}
 				if(!balanceFlag){// 借贷平衡
 					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$voucherSave.linkbutton('myenable');});
 					return;
@@ -391,7 +399,7 @@ Voucher=function(){
 				$voucherNo = $('#voucherNo');
 				var no = $voucherNo.numberspinner('getValue'); 
 	            $.ajax({
-	                url: "voucher/checkNo",
+	                url: "voucher/checkno",
 	                type:'get',
 	                data:{no:no,id:id},
 	                success: function(data){
@@ -445,6 +453,12 @@ Voucher=function(){
 			var rows = $('#voucherDg').datagrid('getRows');
 			for(i=0;i<rows.length;++i){
 				if(rows[i].subjectCode){
+					if((!rows[i].newdebit&&!rows[i].newcrebit)||(rows[i].newdebit==0&&rows[i].newcrebit==0)){
+						return "moneyNoneError";
+					}
+					if(rows[i].newdebit&&rows[i].newcrebit&&!(rows[i].newdebit==0||rows[i].newcrebit==0)){
+						return "moneyBothError";
+					}
 					if(!rows[i].newdebit||(rows[i].newdebit&&rows[i].newdebit==0)){
 						rows[i].newdebit='';
 					}
@@ -889,6 +903,6 @@ $.extend($.fn.validatebox.defaults.rules, {
             var d2 = new Date(param[0], param[1], 1);
             return d1<=date && date<d2;
         },
-        message: '时间超出{0}年{1}月范围.'
+        message: '时间超出当前期{0}年{1}月范围.'
     }
 });

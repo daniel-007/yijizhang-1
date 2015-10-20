@@ -20,8 +20,8 @@
             <li><a href="#">总账</a></li>
             <li><a href="javascript:App.addTab('明细账','search/detail/main',true)">明细账</a></li>
             <li><a href="#">多栏账</a></li>
-            <li><a href="javascript:App.addTab('科目余额表','search/subjectBalance/main',true)">科目余额表</a></li>
-            <li><a href="#">凭证汇总表</a></li>
+			<li><a href="javascript:App.addTab('科目余额表','search/subjectbalance/main',true)">科目余额表</a></li>
+            <li><a href="javascript:App.addTab('凭证汇总表','search/vouchercollect /main',true)">凭证汇总表</a></li>
             <li><a href="#">试算平衡表</a></li>
         </ul>
     </div>
@@ -54,20 +54,38 @@
 </div>
 <script>
     $(function () {
-        $('#cz_bubble').click(function () {
-            var d = dialog({
-                content: $('#cz_menu').html(),
-                quickClose: true
-            });
-            d.show(document.getElementById('cz_bubble'));
+        $('#cz_bubble').tooltip({
+            position: 'bottom',
+            content: $('#cz_menu').html(),
+            showEvent: 'click',
+            onShow: function(){
+                var t = $(this);
+                t.tooltip('tip').css({
+                    'padding':'10px 15px 10px 15px',
+                    'font-size':'12px'
+                }).unbind().bind('mouseenter', function(){
+                    t.tooltip('show');
+                }).bind('mouseleave', function(){
+                    t.tooltip('hide');
+                });
+            }
         });
 
-        $('#bb_bubble').click(function () {
-            var d = dialog({
-                content: $('#bb_menu').html(),
-                quickClose: true
-            });
-            d.show(document.getElementById('bb_bubble'));
+        $('#bb_bubble').tooltip({
+            position: 'bottom',
+            content: $('#bb_menu').html(),
+            showEvent: 'click',
+            onShow: function(){
+                var t = $(this);
+                t.tooltip('tip').css({
+                    'padding':'10px 15px 10px 15px',
+                    'font-size':'12px'
+                }).unbind().bind('mouseenter', function(){
+                    t.tooltip('show');
+                }).bind('mouseleave', function(){
+                    t.tooltip('hide');
+                });
+            }
         });
 
     });

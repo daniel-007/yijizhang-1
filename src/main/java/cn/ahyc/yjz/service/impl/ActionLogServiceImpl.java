@@ -47,7 +47,7 @@ public class ActionLogServiceImpl implements ActionLogService {
 		@Override
 		public Page<ActionLog> actionLogList(int rows, int page) {
 				int start = (page-1)*rows;
-				int end = (page-1)*rows+rows;
+				int end = rows;
 				Map map = new HashMap<>();
 				map.put("start",start);
 				map.put("end",end);

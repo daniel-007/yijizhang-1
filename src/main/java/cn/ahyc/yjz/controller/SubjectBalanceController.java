@@ -28,14 +28,14 @@ import cn.ahyc.yjz.util.Constant;
  * 
  */
 @Controller
-@RequestMapping("/search/subjectBalance")
+@RequestMapping("/search/subjectbalance")
 public class SubjectBalanceController extends BaseController {
 
     @Autowired
     private SubjectBalanceService subjectBalanceService;
 
     public SubjectBalanceController() {
-        this.pathPrefix = "module/search/subjectBalance/";
+        this.pathPrefix = "module/search/subjectbalance/";
 	}
 
     /**
@@ -52,15 +52,29 @@ public class SubjectBalanceController extends BaseController {
      * @param valueNotNull
      * @return
      */
-    @RequestMapping("/subjectBalanceList")
+    @RequestMapping("/list")
     @ResponseBody
-    public Map<String, Object> subjectBalanceList(Long subjectCode, Long periodId, HttpSession session, Long periodFrom,
-            Long periodTo, Long subjectCodeFrom, Long subjectCodeTo, Long level, Long valueNotNull) {
+    public Map<String, Object> subjectBalanceList(Long subjectCode, Long periodId, HttpSession session,
+            Integer periodFrom, Integer periodTo, Long subjectCodeFrom, Long subjectCodeTo, Long level,
+            Long valueNotNull) {
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         if (subjectCode != null) {// TODO 记账中查看科目余额
             list = subjectBalanceService.querySubjectBalanceList(subjectCode, period.getId());
         } else {// 查询-科目余额表
+            if (periodFrom == null && periodTo == null) {
+                periodFrom = period.getCurrentPeriod();
+                periodTo = period.getCurrentPeriod();
+            } else if (!(periodFrom != null && periodTo != null)) {
+                periodFrom = periodFrom != null ? periodFrom : periodTo;
+                periodTo = periodFrom != null ? periodFrom : periodTo;
+            }
+            if (subjectCodeFrom != null && subjectCodeTo == null) {
+                subjectCodeTo = subjectCodeFrom;
+            }
+            if (subjectCodeTo != null) {
+                subjectCodeTo += 1;
+            }
             list = subjectBalanceService.querySubjectBalanceList(period.getBookId(), periodFrom, periodTo, level,
                     subjectCodeFrom, subjectCodeTo, valueNotNull);
         }
@@ -71,7 +85,7 @@ public class SubjectBalanceController extends BaseController {
     }
 
     /**
-     * 页面
+     * 第一次默认初始化页面
      * 
      * @param model
      * @param session
@@ -88,7 +102,7 @@ public class SubjectBalanceController extends BaseController {
     }
 
     /**
-     * 页面
+     * 过滤请求页面
      * 
      * @param model
      * @param session
@@ -100,16 +114,19 @@ public class SubjectBalanceController extends BaseController {
      * @param valueNotNull
      * @return
      */
-    @RequestMapping("/main2")
-    public String main2(Model model, HttpSession session, Long periodFrom, Long periodTo, Long subjectCodeFrom,
+    @RequestMapping("/filter")
+    public String filter(Model model, HttpSession session, Integer periodFrom, Integer periodTo, Long subjectCodeFrom,
             Long subjectCodeTo, Long level, Long valueNotNull) {
         if (periodFrom == null && periodTo == null) {
             Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
             model.addAttribute("periodFrom", period.getCurrentPeriod());
             model.addAttribute("periodTo", period.getCurrentPeriod());
-        } else {
+        } else if (periodFrom != null && periodTo != null) {
             model.addAttribute("periodFrom", periodFrom);
             model.addAttribute("periodTo", periodTo);
+        } else {
+            model.addAttribute("periodFrom", periodFrom != null ? periodFrom : periodTo);
+            model.addAttribute("periodTo", periodFrom != null ? periodFrom : periodTo);
         }
         model.addAttribute("level", level != null && level > 0 ? level : 1);
         model.addAttribute("subjectCodeFrom", subjectCodeFrom);
@@ -119,7 +136,7 @@ public class SubjectBalanceController extends BaseController {
     }
 
     /**
-     * 页面
+     * 过滤页面
      * 
      * @param model
      * @param periodFrom
@@ -131,7 +148,7 @@ public class SubjectBalanceController extends BaseController {
      * @return
      */
     @RequestMapping("/search")
-    public String search(Model model, Long periodFrom, Long periodTo, Long subjectCodeFrom,
+    public String search(Model model, Integer periodFrom, Integer periodTo, Long subjectCodeFrom,
             Long subjectCodeTo, Long level, Long valueNotNull) {
         model.addAttribute("periodFrom", periodFrom);
         model.addAttribute("periodTo", periodTo);

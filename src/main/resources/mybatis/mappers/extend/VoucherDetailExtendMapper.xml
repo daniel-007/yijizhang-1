@@ -153,14 +153,92 @@
             AND t3.book_id = t.book_id
             AND t3.subject_code = t2.subject_code
         ORDER BY t1.voucher_no
-        )
+        )tt 
     WHERE tt.voucher LIKE #{keyword}
         OR tt.summary LIKE #{keyword}
         OR tt.subject_code LIKE #{keyword}
         OR tt.subject_name LIKE #{keyword}
 
   </select>
-
+  <select id="searchDetail" resultType="java.util.Map" parameterType="java.util.Map">
+  <![CDATA[
+	SELECT 
+	  IF (ISNULL(a.id), a.ctt, a.summary) AS summary,
+	  LEFT (a.voucher_time, 10) AS voucherTime,
+	  a.debit ,
+	  a.credit ,
+	  IF (ISNULL(a.id), '', a.subject_name) AS subjectName,
+	  IF (ISNULL(a.id), '', a.voucherId) AS voucherId,
+	  IF (ISNULL(a.id), '', a.voucherWord) AS voucherWord 
+	FROM
+	  (SELECT 
+	    IF (
+	      ISNULL(a.period_id),
+	      '本年累计',
+	      IF (
+	        ISNULL(a.`voucher_time`),
+	        '本期合计',
+	        IFNULL(b.id, '本日合计')
+	      )
+	    ) AS ctt,
+	    MAX(a.`voucher_time`) AS voucher_time,
+	    b.subject_code,
+	    b.id,
+	    CONCAT(a.voucher_word, '-', a.voucher_no) AS voucherWord,
+	    SUM(b.debit) AS debit,
+	    SUM(b.credit) AS credit,
+	    a.id AS voucherId,
+	    c.summary,
+	    d.subject_name 
+	  FROM
+	    `voucher` a,
+	    voucher_detail b,
+	     (SELECT 
+	      a.voucher_id,
+	      a.summary 
+	    FROM
+	      voucher_detail a 
+	      LEFT JOIN voucher b 
+	        ON a.voucher_id = b.id 
+	      LEFT JOIN period c 
+	        ON b.period_id = c.id 
+	      LEFT JOIN account_subject d 
+	        ON a.subject_code = d.subject_code 
+	        AND c.book_id = d.book_id 
+	    GROUP BY a.voucher_id 
+	    ORDER BY a.id ASC) c,
+	    (SELECT 
+	      a.voucher_id,
+	      a.summary,
+	      d.subject_name 
+	    FROM
+	      voucher_detail a 
+	      LEFT JOIN voucher b 
+	        ON a.voucher_id = b.id 
+	      LEFT JOIN period c 
+	        ON b.period_id = c.id 
+	      LEFT JOIN account_subject d 
+	        ON a.subject_code = d.subject_code 
+	        AND c.book_id = d.book_id 
+	    WHERE a.`subject_code` not like #{subjectCode}
+	    GROUP BY a.voucher_id) d 
+	  WHERE b.`subject_code` like #{subjectCode}
+	    AND a.`id` = b.`voucher_id` 
+	    AND a.id = d.voucher_id 
+	    AND a.id = c.voucher_id 
+	    AND a.period_id IN 
+	    (SELECT 
+	      p.id 
+	    FROM
+	      period p 
+	    WHERE p.current_period >= #{startPeriod,jdbcType=INTEGER}
+	      AND p.current_period <= #{endPeriod,jdbcType=INTEGER}
+	      AND p.book_id = #{bookId,jdbcType=BIGINT}) 
+	  GROUP BY a.period_id,
+	    a.`voucher_time`,
+	    b.id WITH ROLLUP) a 
+	]]>
+  </select>
   <update id="resetVoucherNo" parameterType="java.lang.Long" >
     UPDATE voucher tt,
      (SELECT @rowNO := 0) t1

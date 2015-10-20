@@ -1,8 +1,48 @@
 Search_Detail = function (){
 	 return {
-		 init_data_table: function () {
-			  $("#search_detail_container").find("#detail_data_table").datagrid({
-	                url: 'search/voucher/vouchers',
+	     init_period_select: function () {
+	    	 $('#startPeriod').val($("#current_hidden").val());
+	    	 $('#endPeriod').val($("#current_hidden").val());
+	     },
+	     init_SubjectCode: function () {
+	    	 
+	    	 $('#subjectCode').searchbox({
+    		    searcher:function(value,name){
+    		        Account_Subject.open_subject_search_win(function (record) {
+    		            $('#subjectCode').searchbox('setValue', record.subject_code);
+    		        })
+    		    }
+	    	 });
+
+	    	 //
+	    	 var searchVal = $("#subjectCode_hidden").val();
+	    	 if(searchVal){
+	    		 $('#subjectCode').searchbox("setValue", searchVal);
+	    	 }
+	    	 
+	     },
+	     select_SubjectCode: function (){
+	    	 Account_Subject.open_subject_search_win(function (record) {
+		        $('#subjectCode').searchbox('setValue', record.subject_code);
+		     });
+	     },
+	 	//查询按钮
+	     searchDetail:function(){
+	    	if($('#subjectCode').val()==null||$('#subjectCode').val()==""){
+	    		 $.messager.alert("提示信息", "请选择科目代码!");
+	    		 return;
+	    	}
+	    	if($('#startPeriod').val()>$('#endPeriod').val()){
+	    		 $.messager.alert("提示信息", "会计期间起始期间必须小于结束期间!");
+	    		 return;
+	    	}
+			$("#search_detail_container").find("#detail_data_table").datagrid({
+					url: "search/detail/submitNow",
+					queryParams: {
+						startPeriod: $('#startPeriod').val(),
+						endPeriod: $('#endPeriod').val(),
+						subjectCode: $('#subjectCode').val()
+					},
 	                border: false,
 	                fit: true,
 	                singleSelect: true,
@@ -10,61 +50,45 @@ Search_Detail = function (){
 	                rownumbers: true,
 	                columns: [
 	                    [
-	                        {field: 'voucher_time', title: '日期', hidden: true},
-	                        {field: 'voucher_word', title: '凭证字号', hidden: true},
-	                        {field: 'summary', title: '摘要', width: 100, formatter: function (value) {
-	                            var keyword = $("#search_voucher_container").find("#keyword_input").textbox("getValue");
-	                            if (value) {
-	                                return value.replace(keyword, "<span style='color: red;'>" + keyword + "</span>");
-	                            } else {
-	                                return '无';
-	                            }
-	                        }},
-	                        {field: 'subject_name', title: '对方科目', formatter: this.keywordHighlight, width: 100},
+	                        {field: 'voucherId', title: 'voucherId',hidden:true},
+	                        {field: 'voucherTime', title: '日期'},
+	                        {field: 'voucherWord', title: '凭证字号'},
+	                        {field: 'summary', title: '摘要', width: 100},
+	                        {field: 'subjectName', title: '对方科目', width: 100},
 	                        {field: 'debit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
-	                            return "font-weight:700;color:red;";
-	                        }},
-	                        {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
 	                            return "font-weight:700;color:green;";
 	                        }},
-	                        {field: 'subject_name', title: '余额', width: 100},
+	                        {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
+	                            return "font-weight:700;color:red;";
+	                        }},
+	                        {field: 'direction', title: '方向', width: 100},
+	                        {field: 'balance', title: '余额', width: 100}
 	                    ]
 	                ],
-	                view: groupview,
-	                groupField: 'voucher',
-	                groupFormatter: function (value, rows) {
-	                    var keyword = $("#search_voucher_container").find("#keyword_input").textbox("getValue");
-	                    var voucher_arr = value.split(" ");
-
-	                    var voucherWord = voucher_arr[0].replace(keyword, "<span style='color: red;'>" + keyword + "</span>");
-	                    var time = voucher_arr[1].replace(keyword, "<span style='color: red;'>" + keyword + "</span>");
-
-	                    return voucherWord + " ~ " + time;
-	                }
-	            });
-
+	                onDblClickCell: function(index,field,value){
+	            		var selected_row = $("#search_detail_container").find("#detail_data_table").datagrid('getSelected');
+	            		if(!selected_row.voucherId){
+	            			return;
+	            		}
+	            		 App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.voucherId, true);
+	            	},
+	            	rowStyler: function(index,row){
+	            		if (row.voucherId){
+	            			return 'background-color:#6293BB;color:#fff;'; // return inline style
+	            		}
+	            	}
+			});
 		 },
-	     init_period_select: function () {
-	    	 $('#startPeriod').val($("#currentPeriod_hidden").val());
-	    	 $('#endPeriod').val($("#currentPeriod_hidden").val());
-	     },
-	     init_SubjectCode: function () {
-	    	 $('#startSubjectCode').searchbox({
-    		    searcher:function(value,name){
-    		        Account_Subject.open_subject_search_win(function (record) {
-    		            alert(record.subjectName);
-    		        })
-    		    }
-	    	 });
-	    	 $('#endSubjectCode').searchbox({
-    		    searcher:function(value,name){
-    		        alert(value + "," + name);
-    		    }
-	    	});
-	     },
 	     init: function () {
             this.init_period_select();
             this.init_SubjectCode();
+            $('#subjectCode').textbox('textbox').bind('dblclick', function(e){
+            	Search_Detail.select_SubjectCode();
+            });
+            $('#searchDetail').click(function(){Search_Detail.searchDetail();});
+            if($('#subjectCode_hidden').val()!=""){
+            	Search_Detail.searchDetail();
+            }
 	     }
 	 }
 }();
