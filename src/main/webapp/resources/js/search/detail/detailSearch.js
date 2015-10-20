@@ -56,10 +56,10 @@ Search_Detail = function (){
 	                        {field: 'summary', title: '摘要', width: 100},
 	                        {field: 'subjectName', title: '对方科目', width: 100},
 	                        {field: 'debit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
-	                            return "font-weight:700;color:red;";
+	                            return "font-weight:700;color:green;";
 	                        }},
 	                        {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
-	                            return "font-weight:700;color:green;";
+	                            return "font-weight:700;color:red;";
 	                        }},
 	                        {field: 'direction', title: '方向', width: 100},
 	                        {field: 'balance', title: '余额', width: 100}
