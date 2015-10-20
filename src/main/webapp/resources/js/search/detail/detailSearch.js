@@ -71,6 +71,11 @@ Search_Detail = function (){
 	            			return;
 	            		}
 	            		 App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.voucherId, true);
+	            	},
+	            	rowStyler: function(index,row){
+	            		if (row.voucherId){
+	            			return 'background-color:#6293BB;color:#fff;'; // return inline style
+	            		}
 	            	}
 			});
 		 },
