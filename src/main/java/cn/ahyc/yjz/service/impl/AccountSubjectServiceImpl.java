@@ -272,24 +272,24 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
             Long parent_subject_code = (Long) map.get("parent_subject_code");
             Long subject_code = (Long) map.get("subject_code");
-            Object sum_total_debit = map.get("sum_total_debit");
-            Object sum_total_credit = map.get("sum_total_credit");
-            Object sum_initial_left = map.get("sum_initial_left");
-            Object sum_year_occur_amount = map.get("sum_year_occur_amount");
+            BigDecimal sum_total_debit = (BigDecimal) map.getOrDefault("sum_total_debit", BigDecimal.ZERO);
+            BigDecimal sum_total_credit = (BigDecimal) map.getOrDefault("sum_total_credit", BigDecimal.ZERO);
+            BigDecimal sum_initial_left = (BigDecimal) map.getOrDefault("sum_initial_left", BigDecimal.ZERO);
+            BigDecimal sum_year_occur_amount = (BigDecimal) map.getOrDefault("sum_year_occur_amount", BigDecimal.ZERO);
 
-            if (sum_total_debit != map.get("total_debit")) {
+            if (sum_total_debit.compareTo((BigDecimal) map.getOrDefault("total_debit", BigDecimal.ZERO)) != 0) {
                 isUpdate = true;
                 accountSubject.setTotalDebit(sum_total_debit == null ? BigDecimal.ZERO : (BigDecimal) sum_total_debit);
             }
-            if (sum_total_credit != map.get("total_credit")) {
+            if (sum_total_credit.compareTo((BigDecimal) map.getOrDefault("total_credit", BigDecimal.ZERO)) != 0) {
                 isUpdate = true;
                 accountSubject.setTotalCredit(sum_total_credit == null ? BigDecimal.ZERO : (BigDecimal) sum_total_credit);
             }
-            if (sum_initial_left != map.get("initial_left")) {
+            if (sum_initial_left.compareTo((BigDecimal) map.getOrDefault("initial_left", BigDecimal.ZERO)) != 0) {
                 isUpdate = true;
                 accountSubject.setInitialLeft(sum_initial_left == null ? BigDecimal.ZERO : (BigDecimal) sum_initial_left);
             }
-            if (sum_year_occur_amount != map.get("year_occur_amount")) {
+            if (sum_year_occur_amount.compareTo((BigDecimal) map.getOrDefault("year_occur_amount", BigDecimal.ZERO)) != 0) {
                 isUpdate = true;
                 accountSubject.setYearOccurAmount(sum_year_occur_amount == null ? BigDecimal.ZERO : (BigDecimal) sum_year_occur_amount);
             }

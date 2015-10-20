@@ -6,25 +6,26 @@ import java.util.Map;
 import cn.ahyc.yjz.dto.SubjectBalanceDto;
 import cn.ahyc.yjz.mapper.base.SubjectBalanceMapper;
 
-public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
+public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper {
 
-	/**
-	 * 查询所有损益类科目余额
-	 * @param username
-	 * @return
-	 */
-	List<SubjectBalanceDto> selectProfitAndLoss(Map<String, Object> param);
+    /**
+     * 查询所有损益类科目余额
+     *
+     * @param username
+     * @return
+     */
+    List<SubjectBalanceDto> selectProfitAndLoss(Map<String, Object> param);
 
     /**
      * 新增或更新科目余额表累计项、余额项
-     * 
+     *
      * @param periodId
      */
     int insertOrUpdateSubjectBalance(Long periodId);
 
     /**
      * 初始化下一期科目余额
-     * 
+     *
      * @param param
      * @return
      */
@@ -32,7 +33,7 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
 
     /**
      * 汇总科目余额表
-     * 
+     *
      * @param periodId
      * @return
      */
@@ -40,7 +41,7 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
 
     /**
      * 查询科目余额
-     * 
+     *
      * @param map
      * @return
      */
@@ -48,9 +49,18 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
 
     /**
      * 查询科目余额
-     * 
+     *
      * @param map
      * @return
      */
     List<Map<String, Object>> selectBalanceList(Map<String, Object> map);
+
+
+    /**
+     * 获取科目余额表和科目对应方向.
+     *
+     * @param periodId
+     * @return
+     */
+    List<Map> subjectBalanceAndDirection(Long periodId);
 }

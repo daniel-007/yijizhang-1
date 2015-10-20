@@ -55,8 +55,8 @@
         t.parent_subject_code AS subject_code,
         SUM(t.total_debit) AS sum_total_debit,
         SUM(t.total_credit) AS sum_total_credit,
-        ABS(SUM(CASE t.direction WHEN 1 THEN t.initial_left ELSE -t.initial_left END)) AS sum_initial_left,
-        ABS(SUM(CASE t.direction WHEN 1 THEN t.year_occur_amount ELSE -t.year_occur_amount END)) AS
+        SUM(CASE t.direction WHEN 1 THEN t.initial_left ELSE -t.initial_left END) AS sum_initial_left,
+        SUM(CASE t.direction WHEN 1 THEN t.year_occur_amount ELSE -t.year_occur_amount END) AS
         sum_year_occur_amount
         FROM account_subject t WHERE t.parent_subject_code IN
 
