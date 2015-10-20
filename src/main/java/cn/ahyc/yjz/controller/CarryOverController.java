@@ -27,6 +27,11 @@ public class CarryOverController extends BaseController {
 	private CarryOverService carryOverService;
     @Autowired
     private CompanyCommonValueService companyCommonValueService;
+
+    public CarryOverController() {
+        this.pathPrefix = this.pathPrefix + "carryOver/";
+    }
+
 	/**
 	 * 初始化页面.
 	 *
