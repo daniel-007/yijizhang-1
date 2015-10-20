@@ -54,9 +54,9 @@ public class SearchDetailServiceImpl implements SearchDetailService{
 				debitTmp =detailMap.get("debit")==null? new BigDecimal(0.00):(BigDecimal) detailMap.get("debit");
 				if(detailMap.get("voucherId").toString()!=null&&!detailMap.get("voucherId").toString().equals("")){
 					if(startMap.get("direction").equals("借")){
-						tmp= tmp.add(creditTmp).subtract(debitTmp);
+						tmp= tmp.add(debitTmp).subtract(creditTmp);
 					}else{
-						tmp=tmp.subtract(creditTmp).add(debitTmp);
+						tmp=tmp.subtract(debitTmp).add(creditTmp);
 					}
 				}
 				detailMap.put("balance", tmp); 

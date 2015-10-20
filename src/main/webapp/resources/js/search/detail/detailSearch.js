@@ -55,10 +55,10 @@ Search_Detail = function (){
 	                        {field: 'voucherWord', title: '凭证字号'},
 	                        {field: 'summary', title: '摘要', width: 100},
 	                        {field: 'subjectName', title: '对方科目', width: 100},
-	                        {field: 'credit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
+	                        {field: 'debit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
 	                            return "font-weight:700;color:red;";
 	                        }},
-	                        {field: 'debit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
+	                        {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
 	                            return "font-weight:700;color:green;";
 	                        }},
 	                        {field: 'direction', title: '方向', width: 100},
