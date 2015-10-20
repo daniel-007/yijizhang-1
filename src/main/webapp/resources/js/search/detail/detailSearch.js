@@ -1,8 +1,8 @@
 Search_Detail = function (){
 	 return {
 	     init_period_select: function () {
-	    	 $('#startPeriod').val($("#currentPeriod_hidden").val());
-	    	 $('#endPeriod').val($("#currentPeriod_hidden").val());
+	    	 $('#startPeriod').val($("#current_hidden").val());
+	    	 $('#endPeriod').val($("#current_hidden").val());
 	     },
 	     init_SubjectCode: function () {
 	    	 

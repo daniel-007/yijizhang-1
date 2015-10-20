@@ -1,7 +1,7 @@
 <div id="search_detail_container" class="easyui-panel" data-options="fit:true,border:false">
     <div id="tb" class="tabs-header tabs-header-noborder" style="height: 28px;line-height: 28px;padding: 0 5px;">
     <form id="formSubmit" action="#" method="post">
-     <input id="currentPeriod_hidden" type="hidden" value="${currentPeriod?default()}">
+     <input id="current_hidden" type="hidden" value="${currentPeriod?default()}">
      <input id="subjectCode_hidden" type="hidden" value="${subjectCode?default('')}">
         <div class="datagrid-btn-separator"></div>
         <a id="searchDetail" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
