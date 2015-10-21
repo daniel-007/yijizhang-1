@@ -219,9 +219,9 @@
   </select>  
   <select id="selectBalanceList" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
-			IF (isNull(t.groupConcat),'',t.subject_code) AS subject_code,
-			IF (isNull(t.groupConcat),'合计',t.subject_name) AS subject_name,
-			IF (isNull(t.groupConcat),'',t.current_period) AS current_period,
+			t.subject_code AS subject_code,
+			CONCAT(LPAD('',(t.`level`-1)*2,'&#8194;'),t.subject_name) AS subject_name,
+			t.current_period AS current_period,
 			t.initial_debit_balance,
 			t.initial_credit_balance,
 			t.period_debit_occur,
@@ -233,18 +233,18 @@
 		FROM
 			(
 				SELECT
-				CONCAT(p.current_period,a.subject_code) as groupConcat,
-				a.subject_code,
-				a.subject_name,
-				p.current_period,
-				FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
-				FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
-				FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
-				FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
-				FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
-				FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
-				FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
-				FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
+					a.subject_code,
+					a.subject_name,
+					a.`level`,
+					p.current_period,
+					FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
+					FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
+					FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
+					FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
+					FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
+					FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
+					FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
+					FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
 				FROM
 					account_subject a
 					LEFT JOIN period p ON a.book_id = p.book_id
@@ -254,7 +254,10 @@
 					]]>
 					LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id AND t.period_id = p.id
 					WHERE
-						a.`level` = #{level,jdbcType=BIGINT}
+						<![CDATA[
+						a.`level` <= #{level,jdbcType=BIGINT}
+						]]>
+						AND a.`level` > 0
 					 	AND a.book_id = #{bookId,jdbcType=BIGINT}
 						<if test="subjectCodeFrom != null">
 						<![CDATA[
@@ -267,7 +270,7 @@
 						]]>
 						</if>
 				GROUP BY
-					CONCAT(p.current_period,a.subject_code) WITH ROLLUP
+					CONCAT(p.current_period,a.subject_code)
 			) t
 		<if test="valueNotNull == null">
 			WHERE
@@ -276,8 +279,42 @@
 			OR t.period_debit_occur IS NOT NULL
 			OR t.period_credit_occur IS NOT NULL
 		</if>
-		ORDER BY
-			CASE WHEN groupConcat IS NULL THEN 1 ELSE 0 END, groupConcat ASC
+		UNION ALL
+		SELECT
+			'',
+			'合计',
+			'',
+			FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
+			FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
+			FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
+			FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
+			FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
+			FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
+			FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
+			FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
+		FROM
+			account_subject a
+			LEFT JOIN period p ON a.book_id = p.book_id
+			<![CDATA[
+			AND p.current_period >= #{periodFrom,jdbcType=BIGINT}
+			AND p.current_period <= #{periodTo,jdbcType=BIGINT}
+			]]>
+			LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id AND t.period_id = p.id
+			WHERE
+				<![CDATA[
+				a.`level` = 1
+				]]>
+			 	AND a.book_id = #{bookId,jdbcType=BIGINT}
+				<if test="subjectCodeFrom != null">
+				<![CDATA[
+				AND CAST(a.subject_code AS CHAR) >= CAST(#{subjectCodeFrom,jdbcType=BIGINT} AS CHAR)
+				]]>
+				</if>
+				<if test="subjectCodeTo != null">
+				<![CDATA[
+				AND CAST(a.subject_code AS CHAR) < CAST(#{subjectCodeTo,jdbcType=BIGINT} AS CHAR)
+				]]>
+				</if>
   </select>
   <select id="selectBalanceBySubjectCode" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT 

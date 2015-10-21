@@ -22,7 +22,7 @@ import cn.ahyc.yjz.util.Constant;
 
 /**
  * @ClassName: SubjectBalanceController
- * @Description: TODO
+ * @Description: 科目余额表
  * @author chengjiarui 1256064203@qq.com
  * @date 2015年10月18日 下午9:33:04
  * 
@@ -75,7 +75,9 @@ public class SubjectBalanceController extends BaseController {
             if (subjectCodeTo != null) {
                 subjectCodeTo += 1;
             }
-            list = subjectBalanceService.querySubjectBalanceList(period.getBookId(), periodFrom, periodTo, level,
+            level = level != null && level > 0 ? level : 1;
+            list = subjectBalanceService.querySubjectBalanceList(period.getBookId(),
+                    periodFrom, periodTo, level,
                     subjectCodeFrom, subjectCodeTo, valueNotNull);
         }
         Map<String, Object> map = new HashMap<String, Object>();
