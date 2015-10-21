@@ -19,6 +19,10 @@
 <#--明细账相关js-->
 <script type="text/javascript" src="resources/js/search/detail/detailSearch.js"></script>
 
+<#--凭证汇总相关js-->
+<script type="text/javascript" src="resources/js/search/vouchercollect/vouchercollectSearch.js"></script>
+
+
 <#--记账凭证相关js-->
 <script type="text/javascript" src="resources/js/voucher.js"></script>
 <script type="text/javascript"  src="resources/js/voucherTemplate.js"></script>

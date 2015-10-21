@@ -80,4 +80,15 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @return
      */
     void copyAccountSubject(Map<String, Object> param);
+    /**
+	 * 查询凭证汇总
+	 * @param startTime
+     * @param endTime
+     * @param voucherWord
+     * @param voucherStartNo
+     * @param voucherEndNo
+     * @param session
+	 * @return
+	 */
+    List<Map<String,Object>> searchVoucherCollect(Map<String, Object> param);
 }
