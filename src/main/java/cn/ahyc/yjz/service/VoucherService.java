@@ -140,4 +140,11 @@ public interface VoucherService {
      * @param periodId
      */
     void delete(Long voucherId, Long periodId);
+
+    /**
+     * 查询最新的7条凭证.
+     * @param map
+     * @return
+     */
+    List<Map> latestVouchers(Map map);
 }

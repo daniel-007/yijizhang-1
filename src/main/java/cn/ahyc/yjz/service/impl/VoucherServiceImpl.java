@@ -307,4 +307,15 @@ public class VoucherServiceImpl implements VoucherService {
         subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(periodId);
         subjectBalanceExtendMapper.collectSubjectBalance(periodId);
     }
+
+    /**
+     * 查询最新的7条凭证.
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public List<Map> latestVouchers(Map map) {
+        return voucherExtendMapper.latestVouchers(map);
+    }
 }

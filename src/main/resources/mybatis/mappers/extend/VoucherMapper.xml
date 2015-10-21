@@ -86,4 +86,31 @@
     from voucher
     where period_id = #{period_id,jdbcType=BIGINT}
   </select>
+
+  <select id="latestVouchers" parameterType="map" resultType="map">
+      SELECT
+        b.voucher_id,
+        DATE_FORMAT(a.voucher_time, '%m-%d') AS voucher_time,
+        CONCAT(
+            a.voucher_word,
+            '-',
+            a.voucher_no
+        ) AS voucher_word,
+        b.summary,
+        SUM(b.credit) AS count_sum
+    FROM
+        period p,
+        voucher a,
+        voucher_detail b
+    WHERE
+        p.book_id = #{bookId,jdbcType=BIGINT}
+        and a.period_id = #{currentPeriod,jdbcType=BIGINT}
+        and a.id = b.voucher_id
+        and a.period_id = p.id
+    GROUP BY
+        b.voucher_id
+    ORDER BY
+        b.modify_time DESC
+    LIMIT 7;
+  </select>
 </mapper>

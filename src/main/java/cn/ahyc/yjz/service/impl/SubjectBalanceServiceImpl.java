@@ -60,4 +60,15 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
         return subjectBalanceExtendMapper.selectBalanceList(map);
     }
 
+    /**
+     * 查询最新余额.（For east.ftl）
+     *
+     * @param map <p>{'currentPeriod':currentPeriod,'bookId':book_id}</p>
+     * @return
+     */
+    @Override
+    public List<Map> selectLatestBalance(Map map) {
+        return subjectBalanceExtendMapper.selectLatestBalance(map);
+    }
+
 }

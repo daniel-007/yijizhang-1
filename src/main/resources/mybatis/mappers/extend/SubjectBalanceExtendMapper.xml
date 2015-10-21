@@ -292,7 +292,7 @@
 		  account_subject a 
 		  LEFT JOIN period b 
 		    ON a.book_id = b.book_id 
-		    AND b.current_period =  #{currentPeriod,jdbcType=INTEGER}
+		    AND b.current_period =  #{currentPeriod,jdbcType=BIGINT}
 		  LEFT JOIN subject_balance d 
 		    ON (
 		      a.book_id = d.book_id 
@@ -300,6 +300,37 @@
 		      AND a.subject_code = d.subject_code
 		    ) 
 		WHERE a.subject_code =  #{subjectCode,jdbcType=BIGINT}
-		  AND a.book_id =#{bookId,jdbcType=BIGINT}
+		  AND a.book_id = #{bookId,jdbcType=BIGINT}
   </select>
+
+	<select id="selectLatestBalance" parameterType="map" resultType="map">
+		SELECT
+		  c.subject_name,
+		  IF(ISNULL(c.balance), 0.00, c.balance) AS balance,
+		  c.subject_code
+		FROM
+		  (SELECT
+		    b.subject_code,
+		    b.subject_name,
+		    CASE
+		      WHEN b.direction = 1
+		      THEN a.terminal_debit_balance
+		      ELSE a.terminal_credit_balance
+		    END AS balance
+		  FROM
+		    account_subject b
+		    LEFT JOIN subject_balance a
+		      ON (
+		        a.subject_code = b.subject_code
+		        AND a.book_id = b.book_id
+		        AND a.period_id = #{currentPeriod,jdbcType=BIGINT}
+		      )
+		  WHERE b.subject_code IN (1001, 1002, 1122, 2202, 1221, 1403, 1405)
+		    AND b.book_id = #{bookId,jdbcType=BIGINT}) c
+		ORDER BY FIND_IN_SET(
+		    c.subject_code,
+		    '1001,1002,1122,2202,1221,1403,1405'
+		  )
+		LIMIT 7 ;
+	</select>
 </mapper>

@@ -6,6 +6,13 @@ Welcome=function(){
 
     return {
 
+        //初始化
+        init:function(){
+            Welcome.bindEvent();
+            Welcome.initJsPlumb();
+        },
+
+        //绑定事件
         bindEvent:function(){
         	//会计科目
             var $btn_kjkm = $("#btn_kjkm");
@@ -39,6 +46,7 @@ Welcome=function(){
             });
         },
 
+        //初始化欢迎页面的图标连线
         initJsPlumb:function(){
 
             jsPlumb.ready(function () {
@@ -146,11 +154,4 @@ Welcome=function(){
             });
         }
     };
-
 }();
-
-$(function(){
-    Welcome.bindEvent();
-    Welcome.initJsPlumb();
-    East.createInit();
-});

@@ -151,3 +151,40 @@ body, html {
 .fc_menu_ul li a:hover{
     color: #336699;
 }
+
+/** east 页面 */
+#latestBalanceTB{
+    width: 100%;
+}
+
+#latestBalanceTB td{
+    height: 27px;
+    color: #333333;
+}
+
+#latestBalanceTB td a{
+    text-decoration: none;
+    color: #333333;
+}
+
+#latestBalanceTB td a:hover{
+    color: #00438a;
+}
+
+#latestVoucherTB{
+    width: 100%;
+}
+
+#latestVoucherTB td {
+    height: 27px;
+    color: #333333;
+}
+
+#latestVoucherTB td a{
+    text-decoration: none;
+    color: #333333;
+}
+
+#latestVoucherTB td a:hover{
+    color: #00438a;
+}

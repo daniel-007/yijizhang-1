@@ -10,7 +10,6 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
 
 	/**
 	 * 查询所有损益类科目余额
-	 * @param username
 	 * @return
 	 */
 	List<SubjectBalanceDto> selectProfitAndLoss(Map<String, Object> param);
@@ -61,4 +60,12 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper{
      * @return
      */
     Map<String, Object> selectBalanceBySubjectCode(Map<String, Object> map);
+
+    /**
+     * 查询最新余额.（For east.ftl）
+     * @param map
+     * <p>{'currentPeriod':currentPeriod,'bookId':book_id}</p>
+     * @return
+     */
+    List<Map> selectLatestBalance(Map map);
 }

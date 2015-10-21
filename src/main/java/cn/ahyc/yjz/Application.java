@@ -24,7 +24,7 @@ import org.springframework.context.ApplicationContext;
  *  Application 程序运行入口.
  */
 @SpringBootApplication
-public class Application {
+public class Application{
 
       private static ApplicationContext applicationContext;
 
