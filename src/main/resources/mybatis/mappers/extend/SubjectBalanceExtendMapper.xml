@@ -219,9 +219,9 @@
   </select>  
   <select id="selectBalanceList" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
-			t.subject_code AS subject_code,
-			CONCAT(LPAD('',(t.`level`-1)*2,'&#8194;'),t.subject_name) AS subject_name,
-			t.current_period AS current_period,
+			IF (isNull(t.groupConcat),'',t.subject_code) AS subject_code,
+			IF (isNull(t.groupConcat),'合计',t.subject_name) AS subject_name,
+			IF (isNull(t.groupConcat),'',t.current_period) AS current_period,
 			t.initial_debit_balance,
 			t.initial_credit_balance,
 			t.period_debit_occur,
@@ -233,18 +233,18 @@
 		FROM
 			(
 				SELECT
-					a.subject_code,
-					a.subject_name,
-					a.`level`,
-					p.current_period,
-					FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
-					FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
-					FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
-					FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
-					FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
-					FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
-					FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
-					FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
+				CONCAT(p.current_period,a.subject_code) as groupConcat,
+				a.subject_code,
+				a.subject_name,
+				p.current_period,
+				FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
+				FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
+				FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
+				FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
+				FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
+				FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
+				FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
+				FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
 				FROM
 					account_subject a
 					LEFT JOIN period p ON a.book_id = p.book_id
@@ -254,10 +254,7 @@
 					]]>
 					LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id AND t.period_id = p.id
 					WHERE
-						<![CDATA[
-						a.`level` <= #{level,jdbcType=BIGINT}
-						]]>
-						AND a.`level` > 0
+						a.`level` = #{level,jdbcType=BIGINT}
 					 	AND a.book_id = #{bookId,jdbcType=BIGINT}
 						<if test="subjectCodeFrom != null">
 						<![CDATA[
@@ -270,7 +267,7 @@
 						]]>
 						</if>
 				GROUP BY
-					CONCAT(p.current_period,a.subject_code)
+					CONCAT(p.current_period,a.subject_code) WITH ROLLUP
 			) t
 		<if test="valueNotNull == null">
 			WHERE
@@ -279,42 +276,8 @@
 			OR t.period_debit_occur IS NOT NULL
 			OR t.period_credit_occur IS NOT NULL
 		</if>
-		UNION ALL
-		SELECT
-			'',
-			'合计',
-			'',
-			FORMAT(sum(t.initial_debit_balance),2) AS initial_debit_balance,
-			FORMAT(sum(t.initial_credit_balance),2) AS initial_credit_balance,
-			FORMAT(sum(t.period_debit_occur),2) AS period_debit_occur,
-			FORMAT(sum(t.period_credit_occur),2) AS period_credit_occur,
-			FORMAT(sum(t.year_debit_occur),2) AS year_debit_occur,
-			FORMAT(sum(t.year_credit_occur),2) AS year_credit_occur,
-			FORMAT(sum(t.terminal_debit_balance),2) AS terminal_debit_balance,
-			FORMAT(sum(t.terminal_credit_balance),2) AS terminal_credit_balance
-		FROM
-			account_subject a
-			LEFT JOIN period p ON a.book_id = p.book_id
-			<![CDATA[
-			AND p.current_period >= #{periodFrom,jdbcType=BIGINT}
-			AND p.current_period <= #{periodTo,jdbcType=BIGINT}
-			]]>
-			LEFT JOIN subject_balance t ON t.subject_code = a.subject_code AND a.book_id = t.book_id AND t.period_id = p.id
-			WHERE
-				<![CDATA[
-				a.`level` = 1
-				]]>
-			 	AND a.book_id = #{bookId,jdbcType=BIGINT}
-				<if test="subjectCodeFrom != null">
-				<![CDATA[
-				AND CAST(a.subject_code AS CHAR) >= CAST(#{subjectCodeFrom,jdbcType=BIGINT} AS CHAR)
-				]]>
-				</if>
-				<if test="subjectCodeTo != null">
-				<![CDATA[
-				AND CAST(a.subject_code AS CHAR) < CAST(#{subjectCodeTo,jdbcType=BIGINT} AS CHAR)
-				]]>
-				</if>
+		ORDER BY
+			CASE WHEN groupConcat IS NULL THEN 1 ELSE 0 END, groupConcat ASC
   </select>
   <select id="selectBalanceBySubjectCode" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT 
@@ -333,7 +296,7 @@
 		  account_subject a 
 		  LEFT JOIN period b 
 		    ON a.book_id = b.book_id 
-		    AND b.current_period =  #{currentPeriod,jdbcType=BIGINT}
+		    AND b.current_period =  #{currentPeriod,jdbcType=INTEGER}
 		  LEFT JOIN subject_balance d 
 		    ON (
 		      a.book_id = d.book_id 
@@ -341,37 +304,15 @@
 		      AND a.subject_code = d.subject_code
 		    ) 
 		WHERE a.subject_code =  #{subjectCode,jdbcType=BIGINT}
-		  AND a.book_id = #{bookId,jdbcType=BIGINT}
+		  AND a.book_id =#{bookId,jdbcType=BIGINT}
   </select>
 
-	<select id="selectLatestBalance" parameterType="map" resultType="map">
-		SELECT
-		  c.subject_name,
-		  IF(ISNULL(c.balance), 0.00, c.balance) AS balance,
-		  c.subject_code
-		FROM
-		  (SELECT
-		    b.subject_code,
-		    b.subject_name,
-		    CASE
-		      WHEN b.direction = 1
-		      THEN a.terminal_debit_balance
-		      ELSE a.terminal_credit_balance
-		    END AS balance
-		  FROM
-		    account_subject b
-		    LEFT JOIN subject_balance a
-		      ON (
-		        a.subject_code = b.subject_code
-		        AND a.book_id = b.book_id
-		        AND a.period_id = #{currentPeriod,jdbcType=BIGINT}
-		      )
-		  WHERE b.subject_code IN (1001, 1002, 1122, 2202, 1221, 1403, 1405)
-		    AND b.book_id = #{bookId,jdbcType=BIGINT}) c
-		ORDER BY FIND_IN_SET(
-		    c.subject_code,
-		    '1001,1002,1122,2202,1221,1403,1405'
-		  )
-		LIMIT 7 ;
-	</select>
+   <!-- 获取余额表和对应科目方法 -->
+    <select id="subjectBalanceAndDirection" parameterType="java.lang.Long" resultType="java.util.Map" >
+        SELECT DISTINCT t.*, t1.direction
+        FROM subject_balance t, account_subject t1
+        WHERE t.period_id = #{periodId}
+            AND t1.book_id = t.book_id
+            AND t.subject_code = t1.subject_code
+    </select>
 </mapper>
