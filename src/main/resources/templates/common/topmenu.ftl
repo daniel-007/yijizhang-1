@@ -57,7 +57,7 @@
         $('#cz_bubble').tooltip({
             position: 'bottom',
             content: $('#cz_menu').html(),
-            showEvent: 'click',
+            showEvent: 'mouseenter',
             onShow: function(){
                 var t = $(this);
                 t.tooltip('tip').css({
@@ -74,7 +74,7 @@
         $('#bb_bubble').tooltip({
             position: 'bottom',
             content: $('#bb_menu').html(),
-            showEvent: 'click',
+            showEvent: 'mouseenter',
             onShow: function(){
                 var t = $(this);
                 t.tooltip('tip').css({

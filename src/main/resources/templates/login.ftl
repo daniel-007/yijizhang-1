@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="_csrf" content="${_csrf.token}"/>
-    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <#--<meta name="_csrf" content="${_csrf.token}"/>-->
+    <#--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
     <title><@spring.message code="app.title" /></title>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
     <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/icon.css">
     <!-- buttons -->
-    <link rel="stylesheet" type="text/css" href="resources/public/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="resources/public/buttons/buttons.css">
     <!-- font-awesome -->
     <link rel="stylesheet" href="resources/public/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="resources/css/base.css">
@@ -49,7 +49,7 @@
                            style="width:100%;height:40px;padding:12px"
                            value="admin"
                            data-options="required:true,missingMessage:'请输入登录密码',prompt:'密码',iconCls:'icon-lock',iconWidth:38">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
                 </div>
                 <div>
                     <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton"

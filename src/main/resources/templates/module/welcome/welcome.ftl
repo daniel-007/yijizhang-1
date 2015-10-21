@@ -42,5 +42,10 @@
 
 </div>
 
+<script>
+    $(function(){
+        Welcome.init();
+    });
+</script>
 
 

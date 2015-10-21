@@ -1,8 +1,8 @@
 <script type="text/javascript" src="resources/js/topbar.js" async="true"></script>
 <script type="text/javascript" src="resources/js/welcome.js" async="true"></script>
+<script type="text/javascript" src="resources/js/east.js"></script>
 <script type="text/javascript" src="resources/js/book.js"></script>
 <script type="text/javascript" src="resources/js/carryOver.js"></script>
-<script type="text/javascript" src="resources/js/east.js"></script>
 <script type="text/javascript" src="resources/js/cashier.js"></script>
 
 <#--会计科目相关js-->
@@ -13,7 +13,6 @@
 <script type="text/javascript" src="resources/js/accountSubject/initData/main.js"></script>
 
 <#--凭证查询相关js-->
-<script src="resources/public/easyui/src/datagrid-groupview.js"></script>
 <script type="text/javascript" src="resources/js/search/voucher/main.js"></script>
 
 <#--明细账相关js-->

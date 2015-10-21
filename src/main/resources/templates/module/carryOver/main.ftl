@@ -9,7 +9,7 @@
 				<form id="carry_over" action="#" method="post">
 					<div id="firstJsp">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<font size="2">
+						<label style="font-size: 12px;">
 							期末时，应将各损益类科目的余额转入“本年利润”科目，以反映企业在一个会计期间内实现的
 							利润或亏损总额。 本指南将帮助你自动完成对损益类科目的结转，并生成一张自动转账凭证。
 							<br/><br/>
@@ -20,9 +20,9 @@
 							<br/>
 							凭证字:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input id="category_detail" name="voucherWord" style="width: 42%;"/>
-						</font>
+						</label>
 					</div>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
 				</form>
 			</div>
 

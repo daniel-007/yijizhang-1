@@ -36,4 +36,13 @@ public interface SubjectBalanceService {
     List<Map<String, Object>> querySubjectBalanceList(Long bookId, Integer periodFrom, Integer periodTo, Long level,
             Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull);
 
+
+    /**
+     * 查询最新余额.（For east.ftl）
+     * @param map
+     * <p>{'currentPeriod':currentPeriod,'bookId':book_id}</p>
+     * @return
+     */
+    List<Map> selectLatestBalance(Map map);
+
 }

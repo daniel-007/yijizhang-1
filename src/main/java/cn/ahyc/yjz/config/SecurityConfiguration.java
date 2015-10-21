@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 import javax.sql.DataSource;
 
@@ -54,8 +55,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-				http.csrf().csrfTokenRepository(csrfTokenRepository());
-				http.authorizeRequests().antMatchers("/resources/**").permitAll()
+				http.csrf()
+							.disable()
+							.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+							//.csrfTokenRepository(csrfTokenRepository())
+							.and()
+							.authorizeRequests().antMatchers("/resources/**").permitAll()
 							.anyRequest().fullyAuthenticated()
 							.and().formLogin()
 							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())
