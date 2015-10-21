@@ -10,6 +10,9 @@
 		    <td>
 			    <a id="balanceListSearch" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-filter fa-lg"></i>&#8194;过滤</a>
 		    </td>
+		    <td>
+			    <a id="balanceListRefresh" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-refresh fa-lg"></i>&#8194;刷新</a>
+		    </td>
 		</tr>
 	</table>    
 </div>

@@ -3,7 +3,7 @@
  */
 SubjectBalance=function(){
 	return {
-		//页面初始化
+		//记账科目余额页面初始化
 		voucherInit:function(id) {
 			$('#voucherBalanceDg').datagrid({
 				heigth:400,
@@ -26,6 +26,7 @@ SubjectBalance=function(){
 				]]
 			});
         },
+        //查询-科目余额表过滤页面初始化
         searchInit:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	$('#balanceListSubmit').click(function(){
         		SubjectBalance.submit();
@@ -34,7 +35,7 @@ SubjectBalance=function(){
         		$("#default_win").window('close');
         	});
         },
-        //页面初始化
+        //查询-科目余额表页面初始化
         init:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	SubjectBalance.dgInit(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	$('#balanceListSearch').click(function(){
@@ -46,10 +47,14 @@ SubjectBalance=function(){
 					collapsible : false,
 					shadow : true,
 					href : 'search/subjectbalance/search',
-					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull}
 				});
         	});
+        	$('#balanceListRefresh').bind('click', function(){
+        		SubjectBalance.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
+        	});
         },
+        //过滤页面-确定
         submit:function(){
         	if(!$('#balanceListFm').form('validate')){// 表单验证
 				return;
@@ -60,27 +65,25 @@ SubjectBalance=function(){
     		var subjectCodeFrom=$("#subjectCodeFrom").textbox('getValue');
     		var subjectCodeTo=$("#subjectCodeTo").textbox('getValue');
     		var valueNotNull=$('#valueNotNull').prop('checked')?1:'';
-         	var tab = $TC.tabs('getSelected');
-         	$('#tabContainer').tabs('update', {
+    		$("#default_win").window('close');
+    		SubjectBalance.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
+        },
+        //刷新科目余额表
+        refresh:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
+        	var tab = $TC.tabs('getSelected');
+        	$('#tabContainer').tabs('update', {
          		tab: tab,
          		options: {
          			href: 'search/subjectbalance/filter',
-         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
-         			onLoad:function(){
-         				$("#default_win").window('close');
-         			}
+         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull}
          		}
          	});
-         	tab.panel('refresh');
-        },
-        refresh:function(){
-        	var tab = $TC.tabs('getSelected');
         	tab.panel('refresh');
         },
+        //查询-科目余额表 表格初始化
         dgInit:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	if(periodFrom&&periodTo&&periodFrom==periodTo){
         		$('#balanceListDg').datagrid({
-        			heigth:400,
         			singleSelect:true,
         			fitColumns: true,
         			fit:true,
@@ -110,11 +113,13 @@ SubjectBalance=function(){
 			      		if (row.subject_name=='合计'){
 			      			return 'background-color:#6293BB;color:#fff;';
 			      		}
+			      		if(index%2==0){
+			      			return 'background-color:#E6E6FA;color:#000000;';
+			      		}
 			      	}
         		});
         	} else {
         		$('#balanceListDg').datagrid({
-        			heigth:400,
         			singleSelect:true,
         			fitColumns: true,
         			fit:true,
@@ -144,6 +149,9 @@ SubjectBalance=function(){
 		            rowStyler: function(index,row){
 			      		if (row.subject_name=='合计'){
 			      			return 'background-color:#6293BB;color:#fff;';
+			      		}
+			      		if(index%2==0){
+			      			return 'background-color:#E6E6FA;color:#000000;';
 			      		}
 			      	}
         		});

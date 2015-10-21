@@ -27,5 +27,7 @@
 <#--企业通用配置值相关js-->
 <script type="text/javascript" src="resources/js/companyCommonValue.js"></script>
 
+<#--企业通用配置值相关js-->
+<script type="text/javascript" src="resources/js/search/trialbalance/trialbalance.js"></script>
 
 

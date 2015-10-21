@@ -1,17 +1,28 @@
 package cn.ahyc.yjz.service.impl;
 
-import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
-import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
-import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
-import cn.ahyc.yjz.model.*;
-import cn.ahyc.yjz.service.AccountSubjectService;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.*;
+import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
+import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
+import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
+import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.AccountSubjectExample;
+import cn.ahyc.yjz.model.AccountSubjectExtExample;
+import cn.ahyc.yjz.model.Period;
+import cn.ahyc.yjz.model.PeriodExample;
+import cn.ahyc.yjz.service.AccountSubjectService;
 
 /**
  * Created by Joey Yan on 15-9-24.
@@ -219,6 +230,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             public void run() {
                 try {
                     subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(_periodId);
+                    subjectBalanceExtendMapper.collectSubjectBalance(_periodId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
