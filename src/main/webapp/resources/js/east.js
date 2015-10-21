@@ -67,8 +67,8 @@ East=function(){
 					var d = array[i]['summary'];
 					var e = array[i]['count_sum'];
 					html += '<tr>'+
-						'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.voucherDetail('+a+')">' + b + '</a></td>'+
-						'<td>' + c + '</td>'+
+						'<td>' + b + '</td>'+
+						'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.voucherDetail('+a+')">' + c + '</a></td>'+
 						'<td>' + d + '</td>'+
 						'<td style="text-align: right;">' + e + '</td>'+
 						'</tr>';
