@@ -39,13 +39,6 @@
 		<button class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.lirb"/></button>
 		<button class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.xjll"/></button>
 	</div>
-
 </div>
-
-<script>
-    $(function(){
-        Welcome.init();
-    });
-</script>
 
 

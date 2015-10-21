@@ -155,3 +155,7 @@ Welcome=function(){
         }
     };
 }();
+
+$(function(){
+    Welcome.init();
+});

@@ -63,8 +63,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function(){
-        East.init();
-    });
-</script>

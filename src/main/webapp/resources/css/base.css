@@ -137,14 +137,14 @@ body, html {
 }
 
 .fc_menu_ul li{
-    margin: 5px 0px;
+    margin: 10px 0px;
     padding: 0px;
 }
 
 .fc_menu_ul li a{
     color: #1b9af7;
     text-decoration: none;
-    margin: 5px;
+    margin: 20px;
     font-size: 12px;
 }
 
