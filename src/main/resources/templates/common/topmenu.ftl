@@ -17,7 +17,7 @@
     <div id="cz_menu" style="display: none;">
         <ul class="fc_menu_ul">
             <li><a href="javascript:App.addTab('凭证查询','search/voucher/page/main',true)">凭证查询</a></li>
-            <li><a href="#">总账</a></li>
+            <li><a href="javascript:App.addTab('总账','search/ledger/main',true)">总账</a></li>
             <li><a href="javascript:App.addTab('明细账','search/detail/main',true)">明细账</a></li>
             <li><a href="#">多栏账</a></li>
 			<li><a href="javascript:App.addTab('科目余额表','search/subjectbalance/main',true)">科目余额表</a></li>

@@ -383,4 +383,233 @@
 		)
 		LIMIT 7 ;
 	</select>
+	
+	<select id="selectLedgerList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			a.subject_code,
+			IF (summary = '期初余额' OR summary = '上年结转',a.subject_code,'') as subject_code_text,
+			IF (summary = '期初余额' OR summary = '上年结转',CONCAT(LPAD('',(a.`level`-1)*2,'&#8194;'),a.subject_name),'') as subject_name,
+			a.summary,
+			format(a.debit,2) as debit,
+			format(a.credit,2) as credit,
+			format(a.balance,2) as balance,
+			c.init_year,
+			a.current_period,
+			IF (summary = '期初余额' OR summary = '上年结转',1,DAY(LAST_DAY(STR_TO_DATE(CONCAT(c.init_year,'-',a.current_period),'%Y-%m-%d')))) AS daynum,
+			IF (ISNULL(a.balance),'平',IF (a.direction = '1','借','贷')) as direction,
+			a.wordNo,
+			c.init_period
+		FROM
+			(
+				<if test="lastYear != null">
+					SELECT
+						a.subject_name,
+						a.subject_code,
+						a.direction,
+						a.book_id,
+						a.`level`,
+						'1' AS current_period,
+						'上年结转' AS summary,
+						NULL AS debit,
+						NULL AS credit,
+						IF (
+							a.direction = '1',
+							nullif(ifnull(a.initial_left, 0) - ifnull(a.total_debit, 0) + ifnull(a.total_credit, 0),0),
+							nullif(ifnull(a.initial_left, 0) + ifnull(a.total_debit, 0) - ifnull(a.total_credit, 0),0)
+						) AS balance,
+						NULL AS wordNo
+					FROM
+						account_subject a
+					WHERE
+						a.book_id = #{bookId,jdbcType=BIGINT}
+					AND ( a.total_debit IS NOT NULL OR a.total_credit IS NOT NULL )
+					<![CDATA[
+					AND a.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND a.`level` > 0
+				UNION ALL
+					SELECT
+						a.subject_name,
+						a.subject_code,
+						a.direction,
+						a.book_id,
+						a.`level`,
+						'1' AS current_period,
+						'本期合计' AS summary,
+						a.total_debit,
+						a.total_credit,
+						a.initial_left AS balance,
+						NULL AS wordNo
+					FROM
+						account_subject a
+					WHERE
+						a.book_id = #{bookId,jdbcType=BIGINT}
+					AND ( a.total_debit IS NOT NULL OR a.total_credit IS NOT NULL )
+					<![CDATA[
+					AND a.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND a.`level` > 0
+				UNION ALL
+					SELECT
+						a.subject_name,
+						a.subject_code,
+						a.direction,
+						a.book_id,
+						a.`level`,
+						'1' AS current_period,
+						'本年累计' AS summary,
+						a.total_debit,
+						a.total_credit,
+						a.initial_left AS balance,
+						NULL AS wordNo
+					FROM
+						account_subject a
+					WHERE
+						a.book_id = #{bookId,jdbcType=BIGINT}
+					AND ( a.total_debit IS NOT NULL OR a.total_credit IS NOT NULL )
+					<![CDATA[
+					AND a.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND a.`level` > 0
+				UNION ALL
+				</if>
+					SELECT
+						d.subject_name,
+						d.subject_code,
+						d.direction,
+						d.book_id,
+						d.`level`,
+						b.current_period,
+						'期初余额' AS summary,
+						NULL AS debit,
+						NULL AS credit,
+						IFNULL(
+							a.initial_debit_balance,
+							a.initial_credit_balance
+						) AS balance,
+						NULL AS wordNo
+					FROM
+						account_subject d
+						LEFT JOIN period b ON d.book_id = b.book_id
+						LEFT JOIN subject_balance a ON b.id = a.period_id
+						AND d.subject_code = a.subject_code
+					WHERE
+						d.book_id = b.book_id
+					AND d.book_id = #{bookId,jdbcType=BIGINT}
+					AND b.current_period >= #{periodFrom,jdbcType=BIGINT}
+					<![CDATA[
+					AND b.current_period <= #{periodTo,jdbcType=BIGINT}
+					]]>
+					<if test="valueNotNull != null">
+					AND ( a.period_debit_occur IS NOT NULL OR a.period_credit_occur IS NOT NULL )
+					</if>
+					<if test="lastYear != null">
+					AND d.total_debit IS NULL 
+					AND d.total_credit IS NULL
+					</if>
+					<![CDATA[
+					AND d.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND d.`level` > 0
+					GROUP BY
+						d.subject_code
+				UNION ALL
+					SELECT
+						d.subject_name,
+						d.subject_code,
+						d.direction,
+						d.book_id,
+						d.`level`,
+						b.current_period,
+						'本期合计',
+						a.period_debit_occur,
+						a.period_credit_occur,
+						IFNULL(
+							a.terminal_debit_balance,
+							a.terminal_credit_balance
+						),
+						NULLIF(CONCAT(c.voucher_word,min(c.voucher_no),if(min(c.voucher_no)=max(c.voucher_no),'',CONCAT('~',max(c.voucher_no)))),'~')
+					FROM
+						account_subject d
+						LEFT JOIN period b ON d.book_id = b.book_id
+						LEFT JOIN subject_balance a ON b.id = a.period_id
+						AND d.subject_code = a.subject_code
+						LEFT JOIN voucher c ON c.period_id = a.period_id
+					WHERE
+						d.book_id = #{bookId,jdbcType=BIGINT}
+					AND b.current_period >= #{periodFrom,jdbcType=BIGINT}
+					<![CDATA[
+					AND b.current_period <= #{periodTo,jdbcType=BIGINT}
+					]]>
+					<if test="valueNotNull != null">
+					AND ( a.period_debit_occur IS NOT NULL OR a.period_credit_occur IS NOT NULL )
+					</if>
+					<![CDATA[
+					AND d.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND d.`level` > 0
+					GROUP BY
+						d.subject_code,
+						b.current_period
+				UNION ALL
+					SELECT
+						d.subject_name,
+						d.subject_code,
+						d.direction,
+						d.book_id,
+						d.`level`,
+						b.current_period,
+						'本年累计',
+						a.year_debit_occur,
+						a.year_credit_occur,
+						IFNULL(
+							a.terminal_debit_balance,
+							a.terminal_credit_balance
+						),
+						NULL AS wordNo
+					FROM
+						account_subject d
+						LEFT JOIN period b ON d.book_id = b.book_id
+						LEFT JOIN subject_balance a ON b.id = a.period_id
+						AND d.subject_code = a.subject_code
+					WHERE
+						d.book_id = #{bookId,jdbcType=BIGINT}
+					AND b.current_period >= #{periodFrom,jdbcType=BIGINT}
+					<![CDATA[
+					AND b.current_period <= #{periodTo,jdbcType=BIGINT}
+					]]>
+					<if test="valueNotNull != null">
+					AND ( a.period_debit_occur IS NOT NULL OR a.period_credit_occur IS NOT NULL )
+					</if>
+					<![CDATA[
+					AND d.`level` <= #{level,jdbcType=BIGINT}
+					]]>
+					AND d.`level` > 0
+					GROUP BY
+						d.subject_code,
+						b.current_period
+			) a,
+			account_book c
+		WHERE
+		a.book_id = c.id
+		AND a.book_id = #{bookId,jdbcType=BIGINT}
+		<if test="subjectCodeFrom != null">
+		<![CDATA[
+		AND CAST(a.subject_code AS CHAR) >= CAST(#{subjectCodeFrom,jdbcType=BIGINT} AS CHAR)
+		]]>
+		</if>
+		<if test="subjectCodeTo != null">
+		<![CDATA[
+		AND CAST(a.subject_code AS CHAR) < CAST(#{subjectCodeTo,jdbcType=BIGINT} AS CHAR)
+		]]>
+		</if>
+		ORDER BY
+			CAST(a.subject_code AS CHAR),
+			a.current_period,
+			locate(
+				summary,
+				'上年结转,期初余额,本期合计,本年累计'
+			)
+	</select>
+	
 </mapper>

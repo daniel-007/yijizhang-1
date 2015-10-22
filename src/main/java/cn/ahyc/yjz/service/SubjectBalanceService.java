@@ -45,4 +45,19 @@ public interface SubjectBalanceService {
      */
     List<Map> selectLatestBalance(Map map);
 
+    /**
+     * 查询总账
+     * 
+     * @param bookId
+     * @param periodFrom
+     * @param periodTo
+     * @param level
+     * @param subjectCodeFrom
+     * @param subjectCodeTo
+     * @param valueNotNull
+     * @return
+     */
+    List<Map<String, Object>> queryLedgerList(Long bookId, Integer periodFrom, Integer periodTo, Long level,
+            Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull);
+
 }

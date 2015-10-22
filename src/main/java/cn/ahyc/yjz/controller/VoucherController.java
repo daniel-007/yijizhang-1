@@ -179,8 +179,9 @@ public class VoucherController extends BaseController{
         Map<String, Object> map = new HashMap<String, Object>();
         try {
 
-            Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
             AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+            // 当然账套ID所对应的当前期.
+            Period period = periodService.selectCurrentPeriod(accountBook.getId());
             if (voucher.getPeriodId() == null) {
                 voucher.setPeriodId(period.getId());
             }
