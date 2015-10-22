@@ -3,13 +3,15 @@
  */
 East=function(){
 
-	var websocket = null;
+	var wsBalance = null;
+	var wsVoucher = null;
 
 	return {
 		//初始化
 		init : function(){
 			East.bindEvent();
-			East.connect();
+			East.connect('balance');
+			East.connect('voucher');
 		},
 
 		//绑定事件
@@ -25,68 +27,86 @@ East=function(){
 		/**
 		 * 新建websocket连接
 		 */
-		connect : function(){
+		connect : function(type){
 			var target = '/latest/info/list';
-			websocket = new SockJS(target);
-			websocket.onopen = function () {
-				//如果websocket 连接已经打开，通知后台。后台开始推送数据。
-				var msg = "{ready:true,currentPeriod:"+$('#currentPeriodId').val()+",bookId:"+$('#currentAccountBookId').val()+"}";
-				East.sendMessage(msg);
-				setInterval(function(){East.sendMessage(msg)},5000);
-			};
-			websocket.onmessage = function (event) {
-				//console.log('Received: ' + event.data);
-				var data  = event.data;
-				var m = $.parseJSON(data);
-				//最新余额列表
-				var array = m['latestBalance'];
-				var html='';
-				for(var i in array){
-					var c = array[i]['subject_code'];
-					var n = array[i]['subject_name'];
-					var b = array[i]['balance'];
-					html += '<tr>'+
-						'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.balanceDetail('+c+')">' + n + '</a></td>'+
-						'<td style="text-align: right;">' + b + '</td>'+
-						'</tr>';
-					$('#latestBalanceTB').html(html);
-				}
+			if(type==='balance'){
+				wsBalance = new SockJS(target);
+				wsBalance.onopen = function () {
+					//如果websocket 连接已经打开，通知后台。后台开始推送数据。
+					var msg = East.createMsg(1);
+					East.sendMessage(wsBalance,msg);
+					setInterval(function(){East.sendMessage(wsBalance,msg)},5000);
+				};
+				wsBalance.onmessage = function (event) {
+					var data  = event.data;
+					var m = $.parseJSON(data);
+					//最新余额列表
+					var array = m['latestBalance']||[];
+					var html='';
+					for(var i in array){
+						var c = array[i]['subject_code'];
+						var n = array[i]['subject_name'];
+						var b = array[i]['balance'];
+						html += '<tr>'+
+							'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.balanceDetail('+c+')">' + n + '</a></td>'+
+							'<td style="text-align: right;">' + b + '</td>'+
+							'</tr>';
+						$('#latestBalanceTB').html(html);
+					}
 
-				//最新凭证列表
-				array = m['latestVoucher'];
-				html='<tr>'+
+					//移除fa-spin样式
+					$('#refresh1').removeClass('fa-spin');
+				};
+				wsBalance.onclose = function () {
+					//console.log('Info: WebSocket connection closed.');
+				};
+			}else if(type==='voucher'){
+				wsVoucher = new SockJS(target);
+				wsVoucher.onopen = function () {
+					//如果websocket 连接已经打开，通知后台。后台开始推送数据。
+					var msg = East.createMsg(2);
+					East.sendMessage(wsVoucher,msg);
+					setInterval(function(){East.sendMessage(wsVoucher,msg)},5000);
+				};
+				wsVoucher.onmessage = function (event) {
+					var data  = event.data;
+					var m = $.parseJSON(data);
+					//最新凭证列表
+					var array = m['latestVoucher']||[];
+					var html='<tr>'+
 						'<td style="color:#009966">日期</td>'+
 						'<td style="color:#009966">凭证字号</td>'+
 						'<td style="color:#009966">摘要</td>'+
 						'<td style="text-align: right;color:#009966;">合计数</td>'+
-					'</tr>';
-				for(var i in array){
-					var a = array[i]['voucher_id'];
-					var b = array[i]['voucher_time'];
-					var c = array[i]['voucher_word'];
-					var d = array[i]['summary'];
-					var e = array[i]['count_sum'];
-					html += '<tr>'+
-						'<td>' + b + '</td>'+
-						'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.voucherDetail('+a+')">' + c + '</a></td>'+
-						'<td>' + d + '</td>'+
-						'<td style="text-align: right;">' + e + '</td>'+
 						'</tr>';
-					$('#latestVoucherTB').html(html);
-				}
+					for(var i in array){
+						var a = array[i]['voucher_id'];
+						var b = array[i]['voucher_time'];
+						var c = array[i]['voucher_word'];
+						var d = array[i]['summary'];
+						var e = array[i]['count_sum'];
+						html += '<tr>'+
+							'<td>' + b + '</td>'+
+							'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.voucherDetail('+a+')">' + c + '</a></td>'+
+							'<td>' + d + '</td>'+
+							'<td style="text-align: right;">' + e + '</td>'+
+							'</tr>';
+						$('#latestVoucherTB').html(html);
+					}
 
-				//移除fa-spin样式
-				$('.fa-refresh').removeClass('fa-spin');
-			};
-			websocket.onclose = function () {
-				//console.log('Info: WebSocket connection closed.');
-			};
+					//移除fa-spin样式
+					$('#refresh2').removeClass('fa-spin');
+				};
+				wsVoucher.onclose = function () {
+					//console.log('Info: WebSocket connection closed.');
+				};
+			}
 		},
 
 		/**
 		 * 断开websocket连接
 		 */
-		disconnect : function() {
+		disconnect : function(websocket) {
 			if (websocket != null) {
 				websocket.close();
 				websocket = null;
@@ -96,7 +116,7 @@ East=function(){
 		/**
 		 * 发送消息.
 		 */
-		sendMessage : function(message) {
+		sendMessage : function(websocket,message) {
 			if (websocket != null) {
 				//console.log('Sent: ' + message);
 				websocket.send(message);
@@ -106,12 +126,27 @@ East=function(){
 		},
 
 		/**
+		 * 组装消息.
+		 * @param type
+		 */
+		createMsg:function(type){
+			var msg = "{ready:true,type:"+type+",currentPeriod:"+$('#currentPeriodId').val()+",bookId:"+$('#currentAccountBookId').val()+"}";
+			return msg;
+		},
+
+		/**
 		 * 刷新最新余额列表.
 		 */
-		refresh:function(){
-			$('.fa-refresh').addClass('fa-spin');
-			var msg = "{ready:true,currentPeriod:"+$('#currentPeriodId').val()+",bookId:"+$('#currentAccountBookId').val()+"}";
-			East.sendMessage(msg);
+		refresh:function(type){
+			if(type==='balance'){
+				var msg = East.createMsg(1);
+				$('#refresh1').addClass('fa-spin');
+				East.sendMessage(wsBalance,msg);
+			}else if(type==='voucher'){
+				var msg = East.createMsg(2);
+				$('#refresh2').addClass('fa-spin');
+				East.sendMessage(wsVoucher,msg);
+			}
 		},
 
 		/**

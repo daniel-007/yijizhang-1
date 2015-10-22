@@ -41,7 +41,7 @@
         </div>
         <div id="tt1">
             <#--<button title="查看" class="button button-circle button-tiny-18"><i class="fa fa-search"></i></button>-->
-            <button title="刷新" onclick="East.refresh();" class="button button-circle button-tiny-18"><i class="fa fa-refresh fa-spin"></i></button>
+            <button title="刷新" onclick="East.refresh('balance');" class="button button-circle button-tiny-18"><i id="refresh1" class="fa fa-refresh fa-spin"></i></button>
         </div>
     </div>
     <div data-options="region:'south',border:false" style="height: 46%;">
@@ -59,7 +59,7 @@
         </div>
         <div id="tt2">
             <#--<button title="查看" class="button button-circle button-tiny-18"><i class="fa fa-search"></i></button>-->
-            <button title="刷新" onclick="East.refresh();" class="button button-circle button-tiny-18"><i class="fa fa-refresh fa-spin"></i></button>
+            <button title="刷新" onclick="East.refresh('voucher');" class="button button-circle button-tiny-18"><i id="refresh2"  class="fa fa-refresh fa-spin"></i></button>
         </div>
     </div>
 </div>
