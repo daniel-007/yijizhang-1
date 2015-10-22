@@ -19,6 +19,7 @@ Search_Detail = function (){
 	    	 var searchVal = $("#subjectCode_hidden").val();
 	    	 if(searchVal){
 	    		 $('#subjectCode').searchbox("setValue", searchVal);
+	    		 $('span[name="subjectName_value"]').text("("+searchVal+")"+$('#subjectName_detail_hidden').val());
 	    	 }
 	    	 
 	     },

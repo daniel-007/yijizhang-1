@@ -11,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
+import cn.ahyc.yjz.model.AccountSubject;
+import cn.ahyc.yjz.model.AccountSubjectExample;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.SearchDetailService;
 import cn.ahyc.yjz.util.Constant;
@@ -27,6 +30,8 @@ public class SearchDetailController  extends BaseController{
 	}
 	@Autowired
 	private SearchDetailService searchDetailService;
+	@Autowired
+	private AccountSubjectMapper accountSubjectMapper;
 	/**
 	 * 初始化页面.
 	 *
@@ -37,6 +42,21 @@ public class SearchDetailController  extends BaseController{
 		Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         model.addAttribute("currentPeriod", period.getCurrentPeriod());
         model.addAttribute("subjectCode",subjectCode);
+      //查找本年利润科目代码
+        if(subjectCode!=null&&!subjectCode.equals("")){
+	        AccountSubjectExample example=new AccountSubjectExample();
+	  		cn.ahyc.yjz.model.AccountSubjectExample.Criteria criteria=example.createCriteria();
+	  		criteria.andSubjectCodeEqualTo(Long.parseLong(subjectCode));
+	  		criteria.andBookIdEqualTo(period.getBookId());
+	  		List<AccountSubject> accountSubject=accountSubjectMapper.selectByExample(example);
+	  		if(accountSubject.size()>0){
+	  			model.addAttribute("subjectName",accountSubject.get(0).getSubjectName());
+	  		}else{
+	  			model.addAttribute("subjectName","");
+	  		}
+        }else{
+        	model.addAttribute("subjectName","");
+        }
 		return view("main");
 	}
 	

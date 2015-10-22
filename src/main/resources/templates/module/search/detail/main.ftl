@@ -3,6 +3,7 @@
     <form id="formSubmit" action="#" method="post">
      <input id="current_hidden" type="hidden" value="${currentPeriod?default()}">
      <input id="subjectCode_hidden" type="hidden" value="${subjectCode?default('')}">
+     <input id="subjectName_detail_hidden" type="hidden" value="${subjectName?default('')}">
         <div class="datagrid-btn-separator"></div>
         <a id="searchDetail" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
         <span id="subjectName_value"  name="subjectName_value" style="width: 200px;"/></span>
