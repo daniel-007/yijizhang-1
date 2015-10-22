@@ -37,7 +37,8 @@ Search_Detail = function (){
 	    		 $.messager.alert("提示信息", "请选择科目代码!");
 	    		 return;
 	    	}
-	    	if($('#startPeriod').val()>$('#endPeriod').val()){
+	    	var aa=$('#endPeriod').val();
+	    	if(parseInt($('#startPeriod').val())>parseInt($('#endPeriod').val())){
 	    		 $.messager.alert("提示信息", "会计期间起始期间必须小于结束期间!");
 	    		 return;
 	    	}

@@ -38,9 +38,13 @@ public class SearchDetailController  extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = ("/main"))
-	public String main(Model model,String subjectCode,HttpSession session) {
+	public String main(Model model,String subjectCode,Integer currentPeriod,HttpSession session) {
 		Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-        model.addAttribute("currentPeriod", period.getCurrentPeriod());
+        if(currentPeriod!=null&&!currentPeriod.equals("")){
+        	model.addAttribute("currentPeriod", currentPeriod);
+        }else{
+        	model.addAttribute("currentPeriod", period.getCurrentPeriod());
+        }
         model.addAttribute("subjectCode",subjectCode);
       //查找本年利润科目代码
         if(subjectCode!=null&&!subjectCode.equals("")){
