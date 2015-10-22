@@ -11,6 +11,7 @@ Search_Detail = function (){
     		        Account_Subject.open_subject_search_win(function (record) {
     		        	$('span[name="subjectName_value"]').text("("+record.subject_code+")"+record.subject_name);
     		            $('#subjectCode').searchbox('setValue', record.subject_code);
+    		            Search_Detail.searchDetail();
     		        })
     		    }
 	    	 });
@@ -27,6 +28,7 @@ Search_Detail = function (){
 	    	 Account_Subject.open_subject_search_win(function (record) {
 	    		$('span[name="subjectName_value"]').text("("+record.subject_code+")"+record.subject_name);
 		        $('#subjectCode').searchbox('setValue', record.subject_code);
+		        Search_Detail.searchDetail();
 		     });
 	     },
 	 	//查询按钮
