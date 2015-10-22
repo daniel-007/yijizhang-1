@@ -38,7 +38,11 @@ public class ProcessTimeFilter implements Filter {
             request.setAttribute(START_TIME, time);
             filterChain.doFilter(request, servletResponse);
             time = System.currentTimeMillis() - time;
-            log.debug("process in {} ms: {}", time, request.getRequestURI());
+            if(time>5000){
+                  log.warn("Low performance - process in {} ms: {}", time, request.getRequestURI());
+            }else{
+                  log.debug("Normal performance - process in {} ms: {}", time, request.getRequestURI());
+            }
       }
 
       @Override
