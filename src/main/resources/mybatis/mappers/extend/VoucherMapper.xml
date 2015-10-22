@@ -97,7 +97,7 @@
             a.voucher_no
         ) AS voucher_word,
         b.summary,
-        SUM(b.credit) AS count_sum
+        FORMAT(SUM(b.credit),2) AS count_sum
     FROM
         period p,
         voucher a,

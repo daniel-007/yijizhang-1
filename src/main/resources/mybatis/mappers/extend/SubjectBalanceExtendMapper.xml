@@ -356,7 +356,7 @@
 	<select id="selectLatestBalance" parameterType="map" resultType="map">
 		SELECT
 		c.subject_name,
-		IF(ISNULL(c.balance), 0.00, c.balance) AS balance,
+		FORMAT(IF(ISNULL(c.balance), 0.00, c.balance),2) AS balance,
 		c.subject_code
 		FROM
 		(SELECT
