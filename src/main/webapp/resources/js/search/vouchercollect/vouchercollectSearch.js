@@ -28,13 +28,6 @@ VouchercollectSearch=function(){
 			    textField:'showValue',
 			    editable:false,
 			    required:true,
-			    onLoadSuccess:function(){
-			    	if(voucherWord){
-			    		$('#search_voucherWord').combobox('setValue', voucherWord);
-			    	}else{
-			    		$('#search_voucherWord').combobox('setValue', '记');
-			    	}
-			    },
 			    onChange:function(){
 			    	$('#voucherStartNo').numberbox('enable');
 			    	$('#voucherEndNo').numberbox('enable');
