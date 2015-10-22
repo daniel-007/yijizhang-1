@@ -35,6 +35,7 @@ Login = function(){
             if ($('#username').val() == '' || $('#password').val() == '') {
                 return;
             }
+            $('#loginText').html('正在登录 ...&#8194;<i class="fa fa-spinner fa-pulse"></i>');
             $('#loginForm').submit();
         }
 

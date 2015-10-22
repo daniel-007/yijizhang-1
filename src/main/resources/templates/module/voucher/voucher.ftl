@@ -56,7 +56,7 @@
     <div id="voucherTempMm2Save">保存为模式凭证</div>
 </div>
 
-<div id="voucherDgTd" style="padding:10px;display: none;">
+<div id="voucherDgTd" style="padding:10px;">
     <a id="voucherWordEdit" href="javascript:void(0)" class="button button-glow button-square button-tiny"><i class="fa fa-book fa-lg"></i></a>
     <select id="voucherWord" name="voucherWord" style="width:100px;"></select>字
     <input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucher.voucherNo?default(voucherNo)}" data-options="required:true,min:1">号
