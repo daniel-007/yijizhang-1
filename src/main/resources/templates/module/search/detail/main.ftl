@@ -5,6 +5,7 @@
      <input id="subjectCode_hidden" type="hidden" value="${subjectCode?default('')}">
         <div class="datagrid-btn-separator"></div>
         <a id="searchDetail" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-filter fa-lg"></i> 查询</a>
+        <span id="subjectName_value"  name="subjectName_value" style="width: 200px;"/></span>
         <div style="float: left;font-weight: 700;">
             <i class="fa fa-hand-o-right fa-lg"></i> 会计期间：
             <input id="startPeriod" name="startPeriod" class="easyui-numberspinner" data-options="onChange: function(value){$('#vv').text(value);}"	style="width: 50px;" />
@@ -15,8 +16,8 @@
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-hand-o-right fa-lg"></i>科目代码：
             <input id="subjectCode" name="subjectCode"  	style="width: 110px;" />
         </div>
-        <div style="float: right;color: #ff0000;font-weight: 700;">
-            <i class="fa fa-hand-o-right fa-lg"></i> 双击结果中的凭证可弹出详细凭证信息
+        <div style="float: right;font-weight: 700;">
+            <i class="fa fa-hand-o-right fa-lg"></i><font color="#ff0000"> 双击结果中的凭证可弹出详细凭证信息</font>
         </div>
     </form>
     </div>

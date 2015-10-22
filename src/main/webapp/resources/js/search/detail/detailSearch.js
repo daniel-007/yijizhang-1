@@ -9,6 +9,7 @@ Search_Detail = function (){
 	    	 $('#subjectCode').searchbox({
     		    searcher:function(value,name){
     		        Account_Subject.open_subject_search_win(function (record) {
+    		        	$('span[name="subjectName_value"]').text("("+record.subject_code+")"+record.subject_name);
     		            $('#subjectCode').searchbox('setValue', record.subject_code);
     		        })
     		    }
@@ -23,6 +24,7 @@ Search_Detail = function (){
 	     },
 	     select_SubjectCode: function (){
 	    	 Account_Subject.open_subject_search_win(function (record) {
+	    		$('span[name="subjectName_value"]').text("("+record.subject_code+")"+record.subject_name);
 		        $('#subjectCode').searchbox('setValue', record.subject_code);
 		     });
 	     },
