@@ -37,6 +37,9 @@ public class SearchDetailServiceImpl implements SearchDetailService{
 		List<Map> returnList=new ArrayList<Map>();
 		//查询期初余额
 		Map startMap=startBalance(bookId,startPeriod,subjectCode,accountBook);
+		if(startMap==null){
+			return returnList;
+		}
 		returnList.add(startMap);
 		//查询明细账
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -77,6 +80,9 @@ public class SearchDetailServiceImpl implements SearchDetailService{
 		param.put("currentPeriod", startPeriod);
 		param.put("subjectCode", subjectCode);
 		Map<String, Object> startBalance=subjectBalanceExtendMapper.selectBalanceBySubjectCode(param);
+		if(startBalance==null){
+			return null;
+		}
 		Map startMap = new HashMap();
 		int year =accountBook.getInitYear();
 		startPeriod=startPeriod.length()<2?"0"+startPeriod:startPeriod;

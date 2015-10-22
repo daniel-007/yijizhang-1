@@ -15,7 +15,7 @@
         </div>
          <div style="float: left;font-weight: 700;">
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-hand-o-right fa-lg"></i>科目代码：
-            <input id="subjectCode" name="subjectCode"  	style="width: 110px;" />
+            <input id="subjectCode" name="subjectCode"  	 style="width: 110px;" />
         </div>
         <div style="float: right;font-weight: 700;">
             <i class="fa fa-hand-o-right fa-lg"></i><font color="#ff0000"> 双击结果中的凭证可弹出详细凭证信息</font>
