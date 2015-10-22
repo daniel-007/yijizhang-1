@@ -54,7 +54,7 @@
                 <div>
                     <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton"
                        data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
-                        <span style="font-size:14px;">登&#8194;&#8194;录</span>
+                        <span id="loginText" style="font-size:14px;">登&#8194;&#8194;录</span>
                     </a>
                 </div>
             </div>
