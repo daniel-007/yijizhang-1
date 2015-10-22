@@ -30,7 +30,9 @@
 <#--企业通用配置值相关js-->
 <script type="text/javascript" src="resources/js/companyCommonValue.js"></script>
 
-<#--企业通用配置值相关js-->
+<#--试算平衡表js-->
 <script type="text/javascript" src="resources/js/search/trialbalance/trialbalance.js"></script>
+<#--总账js-->
+<script type="text/javascript" src="resources/js/search/ledger/ledger.js"></script>
 
 

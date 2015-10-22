@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
+import cn.ahyc.yjz.model.PeriodExample;
 import cn.ahyc.yjz.service.SubjectBalanceService;
 
 /**
@@ -22,6 +24,9 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
 
     @Autowired
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
+
+    @Autowired
+    private PeriodExtendMapper periodExtendMapper;
 
     /*
      * (non-Javadoc)
@@ -69,6 +74,33 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
     @Override
     public List<Map> selectLatestBalance(Map map) {
         return subjectBalanceExtendMapper.selectLatestBalance(map);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.ahyc.yjz.service.SubjectBalanceService#queryLedgerList(java.lang.Long,
+     * java.lang.Integer, java.lang.Integer, java.lang.Long, java.lang.Long,
+     * java.lang.Long, java.lang.Long)
+     */
+    @Override
+    public List<Map<String, Object>> queryLedgerList(Long bookId, Integer periodFrom, Integer periodTo, Long level,
+            Long subjectCodeFrom, Long subjectCodeTo, Long valueNotNull) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        PeriodExample example = new PeriodExample();
+        PeriodExample.Criteria criteria = example.createCriteria();
+        criteria.andBookIdEqualTo(bookId);
+        criteria.andCurrentPeriodEqualTo(1);
+        map.put("lastYear", periodFrom == 1 && periodExtendMapper.countByExample(example) <= 0 ? true : null);
+        map.put("bookId", bookId);
+        map.put("periodFrom", periodFrom);
+        map.put("periodTo", periodTo);
+        map.put("level", level);
+        map.put("subjectCodeFrom", subjectCodeFrom);
+        map.put("subjectCodeFrom", subjectCodeFrom);
+        map.put("valueNotNull", valueNotNull);
+        return subjectBalanceExtendMapper.selectLedgerList(map);
     }
 
 }

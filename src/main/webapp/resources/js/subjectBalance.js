@@ -113,9 +113,6 @@ SubjectBalance=function(){
 			      		if (row.subject_name=='合计'){
 			      			return 'background-color:#6293BB;color:#fff;';
 			      		}
-			      		if(index%2==0){
-			      			return 'background-color:#E6E6FA;color:#000000;';
-			      		}
 			      	}
         		});
         	} else {
@@ -150,17 +147,14 @@ SubjectBalance=function(){
 			      		if (row.subject_name=='合计'){
 			      			return 'background-color:#6293BB;color:#fff;';
 			      		}
-			      		if(index%2==0){
-			      			return 'background-color:#E6E6FA;color:#000000;';
-			      		}
 			      	}
         		});
         	}
         },
         //打开明细账
         onDblClickRow:function(index,row){
-        	if(row.subject_code){
-        		App.addVoucherTab('明细账','search/detail/main?subjectCode='+row.subject_code,true);
+        	if(row.subject_code&&row.current_period){
+        		App.addVoucherTab('明细账','search/detail/main?subjectCode='+row.subject_code+'&currentPeriod='+row.current_period,true);
         	}
         }
 	};

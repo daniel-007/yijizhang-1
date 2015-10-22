@@ -78,4 +78,12 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper {
 		 * @return
 		 */
 		List<Map> selectLatestBalance(Map map);
+
+    /**
+     * 查询总账
+     * 
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> selectLedgerList(Map<String, Object> map);
 }

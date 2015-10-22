@@ -75,8 +75,31 @@ Voucher=function(){
 			$('#voucherRemoveit').click(function() {
 				Voucher.removeit();
 			});
-			//明细 TODO
+			//明细
 			$('#voucherSubjectDetail').click(function() {
+				var subjectCode;
+				if(editIndex>=0){
+					var ed = $('#voucherDg').datagrid('getEditor', {index:editIndex,field:'subjectCode'});
+					if(Voucher.validateSubjectCode(ed,subjectData)){
+						$.messager.alert('警告', "科目代码'"+$(ed.target).combobox('getValue')+"'不存在!", 'warning');
+						return;
+					}
+					if(Voucher.checkNum($(ed.target).combobox('getText'))){
+	                	$(ed.target).combobox('setValue',$(ed.target).combobox('getText'));
+	                }else{
+	                	$(ed.target).combobox('setValue',$(ed.target).combobox('getValue'));
+	                }
+					subjectCode = $(ed.target).combobox('getText');
+				}else {
+					subjectCode =$('#voucherDg').datagrid('getRows')[0]['subjectCode'];
+				}
+				if(!subjectCode){
+					$.messager.alert('警告', "科目代码不能为空!", 'warning');
+					return;
+				}
+				if(subjectCode&&period){
+	        		App.addVoucherTab('明细账','search/detail/main?subjectCode='+subjectCode.split(' ')[0]+'&currentPeriod='+period,true);
+	        	}
 			});
 			//科目余额
 			$('#voucherSubjectBalance').click(function() {

@@ -81,8 +81,12 @@ TrialBalance=function(){
 		      		if (row.subject_name=='合计'){
 		      			return 'background-color:#6293BB;color:#fff;';
 		      		}
-		      		if(index%2==0){
-		      			return 'background-color:#E6E6FA;color:#000000;';
+		      	},
+		      	onLoadSuccess:function(data){
+		      		if(data&&!data.notBalance){
+		      			$('#balanceResult').html('试算结果平衡');
+		      		}else if(data){
+		      			$('#balanceResult').html('试算结果不平衡');
 		      		}
 		      	}
     		});
