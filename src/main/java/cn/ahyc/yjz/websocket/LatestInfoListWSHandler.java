@@ -19,6 +19,7 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,9 @@ import java.util.Map;
 public class LatestInfoListWSHandler extends TextWebSocketHandler {
 
 		private static Logger logger = LoggerFactory.getLogger(LatestInfoListWSHandler.class);
+
+		private static final int BALANCE=1;
+		private static final int VOUCHER=2;
 
 		@Autowired
 		private SubjectBalanceService subjectBalanceService;
@@ -48,18 +52,17 @@ public class LatestInfoListWSHandler extends TextWebSocketHandler {
 						return;
 				}
 				Map map = JSON.parseObject(message.getPayload().toString(),Map.class);
-				if(map==null){
+				if(map==null||map.get("ready")==null||!(boolean)map.get("ready")){
 						return;
 				}
-				if((boolean)map.get("ready")){
-						logger.debug("WebSocket is ready now.Start pushing data to browser.");
-						Map m = new HashMap<>();
-						List<Map> list = subjectBalanceService.selectLatestBalance(map);
-						m.put("latestBalance",list);
-						list = voucherService.latestVouchers(map);
-						m.put("latestVoucher",list);
-						session.sendMessage(new TextMessage(JSON.toJSONString(m)));
-				}
+
+				logger.debug("WebSocket is ready now.Start pushing data to browser.");
+				int type = (int)map.get("type");
+				Map m = new HashMap<>();
+				List<Map> list = type==BALANCE?subjectBalanceService.selectLatestBalance(map):
+							type==VOUCHER?voucherService.latestVouchers(map):new ArrayList<>(0);
+				m.put(type==1?"latestBalance":"latestVoucher",list);
+				session.sendMessage(new TextMessage(JSON.toJSONString(m)));
 		}
 
 		@Override
