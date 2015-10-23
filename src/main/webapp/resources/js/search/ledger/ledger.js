@@ -9,14 +9,15 @@ Ledger=function(){
         		Ledger.submit();
         	});
         	$('#ledgerReject').click(function(){
-        		$("#default_win").window('close');
+        		Ledger.theWin.window('close');
         	});
         },
+        theWin: null,
         //查询-总账页面初始化
         init:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	Ledger.dgInit(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	$('#ledgerSearch').click(function(){
-				$("#default_win").window({
+        		Ledger.theWin=$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>科目余额表',
 					width : 333,
 					height : 289,
@@ -24,7 +25,11 @@ Ledger=function(){
 					collapsible : false,
 					shadow : true,
 					href : 'search/ledger/search',
-					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull}
+					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+					onClose:function(){
+						$(this).panel('destroy');
+						Ledger.theWin=null;
+					}
 				});
         	});
         	$('#ledgerRefresh').bind('click', function(){
@@ -42,7 +47,7 @@ Ledger=function(){
     		var subjectCodeFrom=$("#ledgersubjectCodeFrom").textbox('getValue');
     		var subjectCodeTo=$("#ledgersubjectCodeTo").textbox('getValue');
     		var valueNotNull=$('#ledgervalueNotNull').prop('checked')?1:'';
-    		$("#default_win").window('close');
+    		Ledger.theWin.window('close');
     		Ledger.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         },
         //刷新科目余额表
@@ -109,7 +114,7 @@ Ledger=function(){
         //打开明细账
         onDblClickRow:function(index,row){
         	if(row.current_period<row.init_period){
-        		$.messager.alert('警告', "明细账不能反应启用期间之前的!", 'warning');
+        		$.messager.alert('警告', "明细账不能反应启用期间之前的数据!", 'warning');
         		return;
         	}
         	if(row.subject_code&&row.current_period){

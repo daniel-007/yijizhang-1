@@ -32,14 +32,15 @@ SubjectBalance=function(){
         		SubjectBalance.submit();
         	});
         	$('#balanceListReject').click(function(){
-        		$("#default_win").window('close');
+        		SubjectBalance.theWin.window('close');
         	});
         },
+        theWin:null,
         //查询-科目余额表页面初始化
         init:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	SubjectBalance.dgInit(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	$('#balanceListSearch').click(function(){
-				$("#default_win").window({
+        		SubjectBalance.theWin=$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>科目余额表',
 					width : 333,
 					height : 289,
@@ -47,7 +48,11 @@ SubjectBalance=function(){
 					collapsible : false,
 					shadow : true,
 					href : 'search/subjectbalance/search',
-					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull}
+					queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
+					onClose:function(){
+						$(this).panel('destroy');
+						SubjectBalance.theWin=null;
+					}
 				});
         	});
         	$('#balanceListRefresh').bind('click', function(){
@@ -65,7 +70,7 @@ SubjectBalance=function(){
     		var subjectCodeFrom=$("#subjectCodeFrom").textbox('getValue');
     		var subjectCodeTo=$("#subjectCodeTo").textbox('getValue');
     		var valueNotNull=$('#valueNotNull').prop('checked')?1:'';
-    		$("#default_win").window('close');
+    		SubjectBalance.theWin.window('close');
     		SubjectBalance.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         },
         //刷新科目余额表

@@ -10,6 +10,8 @@ Voucher=function(){
 	var balanceFlag = false;//借贷平衡标识符
 	var subjectData;//会计科目代码下来框数据
 	var cellFocusFlag;//金额编辑器是否第一次focus标志
+	var theAddWin=null;
+	var theSaveWin=null;
 	
 	return {
 		//凭证页面初始化
@@ -21,14 +23,18 @@ Voucher=function(){
 			});
 			//从模式凭证新增
 			$('#voucherTempAdd,#voucherTempMm1Add').click(function() {
-				$("#default_win").window({
+				Voucher.theAddWin=$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>模式凭证',
 					width : 677,
 					height : 440,
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/template'
+					href : 'voucher/template',
+					onClose:function(){
+						$(this).panel('destroy');
+						Voucher.theAddWin=null;
+					}
 				});
 			});
 			//保存并新增
@@ -52,7 +58,7 @@ Voucher=function(){
 				}else{
 					name=voucherWord+$('#voucherNo').numberspinner('getValue');
 				}
-				$("#default_win").window({
+				Voucher.theSaveWin=$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>保存为模式凭证',
 					width : 325,
 					height : 375,
@@ -60,7 +66,11 @@ Voucher=function(){
 					collapsible : false,
 					shadow : true,
 					href : 'voucher/template/save',
-					queryParams:{name:name,voucherWord:voucherWord}
+					queryParams:{name:name,voucherWord:voucherWord},
+					onClose:function(){
+						$(this).panel('destroy');
+						Voucher.theSaveWin=null;
+					}
 				});
 			});
 			//取消修改
@@ -123,7 +133,7 @@ Voucher=function(){
 					$.messager.alert('警告', "科目代码不能为空!", 'warning');
 					return;
 				}
-				$("#default_win").window({
+				$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>科目余额',
 					width : 1000,
 					height : 500,
@@ -134,19 +144,25 @@ Voucher=function(){
 					queryParams:{
 						subjectCode:subjectCode,
 						voucherId:id
+					},
+					onClose:function(){
+						$(this).panel('destroy');
 					}
 				});
 			});
 			//凭证编制说明
 			$('#voucherHelp').click(function() {
-				$("#default_win").window({
+				$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>凭证编制说明',
 					width : 650,
 					height : 500,
 					modal : true,
 					collapsible : false,
 					shadow : true,
-					href : 'voucher/help'
+					href : 'voucher/help',
+					onClose:function(){
+						$(this).panel('destroy');
+					}
 				});
 			});
 			//凭证字编辑
@@ -227,6 +243,13 @@ Voucher=function(){
 								    	if(!subjectData){
 								    		subjectData=$(this).combobox('getData');
 								    	}
+								    	var tthis = $(this);
+								    	$(this).textbox('textbox').bind('dblclick', function(){
+								    		Account_Subject.open_subject_search_win(function (record) {
+								    			tthis.combobox('setText', record.subject_code+' '+record.subject_name);
+								    			tthis.combobox('setValue', record.subject_code);
+								    		});
+								    	});
 								    }
 						        }},rowspan:2},
 						{title:'借方金额',colspan:11},
