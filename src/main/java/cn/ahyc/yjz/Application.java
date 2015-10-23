@@ -16,33 +16,43 @@
 
 package cn.ahyc.yjz;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import java.util.Properties;
 
 /**
- *  Application 程序运行入口.
+ * Application 程序运行入口.
  */
 @SpringBootApplication
 public class Application{
 
-      private static ApplicationContext applicationContext;
+		private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
-      public static void main(String[] args) throws Exception {
-            applicationContext = new SpringApplicationBuilder()
-                    .showBanner(false)
-                    .sources(Application.class)
-                    .run(args);
-      }
+		public static void main(String[] args) throws Exception {
+				LOGGER.info("Application start to running.");
+				SpringApplication springApplication = new SpringApplicationBuilder()
+							.sources(Application.class)
+							.showBanner(true)
+							.registerShutdownHook(true)
+							.web(true)
+							.build();
 
-      /**
-       * 获取ApplicationContext.
-       *
-       * @return
-       */
-      public static ApplicationContext applicationContext() {
-            return applicationContext;
-      }
+				//set spring.profiles.active
+				Resource resource = new ClassPathResource("config/application.properties");
+				Properties properties = new Properties();
+				properties.load(resource.getInputStream());
+				String profile = properties.getProperty("spring.profiles.active");
+				LOGGER.info("Read spring.profiles.active={} from application.properties.", profile);
+				profile = "@profiles.active@".equals(profile) ? "development" : profile;
+				LOGGER.info("Set default value for spring.profiles.active={}", profile);
+				springApplication.setAdditionalProfiles(profile);
 
-
+				//run
+				springApplication.run(args);
+		}
 }

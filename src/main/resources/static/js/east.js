@@ -35,7 +35,7 @@ East=function(){
 					//如果websocket 连接已经打开，通知后台。后台开始推送数据。
 					var msg = East.createMsg(1);
 					East.sendMessage(wsBalance,msg);
-					setInterval(function(){East.sendMessage(wsBalance,msg)},5000);
+					setInterval(function(){East.sendMessage(wsBalance,msg)},30000);
 				};
 				wsBalance.onmessage = function (event) {
 					var data  = event.data;
@@ -66,7 +66,7 @@ East=function(){
 					//如果websocket 连接已经打开，通知后台。后台开始推送数据。
 					var msg = East.createMsg(2);
 					East.sendMessage(wsVoucher,msg);
-					setInterval(function(){East.sendMessage(wsVoucher,msg)},5000);
+					setInterval(function(){East.sendMessage(wsVoucher,msg)},30000);
 				};
 				wsVoucher.onmessage = function (event) {
 					var data  = event.data;

@@ -47,6 +47,8 @@ insert  into `dict_type`(`id`,`type_code`,`type_name`,`create_time`,`modify_time
 
 insert  into `dict_value`(`id`,`dict_type_id`,`value`,`show_value`,`is_fixed`,`create_time`,`modify_time`) values (1,1,'`2015新会计准则`','2015新会计准则',1,'2015-09-23 09:58:41','2015-01-01 00:00:00');
 
+insert  into `company_common_type`(`id`,`type_code`,`type_name`,`company_id`,`create_time`,`modify_time`) values(2,'2','模式类别',NULL,'2015-10-23 10:46:36','2015-01-01 00:00:00');
+
 -- 演示账套数据 ---
 -- ----------------------------
 --  Records of `account_book`
