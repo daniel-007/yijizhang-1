@@ -58,9 +58,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				http.csrf()
 							.disable()
 							.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-							//.csrfTokenRepository(csrfTokenRepository())
 							.and()
-							.authorizeRequests().antMatchers("/resources/**").permitAll()
+							.authorizeRequests().antMatchers("/static/**","/public/**","**/login.js","/favicon.ico").permitAll()
 							.anyRequest().fullyAuthenticated()
 							.and().formLogin()
 							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())
@@ -80,9 +79,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				auth.jdbcAuthentication().passwordEncoder(passwordEncoder()).dataSource(this.dataSource);
 		}
 
-		private CsrfTokenRepository csrfTokenRepository() {
-				HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-				repository.setSessionAttributeName("_csrf");
-				return repository;
-		}
 }

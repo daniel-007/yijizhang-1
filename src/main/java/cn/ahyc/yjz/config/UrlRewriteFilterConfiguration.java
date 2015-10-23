@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
 import javax.servlet.DispatcherType;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @date: 15/9/24
  */
 @Configuration
+@Profile("production")
 public class UrlRewriteFilterConfiguration {
 
       @Value("${urlRewrite.confReloadCheckInterval}")

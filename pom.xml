@@ -8,6 +8,7 @@
 		<version>1.2.7.RELEASE</version>
 	</parent>
 	<artifactId>yijizhang</artifactId>
+	<packaging>war</packaging>
 	<developers>
 		<developer>
 			<email>sanlai_lee@qq.com</email>
@@ -27,11 +28,58 @@
 		<fastjson.version>1.2.7</fastjson.version>
 		<aviator.version>2.3.3</aviator.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<properties>
+				<profiles.active>development</profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault><!--默认启用的是development环境配置-->
+			</activation>
+		</profile>
+		<profile>
+			<id>production</id>
+			<properties>
+				<profiles.active>production</profiles.active>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
+		<!-- Turn on filtering by default for application properties -->
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/application*.yml</include>
+					<include>**/application*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<excludes>
+					<exclude>**/application.yml</exclude>
+					<exclude>**/application.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>exec</classifier>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

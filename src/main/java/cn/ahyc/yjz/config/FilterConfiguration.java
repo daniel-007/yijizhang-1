@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * FilterConfiguration
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @date: 15/9/24
  */
 @Configuration
+@Profile("development")
 public class FilterConfiguration {
 
       @Autowired
