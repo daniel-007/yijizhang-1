@@ -3,11 +3,12 @@
  */
 TrialBalance=function(){
 	return {
+		theWin: null,
 		//查询-试算平衡表页面初始化
 		init:function(currentPeriod,level){
 			TrialBalance.dgInit(currentPeriod,level);
 			$('#trialbalanceListSearch').click(function(){
-				$("#default_win").window({
+				TrialBalance.theWin=$('<div></div>').window({
 					title : '<i class="fa fa-info-circle"></i>试算平衡表',
 					width : 268,
 					height : 210,
@@ -15,7 +16,11 @@ TrialBalance=function(){
 					collapsible : false,
 					shadow : true,
 					href : 'search/trialbalance/search',
-					queryParams:{currentPeriod:currentPeriod,level:level}
+					queryParams:{currentPeriod:currentPeriod,level:level},
+					onClose:function(){
+						$(this).panel('destroy');
+						TrialBalance.theWin=null;
+					}
 				});
 			});
 			$('#trialbalanceListRefresh').bind('click', function(){
@@ -28,7 +33,7 @@ TrialBalance=function(){
         		TrialBalance.submit();
         	});
         	$('#trialbalanceListReject').click(function(){
-        		$("#default_win").window('close');
+        		TrialBalance.theWin.window('close');
         	});
         },
         //过滤页面-确定
@@ -38,7 +43,7 @@ TrialBalance=function(){
 			}
     		var currentPeriod=$('#trialcurrentPeriod').numberspinner('getValue');
     		var level=$('#triallevel').numberspinner('getValue');
-    		$("#default_win").window('close');
+    		TrialBalance.theWin.window('close');
     		TrialBalance.refresh(currentPeriod,level);
         },
         //刷新
@@ -84,9 +89,9 @@ TrialBalance=function(){
 		      	},
 		      	onLoadSuccess:function(data){
 		      		if(data&&!data.notBalance){
-		      			$('#balanceResult').html('试算结果平衡');
+		      			$('#balanceResult').html('试算结果：<span style="font-weight: 700;color: green;">平衡</span>');
 		      		}else if(data){
-		      			$('#balanceResult').html('试算结果不平衡');
+		      			$('#balanceResult').html('试算结果：<span style="font-weight: 700;color: #ff0000;">不平衡</span>');
 		      		}
 		      	}
     		});

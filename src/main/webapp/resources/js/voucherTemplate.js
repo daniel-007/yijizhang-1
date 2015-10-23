@@ -10,7 +10,7 @@ VoucherTemplate=function(){
 		init:function() {
 			//关闭
 			$('#templateClose').click(function(){
-				VoucherTemplate.close();
+				Voucher.theAddWin.window('close');
 			});
 			//新增
 			$('#templateAdd').click(function(){
@@ -194,12 +194,8 @@ VoucherTemplate=function(){
 			});
 			//取消
 			$('#voucherTemplateSaveReject').click(function() {
-				VoucherTemplate.close();
+				Voucher.theSaveWin.window('close');
 			});
-		},
-		//取消窗口
-		close:function(){
-			$('#default_win').window('close');
 		},
 		//模式凭证新增
 		templateAdd:function(id,name){
@@ -211,7 +207,10 @@ VoucherTemplate=function(){
 				collapsible : false,
 				shadow : true,
 				href : 'voucher/template/add',
-				queryParams:{voucherTemplateId:id}
+				queryParams:{voucherTemplateId:id},
+				onClose:function(){
+					$(this).panel('destroy');
+				}
 			});
 		},
 		//模式凭证删除
@@ -329,7 +328,7 @@ VoucherTemplate=function(){
                             		if(reloadFlag==1){
                             			$('#voucherTemplateDg').datagrid('reload');
                             		}else if(reloadFlag==2){
-                            			VoucherTemplate.close();
+                            			Voucher.theSaveWin.window('close');
                             		}
                             	});
     	                    }else{

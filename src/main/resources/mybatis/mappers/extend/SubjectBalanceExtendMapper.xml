@@ -534,7 +534,18 @@
 						LEFT JOIN period b ON d.book_id = b.book_id
 						LEFT JOIN subject_balance a ON b.id = a.period_id
 						AND d.subject_code = a.subject_code
-						LEFT JOIN voucher c ON c.period_id = a.period_id
+						LEFT JOIN (
+							SELECT
+								c.voucher_no,
+								c.voucher_word,
+								e.subject_code,
+								c.period_id
+							FROM
+								voucher c,
+								voucher_detail e
+							WHERE
+								c.id = e.voucher_id
+						) c ON c.period_id = b.id AND c.subject_code = d.subject_code
 					WHERE
 						d.book_id = #{bookId,jdbcType=BIGINT}
 					AND b.current_period >= #{periodFrom,jdbcType=BIGINT}
