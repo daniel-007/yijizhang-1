@@ -1,38 +1,37 @@
-<script type="text/javascript" src="resources/js/topbar.js" async="true"></script>
-<script type="text/javascript" src="resources/js/welcome.js" async="true"></script>
-<script type="text/javascript" src="resources/js/east.js" async="true"></script>
-<script type="text/javascript" src="resources/js/book.js"></script>
-<script type="text/javascript" src="resources/js/carryOver.js"></script>
-<script type="text/javascript" src="resources/js/cashier.js"></script>
+<script type="text/javascript" src="/js/topbar.js" async="true"></script>
+<script type="text/javascript" src="/js/welcome.js" async="true"></script>
+<script type="text/javascript" src="/js/east.js" async="true"></script>
+<script type="text/javascript" src="/js/book.js"></script>
+<script type="text/javascript" src="/js/carryOver.js"></script>
+<script type="text/javascript" src="/js/cashier.js"></script>
 
 <#--会计科目相关js-->
-<script type="text/javascript" src="resources/public/jqueryPlugin/jquery.maskedinput.min.js"></script>
-<script type="text/javascript" src="resources/public/easyui/src/datagrid-cellediting.js"></script>
-<script type="text/javascript" src="resources/js/accountSubject/main.js"></script>
-<script type="text/javascript" src="resources/js/accountSubject/edit.js"></script>
-<script type="text/javascript" src="resources/js/accountSubject/initData/main.js"></script>
+<script type="text/javascript" src="/public/jqueryPlugin/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="/public/easyui/src/datagrid-cellediting.js"></script>
+<script type="text/javascript" src="/js/accountSubject/main.js"></script>
+<script type="text/javascript" src="/js/accountSubject/edit.js"></script>
+<script type="text/javascript" src="/js/accountSubject/initData/main.js"></script>
 
 <#--凭证查询相关js-->
-<script type="text/javascript" src="resources/js/search/voucher/main.js"></script>
+<script type="text/javascript" src="/js/search/voucher/main.js"></script>
 
 <#--明细账相关js-->
-<script type="text/javascript" src="resources/js/search/detail/detailSearch.js"></script>
+<script type="text/javascript" src="/js/search/detail/detailSearch.js"></script>
 
 <#--凭证汇总相关js-->
-<script type="text/javascript" src="resources/js/search/vouchercollect/vouchercollectSearch.js"></script>
-
+<script type="text/javascript" src="/js/search/vouchercollect/vouchercollectSearch.js"></script>
 
 <#--记账凭证相关js-->
-<script type="text/javascript" src="resources/js/voucher.js"></script>
-<script type="text/javascript"  src="resources/js/voucherTemplate.js"></script>
-<script type="text/javascript" src="resources/js/subjectBalance.js"></script>
+<script type="text/javascript" src="/js/voucher.js"></script>
+<script type="text/javascript"  src="/js/voucherTemplate.js"></script>
+<script type="text/javascript" src="/js/subjectBalance.js"></script>
 
 <#--企业通用配置值相关js-->
-<script type="text/javascript" src="resources/js/companyCommonValue.js"></script>
+<script type="text/javascript" src="/js/companyCommonValue.js"></script>
 
 <#--试算平衡表js-->
-<script type="text/javascript" src="resources/js/search/trialbalance/trialbalance.js"></script>
+<script type="text/javascript" src="/js/search/trialbalance/trialbalance.js"></script>
 <#--总账js-->
-<script type="text/javascript" src="resources/js/search/ledger/ledger.js"></script>
+<script type="text/javascript" src="/js/search/ledger/ledger.js"></script>
 
 

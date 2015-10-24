@@ -1,4 +1,4 @@
-<#import "./lib/spring.ftl" as spring/>
+<#import "lib/spring.ftl" as spring/>
 <#assign security=JspTaglibs["/WEB-INF/tld/security.tld"] />
 
 <!DOCTYPE html>
@@ -16,16 +16,16 @@
         <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
-        <script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
-        <script src="resources/public/easyui/jquery.easyui.min.js"></script>
-        <script src="resources/js/topbar.js"></script>
+        <script type="text/javascript" src="/public/js/jquery.min.js"></script>
+        <script src="/public/easyui/jquery.easyui.min.js"></script>
+        <script src="/js/topbar.js"></script>
         <!-- EasyUI -->
-        <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.css">
         <!-- buttons -->
-        <link rel="stylesheet" type="text/css" href="resources/public/buttons/buttons.css">
+        <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
         <!-- font-awesome -->
-        <link rel="stylesheet" href="resources/public/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="resources/css/base.css">
+        <link rel="stylesheet" href="/public/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
 
     </head>
     <body class="easyui-layout">˝
@@ -48,13 +48,13 @@
             var $e = $('#errorCenter');
             var status = $('#statusCode').val();
             if(status==401){
-                $e.css({'background':'url("resources/images/401.jpg") no-repeat center','background-size':'100% 100%'});
+                $e.css({'background':'url("/images/401.jpg") no-repeat center','background-size':'100% 100%'});
             }else if(status==403){
-                $e.css({'background':'url("resources/images/403.jpg") no-repeat center','background-size':'100% 100%'});
+                $e.css({'background':'url("/images/403.jpg") no-repeat center','background-size':'100% 100%'});
             }else if(status==404){
-                $e.css({'background':'url("resources/images/404.jpg") no-repeat center','background-size':'100% 100%'});
+                $e.css({'background':'url("/images/404.jpg") no-repeat center','background-size':'100% 100%'});
             }else {
-                $e.css({'background':'url("resources/images/500.jpg") no-repeat center','background-size':'100% 100%'});
+                $e.css({'background':'url("/images/500.jpg") no-repeat center','background-size':'100% 100%'});
             }
         });
     </script>

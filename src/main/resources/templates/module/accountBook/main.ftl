@@ -4,11 +4,11 @@
 	<div data-options="region:'center'">
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'west'"
-				style="width: 180px; background-image: url('resources/public/img/jianzhang.png')">
+				style="width: 180px; background-image: url('/public/img/jianzhang.png')">
 				<div style="width:100%;height:300px;"></div>
 				
 				</div>
-			<div data-options="region:'center'" style="padding: 15px;display: none;">
+			<div data-options="region:'center'" style="display: none; padding: 15px;display: none;">
 				<form id="create_book" action="#" method="post">
 					<div id="firstJsp" >
 						<br /> <label size="3"><b>请在建账向导的指引下，建立一个最合适你公司实际情况的账套。</b></label>
@@ -72,7 +72,6 @@
 							data-options="onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" />
 					</div>
-					<#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
 				</form>
 			</div>
 

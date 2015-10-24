@@ -79,7 +79,7 @@ Search_Detail = function (){
 	            		 App.addVoucherTab('记账', 'voucher/main?voucherId=' + selected_row.voucherId, true);
 	            	},
 	            	rowStyler: function(index,row){
-	            		if (row.voucherId){
+	            		if (row.summary=="本日合计"){
 	            			return 'background-color:#6293BB;color:#fff;'; // return inline style
 	            		}
 	            	}

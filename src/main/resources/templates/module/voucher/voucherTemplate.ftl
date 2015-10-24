@@ -13,8 +13,9 @@
             
             <div style="margin:30px 0;"></div>
             <a id="templateTypeEdit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" style="width: 80%">编辑类别</a>
-            <div style="margin:5px 0;"></div>
+            <#--<div style="margin:5px 0;"></div>
             <a id="templateShow" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-tip'" style="width: 80%">显示模式</a>
+        	-->
         </div>
     </div>
 	<div data-options="region:'center',border:false">

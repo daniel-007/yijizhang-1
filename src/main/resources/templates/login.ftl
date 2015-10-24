@@ -1,4 +1,4 @@
-<#import "./lib/spring.ftl" as spring/>
+<#import "lib/spring.ftl" as spring/>
 <#assign security=JspTaglibs["/WEB-INF/tld/security.tld"] />
 
 <!DOCTYPE html>
@@ -18,18 +18,18 @@
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" async="true"></script>
     <![endif]-->
 <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
-    <script type="text/javascript" src="resources/public/js/jquery.min.js"></script>
-    <script src="resources/public/easyui/jquery.easyui.min.js"></script>
-    <script src="resources/js/topbar.js" async="true"></script>
-    <script src="resources/js/login.js" async="true"></script>
+    <script src="/public/js/jquery.min.js"></script>
+    <script src="/public/easyui/jquery.easyui.min.js"></script>
+    <script src="/js/topbar.js" async="true"></script>
+    <script src="/js/login.js" async="true"></script>
     <!-- EasyUI -->
-    <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="resources/public/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/icon.css">
     <!-- buttons -->
-    <link rel="stylesheet" type="text/css" href="resources/public/buttons/buttons.css">
+    <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
     <!-- font-awesome -->
-    <link rel="stylesheet" href="resources/public/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="resources/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/public/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
 </head>
 <body class="easyui-layout">
     <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
@@ -41,15 +41,12 @@
                 <div style="margin-bottom:10px;color: #CC6600;"><#if failureMsg??><i class="fa fa-exclamation-circle"></i> ${failureMsg}</#if></div>
                 <div style="margin-bottom:10px">
                     <input id="username" name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px"
-                           value="admin"
                            data-options="required:true,missingMessage:'请输入登录账号',prompt:'账号',iconCls:'icon-man',iconWidth:38">
                 </div>
                 <div style="margin-bottom:20px">
                     <input id="password" name="password" class="easyui-textbox" type="password"
                            style="width:100%;height:40px;padding:12px"
-                           value="admin"
                            data-options="required:true,missingMessage:'请输入登录密码',prompt:'密码',iconCls:'icon-lock',iconWidth:38">
-                    <#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
                 </div>
                 <div>
                     <a id="loginSubmit" href="javascript:void(0);" class="easyui-linkbutton"
