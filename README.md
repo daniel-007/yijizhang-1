@@ -48,25 +48,33 @@
 ### 开发注意事项
 ##### 1. 包结构严格按照MVC结构命名分层：
 **`-`src/main/java:**
-> - cn.ahyc.yjz.controller
-> - cn.ahyc.yjz.service
-> - cn.ahyc.yjz.mapper
-> - cn.ahyc.yjz.model
-> - cn.ahyc.yjz.config
+> - cn.ahyc.yjz
+>> - aop
+>> - config
+>> - controller
+>> - service
+>> - mapper
+>> - model
+>> - dto
+>> - filter
+>> - security
+>> - thread
+>> - util
+>> - websocket
 
 **`-`src/main/resources**
 > - config
 > - logback
 > - mybatis
->
 >> - mappers
->
->>>> - base
->>>> - extend
->
+>>> - base
+>>> - extend
 > - static
+>> - css
+>> - images
+>> - js
+>> - public
 > - templates
->
 >> - common
 >> - lib
 >> - module
@@ -80,7 +88,21 @@
 
 ##### 2.对业务路径进行重写，模拟静态路径，配置文件路径：/WEB-INF/urlrewrite.xml
 
+## 产线部署说明
+```
+1.克隆仓库到本地(第一次克隆，以后每次只需要pull)
+    $ git clone git@git.oschina.net:lisanlai/yijizhang.git
+ 或者
+    $ cd yijizhang
+    $ git pull
 
+2.打包(生成环境打包使用-P production)
+    $ mvn clean package -P production
+
+3.执行war包
+    $ java -jar yijizhang-{version}-exec.war &
+
+```
 
 
 

@@ -9,6 +9,7 @@
 	</parent>
 	<artifactId>yijizhang</artifactId>
 	<packaging>war</packaging>
+	<version>1.0</version>
 	<developers>
 		<developer>
 			<email>sanlai_lee@qq.com</email>
