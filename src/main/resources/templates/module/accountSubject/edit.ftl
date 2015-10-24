@@ -21,9 +21,10 @@
             <tr>
                 <td>科目代码:</td>
                 <td>
-                    <input id="subject_code" name="subjectCode" class="easyui-textbox"  style="width: 200px;"/>
+                    <input id="subject_code" name="subjectCode"
+                           style="width: 200px;border: 1px solid #cccccc;vertical-align: top;outline-style: none;-moz-border-radius: 5px 5px 5px 5px;-webkit-border-radius: 5px 5px 5px 5px;"/>
                     <label>&nbsp;助记码:</label>
-                    <input name="tipInfo" class="easyui-textbox"  value="${accountSubject.tipInfo?default('')}" style="width: 80px;float:
+                    <input name="tipInfo" class="easyui-textbox" value="${accountSubject.tipInfo?default('')}" style="width: 80px;float:
                     right;"/>
                 </td>
             </tr>

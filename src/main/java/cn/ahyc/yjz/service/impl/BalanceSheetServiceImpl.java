@@ -1,10 +1,12 @@
 package cn.ahyc.yjz.service.impl;
 
 import cn.ahyc.yjz.mapper.base.BalanceSheetMapper;
+import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.service.BalanceSheetService;
 import com.googlecode.aviator.AviatorEvaluator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,29 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
     @Autowired
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
 
+    @Autowired
+    private PeriodExtendMapper periodExtendMapper;
+
+
+    private Map mappingRelationship = new HashMap();
+
+    @Autowired
+    private void initMapping() {
+
+        mappingRelationship.put(".DC", "initial_credit_balance");
+        mappingRelationship.put(".JC", "initial_debit_balance");
+        mappingRelationship.put(".JF", "period_debit_occur");
+        mappingRelationship.put(".DF", "period_credit_occur");
+        mappingRelationship.put(".JL", "year_debit_occur");
+        mappingRelationship.put(".DL", "year_credit_occur");
+        mappingRelationship.put(".JY", "terminal_debit_balance");
+        mappingRelationship.put(".DY", "terminal_credit_balance");
+        mappingRelationship.put(".SY", "profit_loss_occur_amount");
+        mappingRelationship.put(".LY", "profit_loss_total_occur_amount");
+
+    }
+
+
     @Override
     public List<Map> balanceSheets(Period period, Long code) {
 
@@ -39,22 +64,40 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         balanceSheetExample.andCodeFLike(code.toString().concat("%"));
         balanceSheetExample.setOrderByClause("CAST(CODE AS CHAR)");
 
+        //获取资产负债（只有表达式）
         List<BalanceSheet> balanceSheets = balanceSheetMapper.selectByExample(balanceSheetExample);
-        Map subjectBalanceMap = this.subjectBalances(period);
+
+        //根据当前期获取科目余额表信息
+        Map subjectBalanceMap = this.subjectBalances(period.getId());
+
+        //获取1期科目余额信息
+        Map firstPeriodSubjectBalanceMap = null;
+        Long firstPeriodId = null;
+        PeriodExample periodExample = new PeriodExample();
+        PeriodExample.Criteria criteria = periodExample.createCriteria();
+        criteria.andBookIdEqualTo(period.getBookId());
+        criteria.andCurrentPeriodEqualTo(1);
+        List<Period> periods = periodExtendMapper.selectByExample(periodExample);
+        if (!periods.isEmpty()) {
+            firstPeriodId = periods.get(0).getId();
+            firstPeriodSubjectBalanceMap = this.subjectBalances(periods.get(0).getId());
+        }
 
         for (BalanceSheet balanceSheet : balanceSheets) {
 
             String periodEndExp = balanceSheet.getPeriodEndExp();
             String yearBeginExp = balanceSheet.getYearBeginExp();
 
+            Object periodEnd = StringUtils.isEmpty(periodEndExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, periodEndExp, period.getId(), firstPeriodId);
+            Object yearBegin = StringUtils.isEmpty(yearBeginExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, yearBeginExp, period.getId(), firstPeriodId);
             map = new HashMap();
             map.put("id", balanceSheet.getId());
             map.put("name", balanceSheet.getName());
             map.put("level", balanceSheet.getLevel());
             map.put("periodEndExp", periodEndExp);
             map.put("yearBeginExp", yearBeginExp);
-            map.put("periodEnd", parseAndCalcu(subjectBalanceMap, periodEndExp));
-            map.put("yearBegin", parseAndCalcu(subjectBalanceMap, yearBeginExp));
+            map.put("periodEnd", periodEnd);
+            map.put("yearBegin", yearBegin);
             list.add(map);
         }
         return list;
@@ -75,52 +118,89 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
      * =<1101>.JC@(2001,0)
      * =<1101>.JC + <1101>.JC@(2001,0) * (<1101>.JC+()<1101>.JC)
      *
-     * @param map
+     * @param subjectBalanceMap
+     * @param firstPeriodSubjectBalanceMap
      * @param express
+     * @param periodId
+     * @param firstPeriodId
+     * @return
      */
-    private Object parseAndCalcu(Map map, String express) {
+    private Object parseAndCalcu(Map subjectBalanceMap, Map firstPeriodSubjectBalanceMap, String express, Long periodId, Long firstPeriodId) {
 
         Map storeMap = new HashMap();
         String replaceStr = "x"; //
 
-        String expStr = express.replaceAll("[\\=\" \"]", "");
-        expStr = expStr.replaceAll("[\\\" \\\"=\\\\+\\-/*/]", "&");
-        String[] exps = expStr.split("&");
+        String newExpress = express.replaceAll("[\\=\" \"]", ""); //去掉=号 <1101:1109>.JC + <1102>.C
+        String expStr = newExpress; //<1101>.JC + <1102>.C
+        expStr = expStr.replaceAll("[\\\" \\\"=\\\\+\\-/*/]", "&"); //<1101>.JC&<1102>.C
+        String[] exps = expStr.split("&"); //["<1101>.JC", "<1102>.C"]
+        String result = "";
 
-        for (String exp : exps) {
+        for (String exp : exps) { //<1101>.JC
 
-            replaceStr += replaceStr;
-            express.replace(exp, replaceStr);
+            replaceStr += replaceStr; //xx
+            newExpress = newExpress.replace(exp, replaceStr); //xx + <1102>.C
 
             if (exp.contains("@(")) { //计算其他年数据
-
-            } else if (exp.contains("@")) { //计算本年其他期数据.
-
-
-            } else {
-                if (exp.contains(":")) {
-
+                return 0;
+            } else if (exp.contains("@1")) { //计算本年其他期数据.
+                if (firstPeriodSubjectBalanceMap == null) {
+                    return 0;
                 } else {
-                    String code = exp.replace("<", "").replace(">", "");
-                    storeMap.put(replaceStr, map.get(code));
+                    if (exp.contains(":")) {  //<1001:1009>.JC
+                        this.parseMultiCode(storeMap, exp, replaceStr, firstPeriodId);
+                    } else {
+                        storeMap.put(replaceStr, firstPeriodSubjectBalanceMap.getOrDefault(exp, 0)); //xx
+                    }
+                }
+            } else {
+                if (exp.contains(":")) {  //<1001:1009>.JC
+                    this.parseMultiCode(storeMap, exp, replaceStr, periodId);
+                } else {
+                    storeMap.put(replaceStr, subjectBalanceMap.getOrDefault(exp, 0)); //xx
                 }
             }
-
         }
 
-        return AviatorEvaluator.execute(express, storeMap);
+        return AviatorEvaluator.execute(newExpress, storeMap);  //xx + xxxx, {xx:11, xxxx:12}
+    }
 
+
+    private void parseMultiCode(Map storeMap, String exp, String replaceStr, Long periodId) {
+        Map paramMap = new HashMap();
+        String codeStr = exp.replaceAll("\\w*<|>\\w*", ""); //1001:1009
+        String type = exp.substring(exp.indexOf(">") + 1); //.JC
+        String[] codes = codeStr.split(":");  //["1001", "1009"]
+
+        paramMap.put("startCode", codes[0]);
+        paramMap.put("endCode", codes[1]);
+        paramMap.put("periodId", periodId);
+
+        if (StringUtils.isEmpty(type)) {
+            Map sumMap = subjectBalanceExtendMapper.getSumByStartAndEndCode(paramMap);
+            storeMap.put(replaceStr, sumMap == null ? 0 : sumMap.getOrDefault("terminal_balance", 0));
+        } else if (".C".equals(type)) {
+            Map sumMap = subjectBalanceExtendMapper.getSumByStartAndEndCode(paramMap);
+            storeMap.put(replaceStr, sumMap == null ? 0 : sumMap.getOrDefault("initial_balance", 0));
+        } else {
+            paramMap.put("sum", type);
+            Map sumMap = subjectBalanceExtendMapper.getSumByStartAndEndCode(paramMap);
+            storeMap.put(replaceStr, sumMap == null ? 0 : sumMap.getOrDefault(type, 0));
+        }
     }
 
     /**
-     * 获取科目余额表信息并转换成map.
+     * 根据期间id获取科目余额表信息并转换成map.
+     * <p/>
+     * (<1001>.C,440)
      *
-     * @param period
+     * @param periodId
      * @return
      */
-    private Map subjectBalances(Period period) {
+    private Map subjectBalances(Long periodId) {
 
-        List<Map> balanceAndDirects = subjectBalanceExtendMapper.subjectBalanceAndDirection(period.getId());
+        //获取当前期科目余额表信息.
+        List<Map> balanceAndDirects = subjectBalanceExtendMapper.subjectBalanceAndDirection(periodId);
         Map map = new HashMap();
 
         for (Map balanceAndDirect : balanceAndDirects) {

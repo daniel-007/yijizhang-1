@@ -1,5 +1,5 @@
 <style>
-    .datagrid-row-selected {
+    #balance_sheet_container .datagrid-row-selected {
         background: #FFFFFF;
         color: #333333;
     }
@@ -23,15 +23,38 @@
             yearBegin_fmt: function (value, row, index) {
                 if (row.level == 2) {
                     value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
-                    value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;">计算公式：<br/>' + row.yearBeginExp + '</div>';
+                    value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;width:250px;">计算公式：<br/><span>' + row.yearBeginExp;
+                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this)"></i></div>';
                     return  value;
                 }
             },
             periodEnd_fmt: function (value, row, index) {
                 if (row.level == 2) {
                     value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
-                    value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;">计算公式：<br/>' + row.periodEndExp + '</div>';
+                    value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;width:250px;">计算公式：<br/><span>' + row.periodEndExp;
+                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this)"></i></div>';
                     return  value;
+                }
+            },
+            toEdit: function (obj) {
+
+                var $span = $(obj).prev();
+
+                if ($(obj).hasClass("fa-check")) {
+                    var exp = $span.find("input").val();
+                    $span.html(exp);
+                    $(obj).removeClass("fa-check").addClass("fa-pencil-square-o");
+                } else {
+                    var exp = $span.html();
+
+                    var re1 = new RegExp("&lt;", "g");
+                    var re2 = new RegExp("&gt;", "g");
+
+                    exp = exp.replace(re2, ">");
+                    exp = exp.replace(re1, "<");
+
+                    $span.html($('<input type="text">').val(exp));
+                    $(obj).removeClass("fa-pencil-square-o").addClass("fa-check");
                 }
             },
             init_calculate_dropdow: {
@@ -41,8 +64,10 @@
                         $("a.calculate").each(function () {
                             $(this).menubutton({
                                 hasDownArrow: false,
+                                hideOnUnhover: false,
                                 menu: $(this).next()
                             });
+
                         });
                     }
                 }
