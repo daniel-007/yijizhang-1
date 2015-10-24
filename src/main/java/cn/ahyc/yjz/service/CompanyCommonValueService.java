@@ -1,9 +1,4 @@
-package cn.ahyc.yjz.service;/**
- * AccountBookService
- *
- * @author:sanlai_lee@qq.com
- * @date: 15/9/23
- */
+package cn.ahyc.yjz.service;
 
 import java.util.List;
 
