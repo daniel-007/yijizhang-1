@@ -47,37 +47,39 @@
 
 ### 开发注意事项
 ##### 1. 包结构严格按照MVC结构命名分层：
-**`-`src/main/java:**
-> - cn.ahyc.yjz
->> - aop
->> - config
->> - controller
->> - service
->> - mapper
->> - model
->> - dto
->> - filter
->> - security
->> - thread
->> - util
->> - websocket
+```
+    -src/main/java:**
+        - cn.ahyc.yjz
+            - aop
+            - config
+            - controller
+            - service
+            - mapper
+            - model
+            - dto
+            - filter
+            - security
+            - thread
+            - util
+            - websocket
 
-**`-`src/main/resources**
-> - config
-> - logback
-> - mybatis
->> - mappers
->>> - base
->>> - extend
-> - static
->> - css
->> - images
->> - js
->> - public
-> - templates
->> - common
->> - lib
->> - module
+    -src/main/resources**
+        - config
+        - logback
+        - mybatis
+            - mappers
+                  - base
+                  - extend
+        - static
+            - css
+            - images
+            - js
+            - public
+        - templates
+            - common
+            - lib
+            - module
+```
 
 ## Mybatis说明
 ##### 1.MyBatis配置文件分位base和extend两个路径，其中base目录是用来存放自动生成的基础code，而extend用来存放业务扩展code
