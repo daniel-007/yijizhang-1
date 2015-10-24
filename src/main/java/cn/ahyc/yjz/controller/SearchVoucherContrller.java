@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.Period;
+import cn.ahyc.yjz.model.Voucher;
+import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.service.SearchVoucherService;
 import cn.ahyc.yjz.service.VoucherService;
 import cn.ahyc.yjz.util.Constant;
@@ -35,6 +38,9 @@ public class SearchVoucherContrller extends BaseController {
     @Autowired
     private VoucherService voucherService;
 
+    @Autowired
+    private PeriodService periodService;
+
     /**
      * 删除凭证.
      *
@@ -46,13 +52,21 @@ public class SearchVoucherContrller extends BaseController {
     public Map delete(HttpSession session, Long voucherId) {
 
         Map map = new HashMap();
-        map.put("success", true);
-        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
-
+        map.put("success", false);
         try {
+            AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+            // 当然账套ID所对应的当前期.
+            Period period = periodService.selectCurrentPeriod(accountBook.getId());
+            Voucher voucher = voucherService.queryVoucher(voucherId);
+            if (voucher.getPeriodId() == null) {
+                voucher.setPeriodId(period.getId());
+            }
+            if (!period.getId().equals(voucher.getPeriodId())) {
+                throw new RuntimeException("当前会计期间id：" + period.getId() + "不是凭证会计期间id：" + voucher.getPeriodId());
+            }
             voucherService.delete(voucherId, period.getId());
+            map.put("success", true);
         } catch (Exception e) {
-            map.put("success", false);
             map.put("msg", e.getMessage());
         }
 
