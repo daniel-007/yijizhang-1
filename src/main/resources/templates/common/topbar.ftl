@@ -22,8 +22,15 @@
 
 	<div class="action">
 		<ul>
-			<li><a href="#"><i class="fa fa-fax"></i>&#8194;客服</a></li>
-			<li><a href="#"><i class="fa fa-question-circle"></i>&#8194;帮助</a></li>
+			<#--<li><a href="#"><i class="fa fa-fax"></i>&#8194;客服</a></li>-->
+			<#--<li><a id="helpLink" href="javascript:void(0);"><i class="fa fa-exclamation-circle"></i>&#8194;帮助</a></li>-->
+			<li><a id="aboutLink" href="javascript:void(0);"><i class="fa fa-exclamation-circle"></i>&#8194;关于</a></li>
+			<div id="aboutWin" class="easyui-window"
+	            title="<i class='fa fa-exclamation-circle'></i>&#8194;关于"
+	            style="width:400px;height:150px"
+	            data-options="href:'/about',modal:true,collapsible:false,minimizable:false,maximizable:false,resizable:false,closed:true">
+
+			</div>
 			<@security.authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
 				<input type="hidden" id="redirectFlag" value="true"/>
                 <li><a id="logoutLink" href="javascript:void(0);"><i class="fa fa-user"></i>&#8194;<@security.authentication property="name"/></a></li>
