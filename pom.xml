@@ -163,7 +163,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
 						<manifestEntries>
 							<Project-Name>${project.name}</Project-Name>
 							<Release-Version>${project.version}.${buildNumber}</Release-Version>
