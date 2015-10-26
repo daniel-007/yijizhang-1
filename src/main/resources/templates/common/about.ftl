@@ -1,7 +1,7 @@
 <div>
 	<ul class="aboutUl">
-		<li><label style="font-size: 14px;">${buildInfo.name}</label></li>
-        <li><label>发布版本 : ${buildInfo.version}</label></li>
-        <li><label>发布日期 : ${buildInfo.date}</label></li>
+		<li><Strong style="font-size: 14px;">${buildInfo.name}</Strong></li>
+        <li><label>- 发布版本 : <i>${buildInfo.version}</i></label></li>
+        <li><label>- 发布日期 : <i>${buildInfo.date}</i></label></li>
 	</ul>
 </div>
