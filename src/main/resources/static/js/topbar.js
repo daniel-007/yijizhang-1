@@ -8,6 +8,11 @@ TopBar = function(){
 
         bindEvent: function () {
 
+            //关于按钮
+            $('#aboutLink').click(function(){
+                $('#aboutWin').panel('open');
+            });
+
             //绑定注销按钮事件
             $('#logoutLink').tooltip({
                 content: $('<div style="text-align: center;font-size: 11px;">' +

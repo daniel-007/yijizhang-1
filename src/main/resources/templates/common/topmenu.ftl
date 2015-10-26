@@ -44,10 +44,6 @@
         </ul>
     </div>
 
-	<#--<button onClick="App.addTab('设置','voucher/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-left">-->
-		<#--<i class="fa fa-cog"></i><br/><small style="font-size:12px;">设置</small>-->
-	<#--</button>-->
-
 	<button onClick="App.addTab('日志','action/log/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-right">
 		<i class="fa fa-file-text-o"></i><br/><small style="font-size:12px;">日志</small>
 	</button>

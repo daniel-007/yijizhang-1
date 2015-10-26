@@ -127,6 +127,18 @@ body, html {
     margin: 20px;
 }
 
+/** 关于页面 */
+ul.aboutUl{
+    list-style-type: none;
+    margin: 10px 20px;
+    padding: 0px;
+}
+
+ul.aboutUl li{
+    margin: 15px 0px;
+    padding: 0px;
+}
+
 
 /** 查账浮层菜单样式 */
 

@@ -16,6 +16,7 @@
 
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.dto.BuildInfo;
 import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.LoginHistory;
 import cn.ahyc.yjz.service.AccountBookService;
@@ -59,6 +60,9 @@ public class AppController extends BaseController{
       @Autowired
       UserService userService;
 
+      @Autowired
+      BuildInfo buildInfo;
+
       public AppController() {
             this.pathPrefix = "/";
       }
@@ -84,6 +88,7 @@ public class AppController extends BaseController{
       @RequestMapping("/login")
       @PermitAll
       public String login(Map<String, Object> model,HttpServletRequest request) {
+
             if(request.getSession().getAttribute(Constant.SPRING_SECURITY_CONTEXT)!=null){
                   return "redirect:/";
             }
@@ -100,6 +105,17 @@ public class AppController extends BaseController{
                   model.remove("failureMsg");
             }
             return view("login");
+      }
+
+      /**
+       * 关于页面.
+       * @return
+       */
+      @RequestMapping("/about")
+      @PermitAll
+      public String about(Map<String, Object> model){
+            model.put("buildInfo",buildInfo);
+            return view("common/about");
       }
 
       /**
