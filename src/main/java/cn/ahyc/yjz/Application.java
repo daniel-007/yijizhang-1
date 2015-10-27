@@ -48,7 +48,8 @@ public class Application{
 				properties.load(resource.getInputStream());
 				String profile = properties.getProperty("spring.profiles.active");
 				LOGGER.info("Read spring.profiles.active={} from application.properties.", profile);
-				profile = "@profiles.active@".equals(profile) ? "development" : profile;
+//				profile = "@profiles.active@".equals(profile) ? "development" : profile;
+				profile = "@profiles.active@".equals(profile) ? "production" : profile;
 				LOGGER.info("Set default value for spring.profiles.active={}", profile);
 				springApplication.setAdditionalProfiles(profile);
 

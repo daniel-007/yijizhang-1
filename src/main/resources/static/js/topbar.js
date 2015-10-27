@@ -142,3 +142,7 @@ TopBar = function(){
         }
     };
 }();
+
+$(function(){
+    TopBar.init();
+});

@@ -7,14 +7,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <#--<meta name="_csrf" content="${_csrf.token}"/>-->
-        <#--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
         <title><@spring.message code="app.title" /></title>
 
         <#include "common/css.ftl"/>
         <#include "common/jslib.ftl"/>
 
         <#include "common/jsbiz.ftl"/>
+
     </head>
     <body class="easyui-layout" style="width: 100%;height: 100%;">
         <div data-options="region:'north',border:false" style="height:130px;overflow: hidden;">
@@ -27,5 +26,6 @@
             <#include "common/copyright.ftl" />
         </div>
         <div id="default_win"></div>
+
     </body>
 </html>

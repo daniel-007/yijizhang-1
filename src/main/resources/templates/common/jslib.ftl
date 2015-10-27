@@ -4,11 +4,11 @@
   <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
   <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-<!-- EasyUI -->
-<#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
-<!-- mergeJSLibTo:/app/app.lib.pack -->
-<script type="text/javascript" src="/public/js/jquery-1.11.3.js"></script>
+
+<script src="/public/js/jquery.min.js"></script>
 <script type="text/javascript" src="/public/js/sockjs.min.js"></script>
+
+<!-- mergeJSLibTo:/app/app.lib.pack -->
 <script type="text/javascript" src="/public/buttons/buttons.js"></script>
 <script type="text/javascript" src="/public/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/public/jqueryPlugin/jquery.maskedinput.min.js"></script>

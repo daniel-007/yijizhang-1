@@ -28,15 +28,6 @@
     <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
     <!-- mergeLoginCSSTo -->
-
-    <script>
-        $(function(){
-            TopBar.init();
-            //执行初始化函数
-            Login.init();
-        });
-    </script>
-
 </head>
 <body class="easyui-layout">
     <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">

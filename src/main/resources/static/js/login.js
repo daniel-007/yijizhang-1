@@ -41,3 +41,7 @@ Login = function(){
 
     }
 }();
+$(function(){
+    //执行初始化函数
+    Login.init();
+});

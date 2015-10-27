@@ -272,8 +272,6 @@
 							<inputDir>${project.build.directory}/classes</inputDir>
 							<output>${project.build.directory}/classes/static/app/app.lib.pack.${project.version}.${buildNumber}.js</output>
 							<includes>
-								<include>static/public/js/jquery-1.11.3.js</include>
-								<include>static/public/js/sockjs.min.js</include>
 								<include>static/public/buttons/buttons.js</include>
 								<include>static/public/easyui/jquery.easyui.min.js</include>
 								<include>static/public/jqueryPlugin/jquery.maskedinput.min.js</include>
