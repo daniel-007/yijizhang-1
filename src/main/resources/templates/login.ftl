@@ -14,15 +14,29 @@
 
     <script src="/public/js/jquery.min.js"></script>
     <script src="/public/easyui/jquery.easyui.min.js"></script>
-    <script src="/js/topbar.js" async="true"></script>
-    <script src="/js/login.js" async="true"></script>
 
+    <!-- mergeJSLoginTo:/app/app.login.pack -->
+    <script src="/js/topbar.js"></script>
+    <script src="/js/login.js"></script>
+    <!-- mergeJSLoginTo -->
 
-    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
+    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/icon.min.css">
     <link rel="stylesheet" type="text/css" href="/public/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.min.css">
+
+    <!-- mergeLoginCSSTo:/app/app.login.pack -->
+    <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <!-- mergeLoginCSSTo -->
+
+    <script>
+        $(function(){
+            TopBar.init();
+            //执行初始化函数
+            Login.init();
+        });
+    </script>
+
 </head>
 <body class="easyui-layout">
     <div data-options="region:'north',border:false" style="height:30px;overflow: hidden;">
@@ -55,6 +69,7 @@
     </div>
     <script>
         $(function () {
+
             //sessionTimeout之后Tab里面的页面跳转到登录页面，形成了嵌套
             // 自己都很瞧不上的垃圾的解决方案。
             if ($('#redirectFlag').val() == 'true') {

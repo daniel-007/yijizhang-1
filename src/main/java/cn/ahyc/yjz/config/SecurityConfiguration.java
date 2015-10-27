@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 							.disable()
 							.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
 							.and()
-							.authorizeRequests().antMatchers("/static/**","/public/**","**/login.js","**/favicon.ico","/about").permitAll()
+							.authorizeRequests().antMatchers("/static/**","/public/**","/app/**","**/login.js","**/favicon.ico","/about").permitAll()
 							.anyRequest().fullyAuthenticated()
 							.and().formLogin()
 							.defaultSuccessUrl("/").successHandler(loginSuccessHandler())

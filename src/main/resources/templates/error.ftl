@@ -20,9 +20,9 @@
         <script src="/public/easyui/jquery.easyui.min.js"></script>
         <script src="/js/topbar.js"></script>
         <!-- EasyUI -->
-        <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.min.css">
         <!-- buttons -->
-        <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
+        <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.min.css">
         <!-- font-awesome -->
         <link rel="stylesheet" href="/public/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">

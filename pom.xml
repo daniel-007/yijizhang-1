@@ -250,6 +250,26 @@
 							<removeIncluded>false</removeIncluded>
 							<insertNewLine>true</insertNewLine>
 							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.login.pack.${project.version}.${buildNumber}.js</output>
+							<includes>
+								<include>static/js/topbar.js</include>
+								<include>static/js/login.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<removeIncluded>false</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.login.pack.${project.version}.${buildNumber}.css</output>
+							<includes>
+								<include>static/public/buttons/buttons.css</include>
+								<include>static/css/base.css</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<removeIncluded>false</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
 							<output>${project.build.directory}/classes/static/app/app.lib.pack.${project.version}.${buildNumber}.js</output>
 							<includes>
 								<include>static/public/js/jquery-1.11.3.js</include>
@@ -281,10 +301,7 @@
 							<inputDir>${project.build.directory}/classes</inputDir>
 							<output>${project.build.directory}/classes/static/app/app.pack.${project.version}.${buildNumber}.css</output>
 							<includes>
-								<include>static/public/easyui/themes/bootstrap/easyui.css</include>
-								<include>static/public/easyui/themes/icon.css</include>
 								<include>static/public/buttons/buttons.css</include>
-								<include>static/public/font-awesome/css/font-awesome.css</include>
 								<include>static/public/jsPlumb/jsPlumbToolkit-defaults.css</include>
 								<include>static/public/jsPlumb/app.css</include>
 								<include>static/css/base.css</include>
@@ -308,13 +325,38 @@
 					</execution>
 				</executions>
 				<configuration>
-					<basedir>${project.build.directory}/classes/templates/common/</basedir>
+					<basedir>${project.build.directory}/classes/templates/</basedir>
 					<includes>
-						<include>css.ftl</include>
-						<include>jslib.ftl</include>
-						<include>jsbiz.ftl</include>
+						<include>login.ftl</include>
+						<include>common/css.ftl</include>
+						<include>common/jslib.ftl</include>
+						<include>common/jsbiz.ftl</include>
 					</includes>
 					<replacements>
+						<replacement>
+							<token>
+								<![CDATA[
+                                    <!-- mergeJSLoginTo:([^\s]*) -->(.*?)<!-- mergeJSLoginTo -->
+                                ]]>
+							</token>
+							<value>
+								<![CDATA[
+                                    <script type="text/javascript" src="$1.${project.version}.${buildNumber}.js" ></script>
+                                ]]>
+							</value>
+						</replacement>
+						<replacement>
+							<token>
+								<![CDATA[
+                                    <!-- mergeLoginCSSTo:([^\s]*) -->(.*?)<!-- mergeLoginCSSTo -->
+                                ]]>
+							</token>
+							<value>
+								<![CDATA[
+                                    <link rel="stylesheet" type="text/css" href="$1.${project.version}.${buildNumber}.css">
+                                ]]>
+							</value>
+						</replacement>
 						<replacement>
 							<token>
 								<![CDATA[
@@ -323,7 +365,7 @@
 							</token>
 							<value>
 								<![CDATA[
-                                    <script type="text/javascript" src="$1.${project.version}.${buildNumber}.css" ></script>
+                                   <link rel="stylesheet" type="text/css" href="$1.${project.version}.${buildNumber}.css">
                                 ]]>
 							</value>
 						</replacement>
