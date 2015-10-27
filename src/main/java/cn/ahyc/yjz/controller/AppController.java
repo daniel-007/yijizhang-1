@@ -79,7 +79,6 @@ public class AppController extends BaseController{
             return view("dashboard");
       }
 
-
       /**
        * 跳转到登录页面.
        * @param model
