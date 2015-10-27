@@ -642,4 +642,83 @@
         AND t.book_id = t1.book_id
         AND t.subject_code = t1.subject_code
     </select>
+    
+    <select id="getExpressCellValueWithBook" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT
+			<choose>
+			  <when test="searchFeild=='.DC'">
+			    a.initial_credit_balance
+			  </when>
+			  <when test="searchFeild=='.JC'">
+			    a.initial_debit_balance
+			  </when>
+			  <when test="searchFeild=='.JF'">
+			    a.period_debit_occur
+			  </when>
+			  <when test="searchFeild=='.DF'">
+			    a.period_credit_occur
+			  </when>
+			  <when test="searchFeild=='.JL'">
+			    a.year_debit_occur
+			  </when>
+			  <when test="searchFeild=='.DL'">
+			    a.year_credit_occur
+			  </when>
+			  <when test="searchFeild=='.JY'">
+			    a.terminal_debit_balance
+			  </when>
+			  <when test="searchFeild=='.DY'">
+			    a.terminal_credit_balance
+			  </when>
+			  <when test="searchFeild=='.SY'">
+			    a.profit_loss_occur_amount
+			  </when>
+			  <when test="searchFeild=='.LY'">
+			    a.profit_loss_total_occur_amount
+			  </when>
+			  <when test="searchFeild=='.C'">
+			    IF (
+					c.direction = 1,
+					a.initial_debit_balance,
+					a.initial_credit_balance
+				)
+			  </when>
+			  <when test="searchFeild==null">
+			    IF (
+					c.direction = 1,
+					a.terminal_debit_balance,
+					a.terminal_credit_balance
+				)
+			  </when>
+			</choose>
+		FROM
+			subject_balance a,
+			account_book b,
+			period p,
+			account_subject c
+		WHERE
+			1=1
+		<![CDATA[
+		AND CAST(a.subject_code AS CHAR) >= #{subjectCodeStart}
+		AND CAST(a.subject_code AS CHAR) < #{subjectCodeEnd}
+		]]>
+		<if test="year==null">
+		AND a.book_id = b.id
+		AND p.book_id = b.id
+		AND a.period_id = p.id
+		AND a.subject_code = c.subject_code
+		AND a.book_id = c.book_id
+		AND b.id = #{bookId}
+		AND p.current_period = #{period}
+		</if>
+		<if test="year=='-1'">
+		AND a.book_id = b.last_year_id
+		AND p.book_id = b.id
+		AND a.period_id = p.id
+		AND a.subject_code = c.subject_code
+		AND a.book_id = c.book_id
+		AND b.id = #{bookId}
+		AND p.current_period = #{period}
+		</if>
+    </select>
 </mapper>

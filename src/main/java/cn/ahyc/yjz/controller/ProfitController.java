@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.ProfitService;
+import cn.ahyc.yjz.util.Constant;
 
 /**
  * @ClassName: ProfitController
@@ -39,6 +41,7 @@ public class ProfitController extends BaseController {
      */
     @RequestMapping("/main")
     public String voucher(Model model, HttpSession session) {
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
         return view("main");
     }
     

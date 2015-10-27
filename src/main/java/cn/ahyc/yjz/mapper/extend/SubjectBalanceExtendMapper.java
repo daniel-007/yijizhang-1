@@ -94,4 +94,11 @@ public interface SubjectBalanceExtendMapper extends SubjectBalanceMapper {
      * @return
      */
     Map getSumByStartAndEndCode(Map paramMap);
+
+    /**
+     * 账上取数
+     * 
+     * @param map
+     */
+    Long getExpressCellValueWithBook(Map<String, Object> map);
 }
