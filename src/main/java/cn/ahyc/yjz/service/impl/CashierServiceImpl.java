@@ -130,6 +130,7 @@ public class CashierServiceImpl implements CashierService{
 		accountBook1.setCompanyId(accountBook.getCompanyId());
 		accountBook1.setDictValueId(accountBook.getDictValueId());
 		accountBook1.setOverFlag(0);
+		accountBook1.setLastYearId(accountBook.getId());
 		accountBookExtendMapper.insertSelectiveReturnId(accountBook1);
 		//复制科目代码长度数据
 		copySubjectLength(period.getBookId(),accountBook1.getId());

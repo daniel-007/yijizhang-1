@@ -21,6 +21,7 @@
       <arg column="over_flag" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="modify_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="last_year_id" javaType="java.lang.Long" jdbcType="BIGINT" />
     </constructor>
   </resultMap>
 
@@ -75,6 +76,9 @@
       <if test="modifyTime != null">
         modify_time,
       </if>
+      <if test="lastYearId != null">
+        last_year_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -115,6 +119,9 @@
       </if>
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastYearId != null">
+        #{lastYearId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
