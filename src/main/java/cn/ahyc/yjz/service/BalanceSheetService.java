@@ -13,4 +13,6 @@ public interface BalanceSheetService {
     List<Map> balanceSheets(Period period, Long code);
 
     List<BalanceSheet> balanceSheetsByParentCode(Long parentCode);
+
+    void saveExp(BalanceSheet balanceSheet) throws Exception;
 }

@@ -20,30 +20,72 @@
 
         return {
             container: null,
+            datagrid_tables: [],
             yearBegin_fmt: function (value, row, index) {
                 if (row.level == 2) {
                     value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
                     value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;width:250px;">计算公式：<br/><span>' + row.yearBeginExp;
-                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this)"></i></div>';
+                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this,\'yearBegin\',' + row.id + ')"></i></div>';
                     return  value;
+                } else if (row.level == -1) {
+                    return value;
                 }
             },
             periodEnd_fmt: function (value, row, index) {
+                var field = "";
                 if (row.level == 2) {
                     value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
                     value += '<div class="menu-content" style="padding:10px;text-align:left;display: none;width:250px;">计算公式：<br/><span>' + row.periodEndExp;
-                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this)"></i></div>';
+                    value += '</span> <i class="fa fa-pencil-square-o fa-lg" onclick="Balance_Sheet.toEdit(this,\'periodEnd\',' + row.id + ')"></i></div>';
                     return  value;
+                } else if (row.level == -1) {
+                    return value;
                 }
             },
-            toEdit: function (obj) {
 
+            refresh: function () {
+
+                this.init_calculate_dropdow.isinit = 0;
+
+                var ts = Balance_Sheet.datagrid_tables;
+                for (var i = 0; i < ts.length; i++) {
+                    ts[i].unbind().datagrid("reload");
+                }
+            },
+
+            toEdit: function (obj, field, id) {
                 var $span = $(obj).prev();
-
-                if ($(obj).hasClass("fa-check")) {
+                var $this_obj = $(obj);
+                if ($this_obj.hasClass("fa-check")) {
                     var exp = $span.find("input").val();
-                    $span.html(exp);
-                    $(obj).removeClass("fa-check").addClass("fa-pencil-square-o");
+
+                    //保存公式
+                    $.messager.confirm('确认', '此操作不可逆，继续修改？', function (r) {
+                        if (r) {
+                            var _data = {};
+                            if (field == 'yearBegin') {
+                                _data = {yearBeginExp: exp, id: id};
+                            } else {
+                                _data = {periodEndExp: exp, id: id};
+                            }
+
+                            $.ajax({
+                                url: '/balance/sheet/save/exp',
+                                data: _data,
+                                success: function (data) {
+                                    if (data.success) {
+                                        $span.html(exp);
+                                        $this_obj.removeClass("fa-check").addClass("fa-pencil-square-o");
+
+                                        //刷新页面.
+                                        Balance_Sheet.refresh();
+
+                                    }
+                                }
+                            })
+                        }
+                    });
+
                 } else {
                     var exp = $span.html();
 
@@ -54,7 +96,7 @@
                     exp = exp.replace(re1, "<");
 
                     $span.html($('<input type="text">').val(exp));
-                    $(obj).removeClass("fa-pencil-square-o").addClass("fa-check");
+                    $this_obj.removeClass("fa-pencil-square-o").addClass("fa-check");
                 }
             },
             init_calculate_dropdow: {
@@ -76,8 +118,8 @@
 
                 this.container.find("table").each(function () {
 
-                    $(this).datagrid({
-                        url: 'balance/sheet/balanceSheets?code=' + $(this).attr("code"),
+                    var datagrid_table = $(this).datagrid({
+                        url: 'balance/sheet/balancesheets?code=' + $(this).attr("code"),
                         border: false,
                         fitColumns: true,
                         singleSelect: true,
@@ -92,6 +134,8 @@
                                         pre = '&#12288;&#12288;<i class="tree-icon tree-file"></i> ';
                                     } else if (level == 1) {
                                         pre = '&#12288;' + pre;
+                                    } else if (level == -1) {
+                                        pre = '<i class="fa fa-jpy"></i> ';
                                     }
                                     return pre + value;
                                 }},
@@ -103,10 +147,35 @@
                             Balance_Sheet.init_calculate_dropdow.isinit++;
                             Balance_Sheet.init_calculate_dropdow.init();
 
-                            Balance_Sheet.container.find("div.datagrid-body").css("overflow", "hidden");
+//                            Balance_Sheet.container.find("div.datagrid-body").css("overflow", "hidden");
+                        },
+                        loadFilter: function (data) {
+                            if (data) {
+                                var length = data.length;
+                                var sum_name = data[0].name + "总计";
+
+                                var _periodEnd = 0;
+                                var _yearBegin = 0;
+                                for (var i = 0; i < data.length; i++) {
+                                    var record = data[i];
+                                    if (record.needSum == 0) {
+                                        _periodEnd += record.periodEnd;
+                                        _yearBegin += record.yearBegin;
+                                    }
+                                }
+
+                                var sum = {id: 9999, level: -1, name: sum_name, periodEnd: _periodEnd, yearBegin: _yearBegin};
+                                data.push(sum);
+                            }
+
+                            return {total: data.length, rows: data};
+
                         }
 
                     });
+
+
+                    Balance_Sheet.datagrid_tables.push(datagrid_table);
 
 
                 })

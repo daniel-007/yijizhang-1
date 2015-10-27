@@ -4,6 +4,8 @@ import cn.ahyc.yjz.model.BalanceSheet;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.BalanceSheetService;
 import cn.ahyc.yjz.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +25,35 @@ import java.util.Map;
 @RequestMapping("/balance/sheet")
 public class BalanceSheetController extends BaseController {
 
+    Logger logger = LoggerFactory.getLogger(BalanceSheetController.class);
+
     @Autowired
     private BalanceSheetService balanceSheetService;
+
+
+    /**
+     * 修改保存公式.
+     *
+     * @param balanceSheet
+     * @return
+     */
+    @RequestMapping("/save/exp")
+    @ResponseBody
+    public Map saveExp(BalanceSheet balanceSheet) {
+
+        logger.debug("修改公式 /save/exp");
+
+        Map result = new HashMap<>();
+        result.put("success", true);
+
+        try {
+            this.balanceSheetService.saveExp(balanceSheet);
+        } catch (Exception e) {
+            logger.error("修改公式失败 /save/exp");
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     /**
      * 资产负债表入口.
@@ -50,9 +80,11 @@ public class BalanceSheetController extends BaseController {
      * @param code
      * @return
      */
-    @RequestMapping("/balanceSheets")
+    @RequestMapping("/balancesheets")
     @ResponseBody
     public List<Map> balanceSheets(HttpSession session, Long code) {
+
+        logger.debug("获取去资产负债数据 /balancesheets");
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
 
         return balanceSheetService.balanceSheets(period, code);

@@ -94,6 +94,7 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             map.put("id", balanceSheet.getId());
             map.put("name", balanceSheet.getName());
             map.put("level", balanceSheet.getLevel());
+            map.put("needSum", balanceSheet.getNeedSum());
             map.put("periodEndExp", periodEndExp);
             map.put("yearBeginExp", yearBeginExp);
             map.put("periodEnd", periodEnd);
@@ -109,6 +110,11 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         BalanceSheetExample.Criteria criteria = balanceSheetExample.createCriteria();
         criteria.andParentCodeEqualTo(parentCode);
         return balanceSheetMapper.selectByExample(balanceSheetExample);
+    }
+
+    @Override
+    public void saveExp(BalanceSheet balanceSheet) throws Exception {
+        this.balanceSheetMapper.updateByPrimaryKeySelective(balanceSheet);
     }
 
     /**
@@ -162,7 +168,16 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             }
         }
 
-        return AviatorEvaluator.execute(newExpress, storeMap);  //xx + xxxx, {xx:11, xxxx:12}
+
+        Object r = 0;
+        try {
+            r = AviatorEvaluator.execute(newExpress, storeMap);  //xx + xxxx, {xx:11, xxxx:12}
+        } catch (Exception e) {
+            logger.error("解析公式失败,exp={}");
+            e.printStackTrace();
+        }
+
+        return r;
     }
 
 
@@ -191,7 +206,7 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
 
     /**
      * 根据期间id获取科目余额表信息并转换成map.
-     * <p/>
+     * <p>
      * (<1001>.C,440)
      *
      * @param periodId
