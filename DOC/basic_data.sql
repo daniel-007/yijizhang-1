@@ -34,7 +34,7 @@ insert  into `account_subject_template`(`id`,`subject_code`,`subject_name`,`pare
 /*Data for the table `company_common_type` */
 
 insert  into `company_common_type`(`id`,`type_code`,`type_name`,`company_id`,`create_time`,`modify_time`) values (1,'1','凭证字',NULL,'2015-09-26 22:07:11','2015-01-01 00:00:00');
-
+INSERT  INTO `company_common_type`(`id`,`type_code`,`type_name`,`company_id`,`create_time`,`modify_time`) VALUES(2,'2','模式类别',NULL,'2015-10-23 10:46:36','2015-01-01 00:00:00');
 /*Data for the table `company_common_value` */
 
 insert  into `company_common_value`(`id`,`type_id`,`value`,`show_value`,`company_id`,`create_time`,`modify_time`) values (1,1,'记','记',NULL,'2015-09-26 22:07:27','2015-01-01 00:00:00'),(2,1,'录','录',NULL,'2015-09-26 22:07:37','2015-01-01 00:00:00');

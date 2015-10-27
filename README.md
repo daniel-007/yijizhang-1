@@ -102,6 +102,7 @@
     $ mvn clean package -P production
 
 3.执行war包
+    $ kill -9 `ps -ef |grep java |awk '{print $2}'`
     $ java -jar yijizhang-{version}-exec.war &
 
 ```
