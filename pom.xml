@@ -39,6 +39,7 @@
 			<id>development</id>
 			<properties>
 				<profiles.active>development</profiles.active>
+				<compress.skip>true</compress.skip>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -49,6 +50,7 @@
 			<id>production</id>
 			<properties>
 				<profiles.active>production</profiles.active>
+				<compress.skip>false</compress.skip>
 			</properties>
 		</profile>
 	</profiles>
@@ -168,6 +170,25 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exploded</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<configuration>
+							<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+						</configuration>
+					</execution>
+				</executions>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -186,7 +207,160 @@
 					</archive>
 				</configuration>
 			</plugin>
+
+			<!-- 压缩合并JS和CSS  -->
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skip>${compress.skip}</skip>
+					<encoding>UTF-8</encoding>
+					<jswarn>false</jswarn>
+					<suffix>.${project.version}.${buildNumber}</suffix>
+					<force>true</force>
+					<linebreakpos>-1</linebreakpos>
+					<includes>
+						<include>static/js/**/*.js</include>
+						<include>static/public/**/*.js</include>
+						<include>static/public/easyui/themes/bootstrap/easyui.css</include>
+						<include>static/public/easyui/themes/icon.css</include>
+						<include>static/public/buttons/buttons.css</include>
+						<include>static/public/font-awesome/css/font-awesome.css</include>
+						<include>static/public/jsPlumb/jsPlumbToolkit-defaults.css</include>
+						<include>static/public/jsPlumb/app.css</include>
+						<include>static/css/base.css</include>
+						<include>static/css/overwrite.css</include>
+					</includes>
+					<excludes>
+						<exclude>static/public/jsPlumb/*.js</exclude>
+						<exclude>**/**min.js</exclude>
+						<exclude>**/**min.css</exclude>
+					</excludes>
+					<aggregations>
+						<aggregation>
+							<removeIncluded>false</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.lib.pack.${project.version}.${buildNumber}.js</output>
+							<includes>
+								<include>static/public/js/jquery-1.11.3.js</include>
+								<include>static/public/js/sockjs.min.js</include>
+								<include>static/public/buttons/buttons.js</include>
+								<include>static/public/easyui/jquery.easyui.min.js</include>
+								<include>static/public/jqueryPlugin/jquery.maskedinput.min.js</include>
+								<include>static/public/easyui/src/datagrid-cellediting.js</include>
+								<include>static/public/easyui/src/datagrid-groupview.js</include>
+								<include>static/public/easyui/locale/easyui-lang-zh_CN.js</include>
+								<include>static/public/jsPlumb/jquery.validate.js</include>
+								<include>static/public/jsPlumb/jsPlumb-1.7.10.js</include>
+								<include>static/public/jsPlumb/additional-methods.js</include>
+								<include>static/js/common.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<removeIncluded>false</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.biz.pack.${project.version}.${buildNumber}.js</output>
+							<includes>
+								<include>static/js/**/*.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<removeIncluded>false</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.pack.${project.version}.${buildNumber}.css</output>
+							<includes>
+								<include>static/public/easyui/themes/bootstrap/easyui.css</include>
+								<include>static/public/easyui/themes/icon.css</include>
+								<include>static/public/buttons/buttons.css</include>
+								<include>static/public/font-awesome/css/font-awesome.css</include>
+								<include>static/public/jsPlumb/jsPlumbToolkit-defaults.css</include>
+								<include>static/public/jsPlumb/app.css</include>
+								<include>static/css/base.css</include>
+								<include>static/css/overwrite.css</include>
+							</includes>
+						</aggregation>
+					</aggregations>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<basedir>${project.build.directory}/classes/templates/common/</basedir>
+					<includes>
+						<include>css.ftl</include>
+						<include>jslib.ftl</include>
+						<include>jsbiz.ftl</include>
+					</includes>
+					<replacements>
+						<replacement>
+							<token>
+								<![CDATA[
+                                    <!-- mergeCSSTo:([^\s]*) -->(.*?)<!-- mergeCSSTo -->
+                                ]]>
+							</token>
+							<value>
+								<![CDATA[
+                                    <script type="text/javascript" src="$1.${project.version}.${buildNumber}.css" ></script>
+                                ]]>
+							</value>
+						</replacement>
+						<replacement>
+							<token>
+								<![CDATA[
+                                    <!-- mergeJSLibTo:([^\s]*) -->(.*?)<!-- mergeJSLibTo -->
+                                ]]>
+							</token>
+							<value>
+								<![CDATA[
+                                    <script type="text/javascript" src="$1.${project.version}.${buildNumber}.js" ></script>
+                                ]]>
+							</value>
+						</replacement>
+						<replacement>
+							<token>
+								<![CDATA[
+                                    <!-- mergeJSBizTo:([^\s]*) -->(.*?)<!-- mergeJSBizTo -->
+                                ]]>
+							</token>
+							<value>
+								<![CDATA[
+                                    <script type="text/javascript" src="$1.${project.version}.${buildNumber}.js" ></script>
+                                ]]>
+							</value>
+						</replacement>
+					</replacements>
+					<regexFlags>
+						<regexFlag>CASE_INSENSITIVE</regexFlag>
+						<regexFlag>DOTALL</regexFlag>
+					</regexFlags>
+				</configuration>
+			</plugin>
+
 		</plugins>
+
 
 		<finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
 	</build>

@@ -1,3 +1,4 @@
+<!-- mergeJSBizTo:/app/app.biz.pack -->
 <script type="text/javascript" src="/js/topbar.js" async="true"></script>
 <script type="text/javascript" src="/js/welcome.js" async="true"></script>
 <script type="text/javascript" src="/js/east.js" async="true"></script>
@@ -33,5 +34,6 @@
 <script type="text/javascript" src="/js/search/trialbalance/trialbalance.js"></script>
 <#--总账js-->
 <script type="text/javascript" src="/js/search/ledger/ledger.js"></script>
+<!-- mergeJSBizTo -->
 
 

@@ -7,27 +7,20 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <#--<meta name="_csrf" content="${_csrf.token}"/>-->
-    <#--<meta name="_csrf_header" content="${_csrf.headerName}"/>-->
     <title><@spring.message code="app.title" /></title>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
     <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js" async="true"></script>
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js" async="true"></script>
-    <![endif]-->
-<#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
+
     <script src="/public/js/jquery.min.js"></script>
     <script src="/public/easyui/jquery.easyui.min.js"></script>
     <script src="/js/topbar.js" async="true"></script>
     <script src="/js/login.js" async="true"></script>
-    <!-- EasyUI -->
+
+
     <link rel="stylesheet" type="text/css" href="/public/easyui/themes/bootstrap/easyui.css">
     <link rel="stylesheet" type="text/css" href="/public/easyui/themes/icon.css">
-    <!-- buttons -->
     <link rel="stylesheet" type="text/css" href="/public/buttons/buttons.css">
-    <!-- font-awesome -->
     <link rel="stylesheet" type="text/css" href="/public/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
 </head>

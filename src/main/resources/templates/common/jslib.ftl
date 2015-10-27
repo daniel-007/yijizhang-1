@@ -6,6 +6,7 @@
 <![endif]-->
 <!-- EasyUI -->
 <#--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
+<!-- mergeJSLibTo:/app/app.lib.pack -->
 <script type="text/javascript" src="/public/js/jquery-1.11.3.js"></script>
 <script type="text/javascript" src="/public/js/sockjs.min.js"></script>
 <script type="text/javascript" src="/public/buttons/buttons.js"></script>
@@ -18,3 +19,4 @@
 <script type="text/javascript" src="/public/jsPlumb/jsPlumb-1.7.10.js"></script>
 <script type="text/javascript" src="/public/jsPlumb/additional-methods.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
+<!-- mergeJSLibTo -->

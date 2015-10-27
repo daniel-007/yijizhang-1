@@ -19,10 +19,7 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sanlli on 15/10/21.
@@ -57,10 +54,10 @@ public class LatestInfoListWSHandler extends TextWebSocketHandler {
 				}
 
 				logger.debug("WebSocket is ready now.Start pushing data to browser.");
-				int type = (int)map.get("type");
-				Map m = new HashMap<>();
+				Integer type = (Integer)map.get("type");
+				Map m = new HashMap();
 				List<Map> list = type==BALANCE?subjectBalanceService.selectLatestBalance(map):
-							type==VOUCHER?voucherService.latestVouchers(map):new ArrayList<>(0);
+							type==VOUCHER?voucherService.latestVouchers(map):new ArrayList(0);
 				m.put(type==1?"latestBalance":"latestVoucher",list);
 				session.sendMessage(new TextMessage(JSON.toJSONString(m)));
 		}

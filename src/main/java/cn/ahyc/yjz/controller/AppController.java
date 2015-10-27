@@ -126,7 +126,7 @@ public class AppController extends BaseController{
       @Secured({"ROLE_ADMIN","ROLE_USER"})
       public Map<String,Object> savePassWd(@RequestParam String oldPasswd,
                                            @RequestParam String newPasswd){
-            Map<String,Object> map = new HashMap<>();
+            Map<String,Object> map = new HashMap();
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(!userService.isPassWdMatch(user.getUsername(),oldPasswd)){
                   map.put("success",false);
