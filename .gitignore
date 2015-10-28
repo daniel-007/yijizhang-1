@@ -1,0 +1,5 @@
+/buildNumber.properties
+/target
+/.idea
+*.iml
+*.mwb.bak
