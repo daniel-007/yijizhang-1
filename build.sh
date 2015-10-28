@@ -8,11 +8,6 @@ git pull
 
 echo "Pull code finished!"
 
-#编译-打包
-echo "Start compile and package project."
-mvn clean package -P production
-echo "Package project finished!"
-
 #关闭旧进程
 echo "Check if pid exist......"
 pid=`ps -ef |grep java |awk '{print $2}'`
@@ -23,6 +18,11 @@ if [ ! -n $pid ] || [ "$pid"!="" ]; then
 else
     echo "Project is not running."
 fi
+
+#编译-打包
+echo "Start compile and package project."
+mvn clean package -P production
+echo "Package project finished!"
 
 #运行war包
 echo "Start run project....."
