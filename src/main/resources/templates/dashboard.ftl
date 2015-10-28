@@ -26,6 +26,11 @@
             <#include "common/copyright.ftl" />
         </div>
         <div id="default_win"></div>
-
+    <script>
+        $(function(){
+            Welcome.init();
+            East.init();
+        });
+    </script>
     </body>
 </html>

@@ -5,12 +5,12 @@
   <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<script src="/public/js/jquery.min.js"></script>
 <script type="text/javascript" src="/public/js/sockjs.min.js"></script>
+<script src="/public/js/jquery.min.js"></script>
+<script type="text/javascript" src="/public/easyui/jquery.easyui.min.js"></script>
 
 <!-- mergeJSLibTo:/app/app.lib.pack -->
 <script type="text/javascript" src="/public/buttons/buttons.js"></script>
-<script type="text/javascript" src="/public/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/public/jqueryPlugin/jquery.maskedinput.min.js"></script>
 <script type="text/javascript" src="/public/easyui/src/datagrid-cellediting.js"></script>
 <script type="text/javascript" src="/public/easyui/src/datagrid-groupview.js"></script>

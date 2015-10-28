@@ -167,6 +167,3 @@ East=function(){
 
 	};
 }();
-$(function(){
-	East.init();
-});
