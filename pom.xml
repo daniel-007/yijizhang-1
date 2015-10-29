@@ -241,7 +241,7 @@
 						<include>static/css/overwrite.css</include>
 					</includes>
 					<excludes>
-						<exclude>static/public/jsPlumb/*.js</exclude>
+						<exclude>static/public/jsPlumb/jsPlumb-1.7.10.js</exclude>
 						<exclude>**/**min.js</exclude>
 						<exclude>**/**min.css</exclude>
 					</excludes>
@@ -250,59 +250,59 @@
 							<removeIncluded>false</removeIncluded>
 							<insertNewLine>true</insertNewLine>
 							<inputDir>${project.build.directory}/classes</inputDir>
-							<output>${project.build.directory}/classes/static/app/app.login.pack.${project.version}.${buildNumber}.js</output>
+							<output>${project.build.directory}/classes/static/app/app.login.pack.${release.version}.js</output>
 							<includes>
-								<include>static/js/topbar.js</include>
-								<include>static/js/login.js</include>
+								<include>static/js/topbar.${release.version}.js</include>
+								<include>static/js/login.${release.version}.js</include>
 							</includes>
 						</aggregation>
 						<aggregation>
 							<removeIncluded>false</removeIncluded>
 							<insertNewLine>true</insertNewLine>
 							<inputDir>${project.build.directory}/classes</inputDir>
-							<output>${project.build.directory}/classes/static/app/app.login.pack.${project.version}.${buildNumber}.css</output>
+							<output>${project.build.directory}/classes/static/app/app.login.pack.${release.version}.css</output>
 							<includes>
-								<include>static/public/buttons/buttons.css</include>
-								<include>static/css/base.css</include>
-							</includes>
-						</aggregation>
-						<aggregation>
-							<removeIncluded>false</removeIncluded>
-							<insertNewLine>true</insertNewLine>
-							<inputDir>${project.build.directory}/classes</inputDir>
-							<output>${project.build.directory}/classes/static/app/app.lib.pack.${project.version}.${buildNumber}.js</output>
-							<includes>
-								<include>static/public/buttons/buttons.js</include>
-								<include>static/public/jqueryPlugin/jquery.maskedinput.min.js</include>
-								<include>static/public/easyui/src/datagrid-cellediting.js</include>
-								<include>static/public/easyui/src/datagrid-groupview.js</include>
-								<include>static/public/easyui/locale/easyui-lang-zh_CN.js</include>
-								<include>static/public/jsPlumb/jquery.validate.js</include>
-								<include>static/public/jsPlumb/jsPlumb-1.7.10.js</include>
-								<include>static/public/jsPlumb/additional-methods.js</include>
-								<include>static/js/common.js</include>
+								<include>static/public/buttons/buttons.${release.version}.css</include>
+								<include>static/css/base.${release.version}.css</include>
 							</includes>
 						</aggregation>
 						<aggregation>
 							<removeIncluded>true</removeIncluded>
 							<insertNewLine>true</insertNewLine>
 							<inputDir>${project.build.directory}/classes</inputDir>
-							<output>${project.build.directory}/classes/static/app/app.biz.pack.${project.version}.${buildNumber}.js</output>
+							<output>${project.build.directory}/classes/static/app/app.lib.pack.${release.version}.js</output>
 							<includes>
-								<include>static/js/**/*.js</include>
+								<include>static/public/buttons/buttons.${release.version}.js</include>
+								<include>static/public/jqueryPlugin/jquery.maskedinput.min.js</include>
+								<include>static/public/easyui/src/datagrid-cellediting.${release.version}.js</include>
+								<include>static/public/easyui/src/datagrid-groupview.${release.version}.js</include>
+								<include>static/public/easyui/locale/easyui-lang-zh_CN.${release.version}.js</include>
+								<include>static/public/jsPlumb/jquery.validate.${release.version}.js</include>
+								<include>static/public/jsPlumb/additional-methods.${release.version}.js</include>
+								<include>static/public/jsPlumb/jsPlumb-1.7.10.js</include>
+								<include>static/js/common.${release.version}.js</include>
 							</includes>
 						</aggregation>
 						<aggregation>
-							<removeIncluded>false</removeIncluded>
+							<removeIncluded>true</removeIncluded>
 							<insertNewLine>true</insertNewLine>
 							<inputDir>${project.build.directory}/classes</inputDir>
-							<output>${project.build.directory}/classes/static/app/app.pack.${project.version}.${buildNumber}.css</output>
+							<output>${project.build.directory}/classes/static/app/app.biz.pack.${release.version}.js</output>
 							<includes>
-								<include>static/public/buttons/buttons.css</include>
-								<include>static/public/jsPlumb/jsPlumbToolkit-defaults.css</include>
-								<include>static/public/jsPlumb/app.css</include>
-								<include>static/css/base.css</include>
-								<include>static/css/overwrite.css</include>
+								<include>static/js/**/*.${release.version}.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<removeIncluded>true</removeIncluded>
+							<insertNewLine>true</insertNewLine>
+							<inputDir>${project.build.directory}/classes</inputDir>
+							<output>${project.build.directory}/classes/static/app/app.pack.${release.version}.css</output>
+							<includes>
+								<include>static/public/buttons/buttons.${release.version}.css</include>
+								<include>static/public/jsPlumb/jsPlumbToolkit-defaults.${release.version}.css</include>
+								<include>static/public/jsPlumb/app.${release.version}.css</include>
+								<include>static/css/base.${release.version}.css</include>
+								<include>static/css/overwrite.${release.version}.css</include>
 							</includes>
 						</aggregation>
 					</aggregations>
