@@ -8,6 +8,27 @@ git pull
 
 echo "Pull code finished!"
 
+#编译-打包
+echo "Start compile and package project."
+mvn clean package -P production
+echo "Package project finished!"
+
+#创建文件夹
+d="../RunningWar/"
+if [ ! -d $d ]; then
+  mkdir -p $d
+fi
+
+#拷贝war包
+war=`find ./target -name '*-exec.war'`
+if [ ! -n $war ] || [ "$pid"!="" ]; then
+    w=${war##*/}
+    echo "Copy $war to $d"
+    cp -f $war $d
+    echo "chmod 755 $d$w"
+    chmod 755 $d$w
+fi
+
 #关闭旧进程
 echo "Check if pid exist......"
 pid=`ps -ef |grep java |awk '{print $2}'`
@@ -19,12 +40,7 @@ else
     echo "Project is not running."
 fi
 
-#编译-打包
-echo "Start compile and package project."
-mvn clean package -P production
-echo "Package project finished!"
-
 #运行war包
 echo "Start run project....."
-java -jar target/yijizhang-*-exec.war &
+java -jar $d$w &
 
