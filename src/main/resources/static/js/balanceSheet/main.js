@@ -28,9 +28,7 @@ Balance_Sheet = function () {
         refresh: function () {
 
             this.init_calculate_dropdow.isinit = 0;
-
             var periodId = this.container.find("#currentPeriod_hidden").val();
-
             var ts = Balance_Sheet.datagrid_tables;
             for (var i = 0; i < ts.length; i++) {
                 ts[i].unbind().datagrid("reload", {periodId: periodId});
@@ -124,6 +122,8 @@ Balance_Sheet = function () {
                                     pre = '&#12288;' + pre;
                                 } else if (level == -1) {
                                     pre = '<i class="fa fa-jpy"></i> ';
+                                } else if (level == -2) {
+                                    pre = '';
                                 }
                                 return pre + value;
                             }},
@@ -140,7 +140,19 @@ Balance_Sheet = function () {
                         Balance_Sheet.init_calculate_dropdow.isinit++;
                         Balance_Sheet.init_calculate_dropdow.init();
 
+                        //样式计算.
                         Balance_Sheet.container.find("div.datagrid-view,div.datagrid-body").height("932px");
+
+                        setTimeout(function () {
+                            var hs = [];
+                            Balance_Sheet.container.find("table.datagrid-btable").each(function () {
+                                hs.push($(this).height());
+                            });
+                            Balance_Sheet.container.find("#wraphiddendiv").closest("td").height(function (n, c) {
+                                var h = $(this).height();
+                                return h + (hs[0] - hs[1]);
+                            });
+                        }, 500);
                     },
                     loadFilter: function (data) {
                         if (data) {
@@ -180,6 +192,10 @@ Balance_Sheet = function () {
                                     }
                                 }
 
+                            }
+
+                            if (idx > 0) {
+                                new_data.push({num: "", level: -2, name: '<div id="wraphiddendiv"></div>', periodEnd: "", yearBegin: ""});
                             }
 
                             sum_name = data[0].name + "合计";
