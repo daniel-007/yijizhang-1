@@ -646,44 +646,44 @@
     <select id="getExpressCellValueWithBook" parameterType="java.util.Map" resultType="java.lang.Long">
 		SELECT
 			<choose>
-			  <when test="searchFeild=='.DC'">
-			    a.initial_credit_balance
-			  </when>
-			  <when test="searchFeild=='.JC'">
+			  <when test="searchFeild == '.JC'.toString()">
 			    a.initial_debit_balance
 			  </when>
-			  <when test="searchFeild=='.JF'">
+			  <when test="searchFeild == '.DC'.toString()">
+			    a.initial_credit_balance
+			  </when>
+			  <when test="searchFeild == '.JF'.toString()">
 			    a.period_debit_occur
 			  </when>
-			  <when test="searchFeild=='.DF'">
+			  <when test="searchFeild == '.DF'.toString()">
 			    a.period_credit_occur
 			  </when>
-			  <when test="searchFeild=='.JL'">
+			  <when test="searchFeild == '.JL'.toString()">
 			    a.year_debit_occur
 			  </when>
-			  <when test="searchFeild=='.DL'">
+			  <when test="searchFeild == '.DL'.toString()">
 			    a.year_credit_occur
 			  </when>
-			  <when test="searchFeild=='.JY'">
+			  <when test="searchFeild == '.JY'.toString()">
 			    a.terminal_debit_balance
 			  </when>
-			  <when test="searchFeild=='.DY'">
+			  <when test="searchFeild == '.DY'.toString()">
 			    a.terminal_credit_balance
 			  </when>
-			  <when test="searchFeild=='.SY'">
+			  <when test="searchFeild == '.SY'.toString()">
 			    a.profit_loss_occur_amount
 			  </when>
-			  <when test="searchFeild=='.LY'">
+			  <when test="searchFeild == '.SL'.toString()">
 			    a.profit_loss_total_occur_amount
 			  </when>
-			  <when test="searchFeild=='.C'">
+			  <when test="searchFeild == '.C'.toString()">
 			    IF (
 					c.direction = 1,
 					a.initial_debit_balance,
 					a.initial_credit_balance
 				)
 			  </when>
-			  <when test="searchFeild==null">
+			  <when test="searchFeild == null">
 			    IF (
 					c.direction = 1,
 					a.terminal_debit_balance,
@@ -702,7 +702,7 @@
 		AND CAST(a.subject_code AS CHAR) >= #{subjectCodeStart}
 		AND CAST(a.subject_code AS CHAR) < #{subjectCodeEnd}
 		]]>
-		<if test="year==null">
+		<if test="year == null">
 		AND a.book_id = b.id
 		AND p.book_id = b.id
 		AND a.period_id = p.id
@@ -711,7 +711,7 @@
 		AND b.id = #{bookId}
 		AND p.current_period = #{period}
 		</if>
-		<if test="year=='-1'">
+		<if test="year == '-1'.toString()">
 		AND a.book_id = b.last_year_id
 		AND p.book_id = b.id
 		AND a.period_id = p.id

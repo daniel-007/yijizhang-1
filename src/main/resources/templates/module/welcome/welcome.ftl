@@ -36,7 +36,7 @@
 
     <div class="chartBtnDiv" data-options="region:'south',border:false">
 		<button onclick="App.addTab('资产负债表','balance/sheet/main',true);" class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.zcfz"/></button>
-		<button class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.lirb"/></button>
+		<button onclick="App.addTab('利润表','profit/main',true);" class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.lirb"/></button>
 		<button class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.xjll"/></button>
 	</div>
 </div>

@@ -60,7 +60,7 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
         map.put("periodTo", periodTo);
         map.put("level", level);
         map.put("subjectCodeFrom", subjectCodeFrom);
-        map.put("subjectCodeFrom", subjectCodeFrom);
+        map.put("subjectCodeTo", subjectCodeTo);
         map.put("valueNotNull", valueNotNull);
         return subjectBalanceExtendMapper.selectBalanceList(map);
     }
@@ -98,7 +98,7 @@ public class SubjectBalanceServiceImpl implements SubjectBalanceService {
         map.put("periodTo", periodTo);
         map.put("level", level);
         map.put("subjectCodeFrom", subjectCodeFrom);
-        map.put("subjectCodeFrom", subjectCodeFrom);
+        map.put("subjectCodeTo", subjectCodeTo);
         map.put("valueNotNull", valueNotNull);
         return subjectBalanceExtendMapper.selectLedgerList(map);
     }
