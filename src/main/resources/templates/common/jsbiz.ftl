@@ -34,6 +34,10 @@
 <script type="text/javascript" src="/js/search/trialbalance/trialbalance.js"></script>
 <#--总账js-->
 <script type="text/javascript" src="/js/search/ledger/ledger.js"></script>
+
+<#--资产负债表js-->
+<script type="text/javascript" src="/js/balanceSheet/main.js"></script>
+
 <!-- mergeJSBizTo -->
 
 
