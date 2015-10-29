@@ -4,3 +4,8 @@
 *.iml
 *.mwb.bak
 /yjz.log
+/.externalToolBuilders/
+/.settings/
+/.classpath
+/.project
+/.gitignore
