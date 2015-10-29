@@ -41,3 +41,7 @@
 <!-- mergeJSBizTo -->
 
 
+<#--利润表js-->
+<script type="text/javascript" src="/js/profit.js"></script>
+
+

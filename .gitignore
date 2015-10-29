@@ -3,8 +3,9 @@
 /.idea
 *.iml
 *.mwb.bak
-/yjz.log
+/yjz.log*
 /.externalToolBuilders/
 /.settings/
 /.classpath
 /.project
+/.gitignore

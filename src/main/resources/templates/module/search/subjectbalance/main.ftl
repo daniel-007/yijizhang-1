@@ -19,6 +19,6 @@
 
 <script type="text/javascript">
 	$(function () {
-		SubjectBalance.init('${periodFrom?default('')}','${periodTo?default('')}','${level?default('')}','${subjectCodeFrom?default('')}','${subjectCodeTo?default('')}','${valueNotNull?default('')}');
+		SubjectBalance.init('${periodFrom?default('')}','${periodTo?default('')}','${level?default('')}',<#if subjectCodeFrom??>'${subjectCodeFrom?c}'<#else>''</#if>,<#if subjectCodeTo??>'${subjectCodeTo?c}'<#else>''</#if>,'${valueNotNull?default('')}');
 	});
 </script>

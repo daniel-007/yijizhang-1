@@ -62,7 +62,7 @@
     <input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucher.voucherNo?default(voucherNo)}" data-options="required:true,min:1">号
     日期：<input type="text" id="voucherTime" name="voucherTime" value="${(voucher.voucherTime?string("yyyy-MM-dd"))?default(voucherTime)}"></input>
     第${currentPeriod?default(sessionPeriod)}期
-    附单据<input class="easyui-numberspinner" id="billNum" name="billNum" style="width:80px;" value="${voucher.billNum?default('0')}" data-options="required:true,min:0">张
+    附单据<input class="easyui-numberspinner" name="billNum" style="width:80px;" value="${voucher.billNum?default('0')}" data-options="required:true,min:0">张
 </div>
 
 

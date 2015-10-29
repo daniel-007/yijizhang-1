@@ -18,11 +18,11 @@
 				</tr>
 				<tr>	
 					<td>会计科目：</td>
-					<td colspan="3"><input class="easyui-numberbox" id="ledgersubjectCodeFrom" name="subjectCodeFrom" style="width:80px;" value="${subjectCodeFrom?default('')}" data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="ledgersubjectCodeFrom" name="subjectCodeFrom" style="width:80px;" <#if subjectCodeFrom??>value="${subjectCodeFrom?c}"</#if> data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td>至：</td>
-					<td colspan="3"><input class="easyui-numberbox" id="ledgersubjectCodeTo" name="subjectCodeTo" style="width:80px;" value="${subjectCodeTo?default('')}" data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
+					<td colspan="3"><input class="easyui-numberbox" id="ledgersubjectCodeTo" name="subjectCodeTo" style="width:80px;" <#if subjectCodeTo??>value="${subjectCodeTo?c}"</#if> data-options="min:0,precision:0,validType:'voucherMaxLength[30]'"></input></td>
 				</tr>
 				<tr>	
 					<td colspan="4">
@@ -42,6 +42,6 @@
 
 <script type="text/javascript">
 	$(function () {
-		Ledger.searchInit('${periodFrom?default('')}','${periodTo?default('')}','${level?default('')}','${subjectCodeFrom?default('')}','${subjectCodeTo?default('')}','${valueNotNull?default('')}');
+		Ledger.searchInit('${periodFrom?default('')}','${periodTo?default('')}','${level?default('')}',<#if subjectCodeFrom??>'${subjectCodeFrom?c}'<#else>''</#if>,<#if subjectCodeTo??>'${subjectCodeTo?c}'<#else>''</#if>,'${valueNotNull?default('')}');
 	});
 </script>
