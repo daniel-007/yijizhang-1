@@ -96,10 +96,10 @@ public class CarryOverServiceImpl implements  CarryOverService{
 			}
 			detail.setSubjectCode(data.getSubjectCode());
 			if(data.getDirection()==1){
-				detail.setDebit(data.getTerminalDebitBalance());
+				detail.setCredit(data.getTerminalDebitBalance());
 				totalDebit=totalDebit.add(data.getTerminalDebitBalance());
 			}else{
-				detail.setCredit(data.getTerminalCreditBalance());
+				detail.setDebit(data.getTerminalCreditBalance());
 				totalCredit=totalCredit.add(data.getTerminalCreditBalance());
 			}
 			details.add(detail);
@@ -122,7 +122,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 			if(totalCredit.compareTo(new BigDecimal(0.00))==1){
 				VoucherDetail detailCredit=new VoucherDetail();
 				detailCredit.setSubjectCode(accountSubject.get(0).getSubjectCode());
-				detailCredit.setDebit(totalCredit);
+				detailCredit.setCredit(totalCredit);
 				details.add(detailCredit);
 			}
 		}else{
