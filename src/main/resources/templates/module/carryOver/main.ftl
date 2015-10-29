@@ -4,7 +4,7 @@
 	<div data-options="region:'center'">
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'west'"
-				style="width: 180px; background-image: url('resources/public/img/jianzhang.png')"></div>
+				style="width: 180px; background-image: url('/public/img/jianzhang.png')"></div>
 			<div data-options="region:'center'" style="padding: 25px;line-height: 220%;">
 				<form id="carry_over" action="#" method="post">
 					<div id="firstJsp">
