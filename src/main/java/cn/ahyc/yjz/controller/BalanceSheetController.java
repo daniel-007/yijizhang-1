@@ -1,5 +1,6 @@
 package cn.ahyc.yjz.controller;
 
+import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.BalanceSheet;
 import cn.ahyc.yjz.model.Period;
 import cn.ahyc.yjz.service.BalanceSheetService;
@@ -68,6 +69,7 @@ public class BalanceSheetController extends BaseController {
 
         List<BalanceSheet> balanceSheets = balanceSheetService.balanceSheetsByParentCode(-9999l);
         model.addAttribute("balanceSheets", balanceSheets);
+        model.addAttribute("period", period);
 
         return view("balanceSheet/main");
     }
@@ -78,16 +80,22 @@ public class BalanceSheetController extends BaseController {
      *
      * @param session
      * @param code
+     * @param periodId
      * @return
      */
     @RequestMapping("/balancesheets")
     @ResponseBody
-    public List<Map> balanceSheets(HttpSession session, Long code) {
+    public List<Map> balanceSheets(HttpSession session, Long code, Long periodId) {
 
         logger.debug("获取去资产负债数据 /balancesheets");
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
 
-        return balanceSheetService.balanceSheets(period, code);
+        if (periodId != null) {
+            period.setId(periodId);
+        }
+
+        return balanceSheetService.balanceSheets(period,accountBook, code);
     }
 
 

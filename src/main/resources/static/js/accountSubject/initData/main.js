@@ -54,12 +54,14 @@ Account_Subject_Init_Data = function () {
             return Account_Subject_Init_Data.highlight_keyword(value.toString());
         },
         subjectNameFormatter: function (value, row, index) {
+            //
+            value = Account_Subject_Init_Data.highlight_keyword(value);
             var blank = "";
             for (var i = 1; i < row.level; i++) {
                 blank += "&#12288;";
             }
 
-            return Account_Subject_Init_Data.highlight_keyword(blank + value);
+            return blank + value;
         },
         highlight_keyword: function (val) {
             var keyword = Account_Subject_Init_Data._keyword_val_;

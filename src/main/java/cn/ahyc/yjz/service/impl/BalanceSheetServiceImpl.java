@@ -55,7 +55,7 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
 
 
     @Override
-    public List<Map> balanceSheets(Period period, Long code) {
+    public List<Map> balanceSheets(Period period, AccountBook accountBook, Long code) {
 
         List list = new ArrayList();
         Map map;
@@ -70,19 +70,29 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         //根据当前期获取科目余额表信息
         Map subjectBalanceMap = this.subjectBalances(period.getId());
 
-        //获取1期科目余额信息
+        //获取该账套起始期间期科目余额信息
         Map firstPeriodSubjectBalanceMap = null;
         Long firstPeriodId = null;
-        PeriodExample periodExample = new PeriodExample();
-        PeriodExample.Criteria criteria = periodExample.createCriteria();
-        criteria.andBookIdEqualTo(period.getBookId());
-        criteria.andCurrentPeriodEqualTo(1);
-        List<Period> periods = periodExtendMapper.selectByExample(periodExample);
-        if (!periods.isEmpty()) {
-            firstPeriodId = periods.get(0).getId();
-            firstPeriodSubjectBalanceMap = this.subjectBalances(periods.get(0).getId());
+
+        //起始期间和当前期间一样，不用重复计算
+        if (accountBook.getInitPeriod() == period.getCurrentPeriod()) {
+            firstPeriodSubjectBalanceMap = subjectBalanceMap;
+            firstPeriodId = period.getId();
+        } else {
+            PeriodExample periodExample = new PeriodExample();
+            PeriodExample.Criteria criteria = periodExample.createCriteria();
+            criteria.andBookIdEqualTo(period.getBookId());
+            criteria.andCurrentPeriodEqualTo(accountBook.getInitPeriod());
+            List<Period> periods = periodExtendMapper.selectByExample(periodExample);
+            if (!periods.isEmpty()) {
+                firstPeriodId = periods.get(0).getId();
+                firstPeriodSubjectBalanceMap = this.subjectBalances(firstPeriodId);
+            }
         }
 
+        logger.info("科目余额：{},\n {}", subjectBalanceMap.toString(), firstPeriodSubjectBalanceMap.toString());
+
+        //解析公式.
         for (BalanceSheet balanceSheet : balanceSheets) {
 
             String periodEndExp = balanceSheet.getPeriodEndExp();
@@ -133,6 +143,10 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
      */
     private Object parseAndCalcu(Map subjectBalanceMap, Map firstPeriodSubjectBalanceMap, String express, Long periodId, Long firstPeriodId) {
 
+        if (StringUtils.isEmpty(express)) {
+            return 0;
+        }
+
         Map storeMap = new HashMap();
         String replaceStr = "x"; //
 
@@ -150,12 +164,14 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             if (exp.contains("@(")) { //计算其他年数据
                 return 0;
             } else if (exp.contains("@1")) { //计算本年其他期数据.
+                exp = exp.replace("@1", "");
                 if (firstPeriodSubjectBalanceMap == null) {
                     return 0;
                 } else {
                     if (exp.contains(":")) {  //<1001:1009>.JC
                         this.parseMultiCode(storeMap, exp, replaceStr, firstPeriodId);
                     } else {
+                        logger.info("@1计算公式={}", exp);
                         storeMap.put(replaceStr, firstPeriodSubjectBalanceMap.getOrDefault(exp, 0)); //xx
                     }
                 }
@@ -168,24 +184,32 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             }
         }
 
-
         Object r = 0;
         try {
             r = AviatorEvaluator.execute(newExpress, storeMap);  //xx + xxxx, {xx:11, xxxx:12}
         } catch (Exception e) {
-            logger.error("解析公式失败,exp={}");
-            e.printStackTrace();
+            logger.error("解析公式失败,express={},newExpress={}, {}", express, newExpress, storeMap.toString());
         }
 
         return r;
     }
 
 
+    /**
+     * 解析会计科目区间值.
+     *
+     * @param storeMap
+     * @param exp
+     * @param replaceStr
+     * @param periodId
+     */
     private void parseMultiCode(Map storeMap, String exp, String replaceStr, Long periodId) {
         Map paramMap = new HashMap();
         String codeStr = exp.replaceAll("\\w*<|>\\w*", ""); //1001:1009
         String type = exp.substring(exp.indexOf(">") + 1); //.JC
         String[] codes = codeStr.split(":");  //["1001", "1009"]
+
+        logger.info("区间表达式={},periodId={}", exp, periodId);
 
         paramMap.put("startCode", codes[0]);
         paramMap.put("endCode", codes[1]);
@@ -225,23 +249,23 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             String formatPre = "<".concat(subjectCodeStr).concat(">");
 
             if (direction == 1) {
-                map.put(formatPre.concat(".C"), balanceAndDirect.get("initial_debit_balance"));
-                map.put(formatPre.concat(""), balanceAndDirect.get("terminal_debit_balance"));
+                map.put(formatPre.concat(".C"), balanceAndDirect.getOrDefault("initial_debit_balance", 0));
+                map.put(formatPre.concat(""), balanceAndDirect.getOrDefault("terminal_debit_balance", 0));
             } else {
-                map.put(formatPre.concat(".C"), balanceAndDirect.get("initial_credit_balance"));
-                map.put(formatPre.concat(""), balanceAndDirect.get("terminal_credit_balance"));
+                map.put(formatPre.concat(".C"), balanceAndDirect.getOrDefault("initial_credit_balance", 0));
+                map.put(formatPre.concat(""), balanceAndDirect.getOrDefault("terminal_credit_balance", 0));
             }
 
-            map.put(formatPre.concat(".DC"), balanceAndDirect.get("initial_credit_balance"));
-            map.put(formatPre.concat(".JC"), balanceAndDirect.get("initial_debit_balance"));
-            map.put(formatPre.concat(".JF"), balanceAndDirect.get("period_debit_occur"));
-            map.put(formatPre.concat(".DF"), balanceAndDirect.get("period_credit_occur"));
-            map.put(formatPre.concat(".JL"), balanceAndDirect.get("year_debit_occur"));
-            map.put(formatPre.concat(".DL"), balanceAndDirect.get("year_credit_occur"));
-            map.put(formatPre.concat(".JY"), balanceAndDirect.get("terminal_debit_balance"));
-            map.put(formatPre.concat(".DY"), balanceAndDirect.get("terminal_credit_balance"));
-            map.put(formatPre.concat(".SY"), balanceAndDirect.get("profit_loss_occur_amount"));
-            map.put(formatPre.concat(".LY"), balanceAndDirect.get("profit_loss_total_occur_amount"));
+            map.put(formatPre.concat(".DC"), balanceAndDirect.getOrDefault("initial_credit_balance", 0));
+            map.put(formatPre.concat(".JC"), balanceAndDirect.getOrDefault("initial_debit_balance", 0));
+            map.put(formatPre.concat(".JF"), balanceAndDirect.getOrDefault("period_debit_occur", 0));
+            map.put(formatPre.concat(".DF"), balanceAndDirect.getOrDefault("period_credit_occur", 0));
+            map.put(formatPre.concat(".JL"), balanceAndDirect.getOrDefault("year_debit_occur", 0));
+            map.put(formatPre.concat(".DL"), balanceAndDirect.getOrDefault("year_credit_occur", 0));
+            map.put(formatPre.concat(".JY"), balanceAndDirect.getOrDefault("terminal_debit_balance", 0));
+            map.put(formatPre.concat(".DY"), balanceAndDirect.getOrDefault("terminal_credit_balance", 0));
+            map.put(formatPre.concat(".SY"), balanceAndDirect.getOrDefault("profit_loss_occur_amount", 0));
+            map.put(formatPre.concat(".LY"), balanceAndDirect.getOrDefault("profit_loss_total_occur_amount", 0));
         }
 
         return map;
