@@ -26,7 +26,6 @@ Balance_Sheet = function () {
         },
 
         refresh: function () {
-
             this.init_calculate_dropdow.isinit = 0;
             var periodId = this.container.find("#currentPeriod_hidden").val();
             var ts = Balance_Sheet.datagrid_tables;
@@ -235,6 +234,7 @@ Balance_Sheet = function () {
 
         init: function () {
             this.container = $("#balance_sheet_container");
+            this.init_calculate_dropdow.isinit = 0;
 
             this.init_period();
             this.init_data_table();
