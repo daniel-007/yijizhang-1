@@ -90,8 +90,6 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             }
         }
 
-        logger.info("科目余额：{},\n {}", subjectBalanceMap.toString(), firstPeriodSubjectBalanceMap.toString());
-
         //解析公式.
         for (BalanceSheet balanceSheet : balanceSheets) {
 
@@ -171,7 +169,6 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
                     if (exp.contains(":")) {  //<1001:1009>.JC
                         this.parseMultiCode(storeMap, exp, replaceStr, firstPeriodId);
                     } else {
-                        logger.info("@1计算公式={}", exp);
                         storeMap.put(replaceStr, firstPeriodSubjectBalanceMap.getOrDefault(exp, 0)); //xx
                     }
                 }
