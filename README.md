@@ -92,18 +92,11 @@
 
 ## 产线部署说明
 ```
-1.克隆仓库到本地(第一次克隆，以后每次只需要pull)
-    $ git clone git@git.oschina.net:lisanlai/yijizhang.git
- 或者
-    $ cd yijizhang
-    $ git pull
+1.第一次需要克隆仓库到本地
+   $ git clone git@git.oschina.net:lisanlai/yijizhang.git
 
-2.打包(生成环境打包使用-P production)
-    $ mvn clean package -P production
-
-3.执行war包
-    $ kill -9 `ps -ef |grep java |awk '{print $2}'`
-    $ java -jar yijizhang-{version}-exec.war &
+2.以后每次只需要执行./build.sh文件即可
+   $ ./build.sh
 
 ```
 
