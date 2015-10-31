@@ -79,20 +79,20 @@ public class ExpressionThread implements Runnable {
             subjectCodeEnd = subjectCode;
         }
         // 取数类型
-        pattern = Pattern.compile(">(\\..*?)(@.*?)$");
+        pattern = Pattern.compile(">(\\..*?)(@.*)?$");
         matcher = pattern.matcher(cell);
         if (matcher.find()) {
             searchFeild = matcher.group(1);
         }
         // 会计年度、会计期间
-        pattern = Pattern.compile("@/((.*?),(.*?)/)");
+        pattern = Pattern.compile("@\\((.*?),(.*?)\\)");
         matcher = pattern.matcher(cell);
         if (matcher.find()) {
             year = matcher.group(1);
             period = Integer.valueOf(matcher.group(2));
             period = period < 0 ? currentPeriod + period : period;
         }
-        pattern = Pattern.compile("@(^-?\\d+)$");
+        pattern = Pattern.compile("@([-]?[0-9.]+)$");
         matcher = pattern.matcher(cell);
         if (matcher.find()) {
             period = Integer.valueOf(matcher.group(1));
@@ -106,6 +106,7 @@ public class ExpressionThread implements Runnable {
         map.put("year", year);
         map.put("period", period);
         map.put("bookId", bookId);
+        LOGGER.debug("call map {}", map);
         Long value = subjectBalanceExtendMapper.getExpressCellValueWithBook(map);
         LOGGER.debug("call value {}", value);
         return value == null ? 0 : value;
@@ -129,7 +130,16 @@ public class ExpressionThread implements Runnable {
         }
     }
 
-//    public static void main(String[] args) {
+    // public static void main(String[] args) {
+    // final Map<String, Object> map = new HashMap<String, Object>();
+    // map.put("date", 1);
+    // final List<Map<String, Object>> list = new ArrayList<Map<String,
+    // Object>>();
+    // list.add(map);
+    // Map<String, Object> env = new HashMap<String, Object>();
+    // env.put("list", list);
+    // AviatorEvaluator.addFunction(new CellValueFunction());
+    // System.out.println(AviatorEvaluator.execute("cell(list,0,date)+3", env));
     //
     // Pattern pattern = Pattern.compile("([A-Z]+)([0-9]+)");
     // Matcher matcher = pattern.matcher("B22");
@@ -142,6 +152,8 @@ public class ExpressionThread implements Runnable {
     // ExpressionThread thread = new ExpressionThread();
     // thread.map = new HashMap<String, Object>();
     // thread.key = "as";
-    // thread.cell = "<5051>.SL@-1";
-    // thread.run(); }
+    // thread.currentPeriod = 10;
+    // thread.cell = "<6402>.SY";
+    // thread.run();
+    // }
 }

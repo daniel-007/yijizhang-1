@@ -26,6 +26,7 @@ import cn.ahyc.yjz.mapper.extend.ProfitExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.service.ProfitService;
 import cn.ahyc.yjz.thread.ExpressionThread;
+import cn.ahyc.yjz.util.CellValueFunction;
 
 /**
  * @ClassName: ProfitServiceImpl
@@ -89,7 +90,7 @@ public class ProfitServiceImpl implements ProfitService {
         if (StringUtils.isBlank(expression)) {
             expression = "''";
         }
-        LOGGER.debug("expression compile：{}", expression);
+        LOGGER.info("expression compile：{}", expression);
         Expression compiledExp = AviatorEvaluator.compile(expression, true);
         list.add(compiledExp);
         return list;
@@ -98,16 +99,17 @@ public class ProfitServiceImpl implements ProfitService {
     /**
      * 设置变量
      * 
-     * @param map
+     * @param envMap
      * @param expStr
      * @return
      */
-    private static String getEnv(Map<String, Object> map, String expStr) {
+    private static String getEnvAndExpression(Map<String, Object> envMap, String expStr) {
         if(StringUtils.isBlank(expStr)){
             return null;
         }
         String result = expStr.replace("=", "");
-        String str = result.replaceAll("\\+|\\-/D|\\*|\\/", "&");
+        String str = result.replaceAll("\\+|\\*|\\/", "&");// 替换加号、乘号、除号
+        str = str.replaceAll("\\-([A-Z]+)", "&$1");// 替换减号，排除@-1
         String[] exps = str.split("&");
         String param;
         Pattern pattern = Pattern.compile("([A-Z]+)([0-9]+)");
@@ -116,15 +118,20 @@ public class ProfitServiceImpl implements ProfitService {
             param = "";
             matcher = pattern.matcher(exp);
             if (matcher.find()) { // 单元格取数 B2
-                param = "map" + matcher.group(2) + ".c" + matcher.group(1) + "Val";
+                param = "cell(list," + (Integer.valueOf(matcher.group(2)) - 1) + ",c" + matcher.group(1) + "Val)";
                 result = result.replace(exp, param);
             } else if (exp.indexOf("<") >= 0) { // 账上取数
-                param = "a" + map.size();
-                map.put(param, exp);
+                param = "a" + envMap.size();
+                envMap.put(param, exp);
                 result = result.replace(exp, param);
             }
         }
         return result;
+    }
+
+    // TODO
+    private Object execute() {
+        return null;
     }
 
     /*
@@ -136,33 +143,43 @@ public class ProfitServiceImpl implements ProfitService {
     @Override
     public List<Map<String, Object>> getList(Integer currentPeriod, Long bookId) {
         List<ExpressionColumn> colList = profitExtendMapper.selectProfitExpressionColumn();
+        List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, colList);
+        return list;
+    }
+
+    /**
+     * @param currentPeriod
+     * @param bookId
+     * @param colList
+     * @return
+     */
+    private List<Map<String, Object>> exeExpression(Integer currentPeriod, Long bookId,
+            List<ExpressionColumn> colList) {
         List<Expression> compileList = new ArrayList<Expression>();
         Map<String, Object> envMap = new HashMap<String, Object>();
+        // 注册函数
+        AviatorEvaluator.addFunction(new CellValueFunction());
         // 编译表达式、设置变量
         for (ExpressionColumn col : colList) {
-            compile(compileList, getEnv(envMap, col.getcB()));
-            compile(compileList, getEnv(envMap, col.getcC()));
+            compile(compileList, getEnvAndExpression(envMap, col.getcB()));
+            compile(compileList, getEnvAndExpression(envMap, col.getcC()));
         }
         // 获取变量值
         envMap = getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map;
-        map = new HashMap<String, Object>();
-        map.put("cA", "项目");
-        map.put("cBVal", "本期金额");
-        map.put("cCVal", "上期金额");
-        list.add(map);
         // 执行表达式
         int j = 0;
         for (ExpressionColumn col : colList) {
             map = new HashMap<String, Object>();
             map.put("cA", col.getcA());
+            map.put("cAVal", col.getcA());
             map.put("cB", col.getcB());
             map.put("cC", col.getcC());
             map.put("cBVal", compileList.get(j++).execute(envMap));
             map.put("cCVal", compileList.get(j++).execute(envMap));
             list.add(map);
-            envMap.put("map" + list.size(), map);
+            envMap.put("list", list);
         }
         return list;
     }
@@ -177,8 +194,21 @@ public class ProfitServiceImpl implements ProfitService {
     public Object countExp(Integer currentPeriod, Long bookId, String expStr) {
         List<Expression> compileList = new ArrayList<Expression>();
         Map<String, Object> envMap = new HashMap<String, Object>();
-        compile(compileList, getEnv(envMap, expStr));
+        compile(compileList, getEnvAndExpression(envMap, expStr));
         envMap = getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
         return compileList.get(0).execute(envMap);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.ProfitService#getListWithExpList(java.util.List,
+     * java.lang.Integer, java.lang.Long)
+     */
+    @Override
+    public List<Map<String, Object>> getListWithExpList(List<ExpressionColumn> expList, Integer currentPeriod,
+            Long bookId) {
+        List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, expList);
+        return list;
     }
 }

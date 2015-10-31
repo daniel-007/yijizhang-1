@@ -78,6 +78,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		voucher.setVoucherTime(voucherTime);
 		voucher.setBillNum(0);
 		voucher.setPeriodId(periodId);
+        voucher.setCarryOver(1);// 1:结账凭证
 		//保存凭证
 		String reslutSuccess=voucherService.save(voucher, details);
 		result="已生成一张转账凭证，凭证字号为："+reslutSuccess;

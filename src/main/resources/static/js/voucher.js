@@ -914,7 +914,7 @@ Voucher=function(){
 		//调用：accSub(arg1,arg2)   
 		//返回值：arg1减上arg2的精确结果   
 		accSub:function(arg1,arg2){      
-		    return accAdd(arg1,-arg2);  
+		    return Voucher.accAdd(arg1,-arg2);  
 		},
 		//说明：javascript的除法结果会有误差，在两个浮点数相除的时候会比较明显。这个函数返回较为精确的除法结果。   
 		//调用：accDiv(arg1,arg2)   

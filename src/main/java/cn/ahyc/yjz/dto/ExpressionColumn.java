@@ -26,6 +26,27 @@ public class ExpressionColumn {
     private String cG;
     private String cH;
 
+    private String cAVal;
+    private String cBVal;
+    private String cCVal;
+    private String cDVal;
+    private String cEVal;
+    private String cFVal;
+    private String cGVal;
+    private String cHVal;
+
+    /**
+     * 
+     */
+    public ExpressionColumn() {
+    }
+
+    @Override
+    public String toString() {
+        return "ExpressionColumn [cA=" + cA + ", cB=" + cB + ", cC=" + cC + ", cAVal=" + cAVal + ", cBVal=" + cBVal
+                + ", cCVal=" + cCVal + "]";
+    }
+
     /**
      * @param cA
      * @param cB
@@ -41,21 +62,17 @@ public class ExpressionColumn {
      * @param cA
      * @param cB
      * @param cC
-     * @param cD
-     * @param cE
-     * @param cF
-     * @param cG
-     * @param cH
+     * @param cAVal
+     * @param cBVal
+     * @param cCVal
      */
-    public ExpressionColumn(String cA, String cB, String cC, String cD, String cE, String cF, String cG, String cH) {
+    public ExpressionColumn(String cA, String cB, String cC, String cAVal, String cBVal, String cCVal) {
         this.cA = cA;
         this.cB = cB;
         this.cC = cC;
-        this.cD = cD;
-        this.cE = cE;
-        this.cF = cF;
-        this.cG = cG;
-        this.cH = cH;
+        this.cAVal = cAVal;
+        this.cBVal = cBVal;
+        this.cCVal = cCVal;
     }
 
     public String getcA() {
@@ -120,5 +137,69 @@ public class ExpressionColumn {
 
     public void setcH(String cH) {
         this.cH = cH;
+    }
+
+    public String getcAVal() {
+        return cAVal;
+    }
+
+    public void setcAVal(String cAVal) {
+        this.cAVal = cAVal;
+    }
+
+    public String getcBVal() {
+        return cBVal;
+    }
+
+    public void setcBVal(String cBVal) {
+        this.cBVal = cBVal;
+    }
+
+    public String getcCVal() {
+        return cCVal;
+    }
+
+    public void setcCVal(String cCVal) {
+        this.cCVal = cCVal;
+    }
+
+    public String getcDVal() {
+        return cDVal;
+    }
+
+    public void setcDVal(String cDVal) {
+        this.cDVal = cDVal;
+    }
+
+    public String getcEVal() {
+        return cEVal;
+    }
+
+    public void setcEVal(String cEVal) {
+        this.cEVal = cEVal;
+    }
+
+    public String getcFVal() {
+        return cFVal;
+    }
+
+    public void setcFVal(String cFVal) {
+        this.cFVal = cFVal;
+    }
+
+    public String getcGVal() {
+        return cGVal;
+    }
+
+    public void setcGVal(String cGVal) {
+        this.cGVal = cGVal;
+    }
+
+    public String getcHVal() {
+        return cHVal;
+    }
+
+    public void setcHVal(String cHVal) {
+        this.cHVal = cHVal;
     }
 }
