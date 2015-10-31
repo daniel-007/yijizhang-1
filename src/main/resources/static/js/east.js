@@ -29,8 +29,8 @@ East=function(){
 		 */
 		connect : function(type){
 
-			var h1 = ($('#latestBalanceDIV').height()/8) + 'px';
-			var h2 = ($('#latestVoucherDIV').height()/9) + 'px';
+			var h1 = ($('#latestBalanceDIV').height()/8-2) + 'px';
+			var h2 = ($('#latestVoucherDIV').height()/9-2) + 'px';
 
 			var target = '/latest/info/list';
 			if(type==='balance'){
