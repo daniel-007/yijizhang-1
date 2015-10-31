@@ -170,7 +170,6 @@ ul.aboutUl li{
 }
 
 #latestBalanceTB td{
-    height: 25px;
     color: #333333;
 }
 
@@ -188,7 +187,6 @@ ul.aboutUl li{
 }
 
 #latestVoucherTB td {
-    height: 25px;
     color: #333333;
 }
 
