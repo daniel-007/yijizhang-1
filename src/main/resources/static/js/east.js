@@ -28,6 +28,10 @@ East=function(){
 		 * 新建websocket连接
 		 */
 		connect : function(type){
+
+			var h1 = ($('#latestBalanceDIV').height()/8) + 'px';
+			var h2 = ($('#latestVoucherDIV').height()/9) + 'px';
+
 			var target = '/latest/info/list';
 			if(type==='balance'){
 				wsBalance = new SockJS(target);
@@ -48,8 +52,8 @@ East=function(){
 						var n = array[i]['subject_name'];
 						var b = array[i]['balance'];
 						html += '<tr>'+
-							'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.balanceDetail('+c+')">' + n + '</a></td>'+
-							'<td style="text-align: right;">' + b + '</td>'+
+							'<td style="height: '+h1+';"><a title="点击查看明细" href="javascript:void(0);" onclick="East.balanceDetail('+c+')">' + n + '</a></td>'+
+							'<td style="text-align: right;height: '+h1+';">' + b + '</td>'+
 							'</tr>';
 						$('#latestBalanceTB').html(html);
 					}
@@ -86,7 +90,7 @@ East=function(){
 						var d = array[i]['summary'];
 						var e = array[i]['count_sum'];
 						html += '<tr>'+
-							'<td>' + b + '</td>'+
+							'<td style="height: '+h2+';">' + b + '</td>'+
 							'<td><a title="点击查看明细" href="javascript:void(0);" onclick="East.voucherDetail('+a+')">' + c + '</a></td>'+
 							'<td>' + d + '</td>'+
 							'<td style="text-align: right;">' + e + '</td>'+
