@@ -3,7 +3,7 @@ package cn.ahyc.yjz.service;
 import java.util.List;
 import java.util.Map;
 
-import cn.ahyc.yjz.dto.ExpressionColumn;
+import cn.ahyc.yjz.dto.ReportRow;
 
 /**
  * @ClassName: ProfitService
@@ -40,6 +40,6 @@ public interface ProfitService {
      * @param bookId
      * @return
      */
-    List<Map<String, Object>> getListWithExpList(List<ExpressionColumn> expList, Integer currentPeriod, Long bookId);
+    List<Map<String, Object>> getListWithExpList(List<ReportRow> expList, Integer currentPeriod, Long bookId);
 
 }

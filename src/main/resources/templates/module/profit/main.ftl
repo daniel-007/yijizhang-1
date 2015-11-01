@@ -20,12 +20,16 @@
             <td>
                 <div class="datagrid-btn-separator"></div>
             </td>
+            <td>
+                <a id="profitCount" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-dollar fa-lg"></i>&#8194;计算</a>
+            </td>
         </tr>
     </table>
 </div>
 
 <div id="profitDgTd" style="padding:10px;">
 	报表计算会计期间：<input id="searchtPeriod" style="width:80px;" value="${searchtPeriod?default(1)}">
+	<input id="cellContent" class="easyui-textbox" data-options="disabled:true" style="width:300px">
 </div>
 
 <script type="text/javascript">

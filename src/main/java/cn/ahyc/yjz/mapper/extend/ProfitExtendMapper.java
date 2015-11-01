@@ -2,7 +2,7 @@ package cn.ahyc.yjz.mapper.extend;
 
 import java.util.List;
 
-import cn.ahyc.yjz.dto.ExpressionColumn;
+import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.base.ProfitMapper;
 
 /**
@@ -19,6 +19,6 @@ public interface ProfitExtendMapper extends ProfitMapper {
      * 
      * @return
      */
-    List<ExpressionColumn> selectProfitExpressionColumn();
+    List<ReportRow> selectProfitExpressionColumn();
 
 }

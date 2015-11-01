@@ -9,13 +9,15 @@
 package cn.ahyc.yjz.dto;
 
 /**
- * @ClassName: ExpressionColumn
- * @Description: TODO
+ * @ClassName: ReportRow
+ * @Description: 报表行
  * @author chengjiarui 1256064203@qq.com
  * @date 2015年10月27日 下午6:49:27
  * 
  */
-public class ExpressionColumn {
+public class ReportRow {
+
+    private String fix;
 
     private String cA;
     private String cB;
@@ -35,12 +37,6 @@ public class ExpressionColumn {
     private String cGVal;
     private String cHVal;
 
-    /**
-     * 
-     */
-    public ExpressionColumn() {
-    }
-
     @Override
     public String toString() {
         return "ExpressionColumn [cA=" + cA + ", cB=" + cB + ", cC=" + cC + ", cAVal=" + cAVal + ", cBVal=" + cBVal
@@ -48,17 +44,27 @@ public class ExpressionColumn {
     }
 
     /**
+     * 
+     */
+    public ReportRow() {
+    }
+
+    /**
+     * @param fix
      * @param cA
      * @param cB
      * @param cC
      */
-    public ExpressionColumn(String cA, String cB, String cC) {
+    public ReportRow(String fix, String cA, String cB, String cC) {
+        super();
+        this.fix = fix;
         this.cA = cA;
         this.cB = cB;
         this.cC = cC;
     }
 
     /**
+     * @param fix
      * @param cA
      * @param cB
      * @param cC
@@ -66,13 +72,23 @@ public class ExpressionColumn {
      * @param cBVal
      * @param cCVal
      */
-    public ExpressionColumn(String cA, String cB, String cC, String cAVal, String cBVal, String cCVal) {
+    public ReportRow(String fix, String cA, String cB, String cC, String cAVal, String cBVal, String cCVal) {
+        super();
+        this.fix = fix;
         this.cA = cA;
         this.cB = cB;
         this.cC = cC;
         this.cAVal = cAVal;
         this.cBVal = cBVal;
         this.cCVal = cCVal;
+    }
+
+    public String getFix() {
+        return fix;
+    }
+
+    public void setFix(String fix) {
+        this.fix = fix;
     }
 
     public String getcA() {

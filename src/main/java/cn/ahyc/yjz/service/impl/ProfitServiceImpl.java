@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 
-import cn.ahyc.yjz.dto.ExpressionColumn;
+import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.extend.ProfitExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.service.ProfitService;
@@ -88,7 +88,7 @@ public class ProfitServiceImpl implements ProfitService {
      */
     private static List<Expression> compile(List<Expression> list, String expression) {
         if (StringUtils.isBlank(expression)) {
-            expression = "''";
+            expression = "0";
         }
         LOGGER.info("expression compile：{}", expression);
         Expression compiledExp = AviatorEvaluator.compile(expression, true);
@@ -142,7 +142,7 @@ public class ProfitServiceImpl implements ProfitService {
      */
     @Override
     public List<Map<String, Object>> getList(Integer currentPeriod, Long bookId) {
-        List<ExpressionColumn> colList = profitExtendMapper.selectProfitExpressionColumn();
+        List<ReportRow> colList = profitExtendMapper.selectProfitExpressionColumn();
         List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, colList);
         return list;
     }
@@ -154,13 +154,13 @@ public class ProfitServiceImpl implements ProfitService {
      * @return
      */
     private List<Map<String, Object>> exeExpression(Integer currentPeriod, Long bookId,
-            List<ExpressionColumn> colList) {
+            List<ReportRow> colList) {
         List<Expression> compileList = new ArrayList<Expression>();
         Map<String, Object> envMap = new HashMap<String, Object>();
         // 注册函数
         AviatorEvaluator.addFunction(new CellValueFunction());
         // 编译表达式、设置变量
-        for (ExpressionColumn col : colList) {
+        for (ReportRow col : colList) {
             compile(compileList, getEnvAndExpression(envMap, col.getcB()));
             compile(compileList, getEnvAndExpression(envMap, col.getcC()));
         }
@@ -170,8 +170,9 @@ public class ProfitServiceImpl implements ProfitService {
         Map<String, Object> map;
         // 执行表达式
         int j = 0;
-        for (ExpressionColumn col : colList) {
+        for (ReportRow col : colList) {
             map = new HashMap<String, Object>();
+            map.put("fix", col.getFix());
             map.put("cA", col.getcA());
             map.put("cAVal", col.getcA());
             map.put("cB", col.getcB());
@@ -206,7 +207,7 @@ public class ProfitServiceImpl implements ProfitService {
      * java.lang.Integer, java.lang.Long)
      */
     @Override
-    public List<Map<String, Object>> getListWithExpList(List<ExpressionColumn> expList, Integer currentPeriod,
+    public List<Map<String, Object>> getListWithExpList(List<ReportRow> expList, Integer currentPeriod,
             Long bookId) {
         List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, expList);
         return list;

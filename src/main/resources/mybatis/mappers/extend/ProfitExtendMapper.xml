@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ahyc.yjz.mapper.extend.ProfitExtendMapper">
-  <resultMap id="ExpressionColumn" type="cn.ahyc.yjz.dto.ExpressionColumn">
+  <resultMap id="ReportRow" type="cn.ahyc.yjz.dto.ReportRow">
     <constructor>
+      <arg column="fix" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="cA" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="cB" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="cC" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
 
-  <select id="selectProfitExpressionColumn" resultMap="ExpressionColumn">
+  <select id="selectProfitExpressionColumn" resultMap="ReportRow">
     select
+    	'1' as fix,
     	t.name as cA,
     	t.year_exp as cB,
     	t.month_exp as cC
