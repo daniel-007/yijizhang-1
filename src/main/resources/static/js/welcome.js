@@ -1,15 +1,17 @@
 /**
  * 欢迎页面的JS脚本文件。
  */
-Welcome=function(){
 
+var jsPlumbInstance;
+
+Welcome=function(){
 
     return {
 
         //初始化
         init:function(){
             Welcome.bindEvent();
-            Welcome.initJsPlumb();
+            Welcome.createJsPlumb();
         },
 
         //绑定事件
@@ -46,19 +48,14 @@ Welcome=function(){
             });
         },
 
+        repaint:function(){
+            jsPlumb.repaintEverything();
+        },
+
         //初始化欢迎页面的图标连线
-        initJsPlumb:function(){
-
+        createJsPlumb: function(){
             jsPlumb.ready(function () {
-
-                $canvas = $('#canvas');
-                var h = $canvas.parent().height();
-                $canvas.height(h);
-
-                var instance = jsPlumb.getInstance({
-                    // default drag options
-                    //DragOptions: { cursor: 'pointer', zIndex: 2000},
-                    ConnectionsDetachable: false,
+                jsPlumbInstance = jsPlumb.getInstance({
                     ConnectionOverlays: [
                         [ "Arrow", { location: 1 } ],
                         [ "Label", {
@@ -78,7 +75,8 @@ Welcome=function(){
                         "Arrow"
                     ]
                 };
-                instance.registerConnectionType("basic", basicType);
+                jsPlumbInstance.registerConnectionType("basic", basicType);
+
 
                 // this is the paint style for the connecting lines..
                 var connectorPaintStyle = {
@@ -122,19 +120,19 @@ Welcome=function(){
                 var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
                     for (var i = 0; i < sourceAnchors.length; i++) {
                         var sourceUUID = toId + sourceAnchors[i];
-                        instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
+                        jsPlumbInstance.addEndpoint("flowchart" + toId, sourceEndpoint, {
                             anchor: sourceAnchors[i], uuid: sourceUUID
                         });
                     }
                     for (var j = 0; j < targetAnchors.length; j++) {
                         var targetUUID = toId + targetAnchors[j];
-                        instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
+                        jsPlumbInstance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
                     }
                 };
 
 
                 // suspend drawing and initialise.
-                instance.batch(function () {
+                jsPlumbInstance.batch(function () {
 
                     _addEndpoints("Window5", [], ["TopCenter"]);
                     _addEndpoints("Window4", ["RightMiddle"], []);
@@ -143,14 +141,11 @@ Welcome=function(){
                     _addEndpoints("Window1", ["RightMiddle"], []);
 
                     // connect a few up
-                    instance.connect({uuids: ["Window1RightMiddle", "Window2LeftMiddle"]});
-                    instance.connect({uuids: ["Window4RightMiddle", "Window2LeftMiddle"], editable: false});
-                    instance.connect({uuids: ["Window2RightMiddle", "Window3LeftMiddle"], editable: false});
-                    instance.connect({uuids: ["Window3BottomCenter", "Window5TopCenter"], editable: false});
+                    jsPlumbInstance.connect({uuids: ["Window1RightMiddle", "Window2LeftMiddle"]});
+                    jsPlumbInstance.connect({uuids: ["Window4RightMiddle", "Window2LeftMiddle"], editable: false});
+                    jsPlumbInstance.connect({uuids: ["Window2RightMiddle", "Window3LeftMiddle"], editable: false});
+                    jsPlumbInstance.connect({uuids: ["Window3BottomCenter", "Window5TopCenter"], editable: false});
                 });
-
-                jsPlumb.fire("jsPlumbDemoLoaded", instance);
-
             });
         }
     };

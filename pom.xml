@@ -236,7 +236,6 @@
 						<include>static/public/buttons/buttons.css</include>
 						<include>static/public/font-awesome/css/font-awesome.css</include>
 						<include>static/public/jsPlumb/jsPlumbToolkit-defaults.css</include>
-						<include>static/public/jsPlumb/app.css</include>
 						<include>static/css/base.css</include>
 						<include>static/css/overwrite.css</include>
 					</includes>
@@ -300,7 +299,6 @@
 							<includes>
 								<include>static/public/buttons/buttons.${release.version}.css</include>
 								<include>static/public/jsPlumb/jsPlumbToolkit-defaults.${release.version}.css</include>
-								<include>static/public/jsPlumb/app.${release.version}.css</include>
 								<include>static/css/base.${release.version}.css</include>
 								<include>static/css/overwrite.${release.version}.css</include>
 							</includes>
