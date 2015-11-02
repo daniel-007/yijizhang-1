@@ -206,8 +206,6 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         String type = exp.substring(exp.indexOf(">") + 1); //.JC
         String[] codes = codeStr.split(":");  //["1001", "1009"]
 
-        logger.info("区间表达式={},periodId={}", exp, periodId);
-
         paramMap.put("startCode", codes[0]);
         paramMap.put("endCode", codes[1]);
         paramMap.put("periodId", periodId);
