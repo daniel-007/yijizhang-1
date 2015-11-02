@@ -140,6 +140,7 @@ public class AccountSubjectController extends BaseController {
 
     /**
      * 删除会计科目.
+     *
      * @param subjectId
      * @return
      */
@@ -167,20 +168,25 @@ public class AccountSubjectController extends BaseController {
      * @param accountSubject
      * @param parentSubjectCodeBack
      * @param parentSubjectCode
+     * @param session
      * @return
      */
     @RequestMapping(value = ("/edit"))
     @ResponseBody
-    public Map<String, Object> edit(AccountSubject accountSubject
+    public Map<String, Object> edit(
+            AccountSubject accountSubject
             , @RequestParam("parent_subject_code_back") Long parentSubjectCodeBack
             , @RequestParam("parent_subject_code") Long parentSubjectCode
+            , HttpSession session
     ) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
 
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("success", true);
 
         try {
-            accountSubjectService.editAccountSubject(accountSubject, parentSubjectCodeBack, parentSubjectCode);
+            accountSubjectService.editAccountSubject(accountSubject, parentSubjectCodeBack, parentSubjectCode, period);
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);

@@ -7,11 +7,10 @@ import cn.ahyc.yjz.mapper.base.VoucherDetailMapper;
 import cn.ahyc.yjz.model.VoucherDetail;
 
 /**
+ * @author chengjiarui 1256064203@qq.com
  * @ClassName: VoucherDetailExtendMapper
  * @Description: TODO
- * @author chengjiarui 1256064203@qq.com
  * @date 2015年10月18日 上午10:13:24
- * 
  */
 public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
 
@@ -64,10 +63,18 @@ public interface VoucherDetailExtendMapper extends VoucherDetailMapper {
      * @param periodId
      */
     void resetVoucherNo(Long periodId);
+
     /**
      * 明细账查询.
      *
      * @param periodId
      */
     List<Map> searchDetail(Map param);
+
+    /**
+     * 叶子节点添加叶子节点，该叶子节点关联的凭证改成该叶子节点的子节点。
+     *
+     * @param param
+     */
+    void updateToNewSubjectCode(Map param);
 }

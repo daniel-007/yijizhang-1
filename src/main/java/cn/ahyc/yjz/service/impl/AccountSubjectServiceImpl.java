@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
+import cn.ahyc.yjz.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.PeriodExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
-import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.AccountSubjectExample;
-import cn.ahyc.yjz.model.AccountSubjectExtExample;
-import cn.ahyc.yjz.model.Period;
-import cn.ahyc.yjz.model.PeriodExample;
 import cn.ahyc.yjz.service.AccountSubjectService;
 
 /**
@@ -38,6 +35,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Autowired
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
+
+    @Autowired
+    private VoucherDetailExtendMapper voucherDetailExtendMapper;
 
     private final int first_level_subject_len = 4;
 
@@ -101,6 +101,8 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 List<Map> children = accountSubjectMapper.getChildrenSubjectsByCategoryId(map);
                 sub.put("children", children);
                 setChildrenSubject(children, map, cdsc, cdsn);
+            } else {
+                sub.put("isLeaf", true);
             }
 
         }
@@ -116,7 +118,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode) throws Exception {
+    public void editAccountSubject(AccountSubject accountSubject, Long parentSubjectCodeBack, Long parentSubjectCode, Period period) throws Exception {
 
         if (parentSubjectCode == -1) {
             parentSubjectCode = parentSubjectCodeBack;
@@ -128,6 +130,41 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         accountSubject.setModifyTime(now);
 
         if (accountSubject.getId() == -1) {
+
+            //子级添加子级需把该子级关联凭证移到子级，初始化数据重新计算。
+            AccountSubjectExample example = new AccountSubjectExample();
+            AccountSubjectExample.Criteria criteria = example.createCriteria();
+            criteria.andParentSubjectCodeEqualTo(parentSubjectCode);
+            criteria.andBookIdEqualTo(accountSubject.getBookId());
+            List<AccountSubject> accountSubjectChildren = accountSubjectMapper.selectByExample(example);
+
+            //需要处理业务。
+            if (accountSubjectChildren.isEmpty()) {
+                if (parentSubjectCode > 0) { //非会计科目小分类
+                    AccountSubjectExample example1 = new AccountSubjectExample();
+                    AccountSubjectExample.Criteria criteria1 = example1.createCriteria();
+                    criteria1.andSubjectCodeEqualTo(parentSubjectCode);
+                    criteria1.andBookIdEqualTo(accountSubject.getBookId());
+                    List<AccountSubject> accountSubjectParent = accountSubjectMapper.selectByExample(example1);
+
+                    if (!accountSubjectParent.isEmpty()) {
+                        AccountSubject as = accountSubjectParent.get(0);
+                        //父级初始数据移给子级
+                        accountSubject.setInitialLeft(as.getInitialLeft());
+                        accountSubject.setTotalCredit(as.getTotalDebit());
+                        accountSubject.setTotalDebit(as.getTotalDebit());
+                        accountSubject.setYearOccurAmount(as.getYearOccurAmount());
+                        //父级关联的凭证移到子级
+                        Map param = new HashMap<>();
+                        param.put("periodId", period.getId());
+                        param.put("oldSubjectCode", as.getSubjectCode());
+                        param.put("newSubjectCode", accountSubject.getSubjectCode());
+                        voucherDetailExtendMapper.updateToNewSubjectCode(param);
+                    }
+
+                }
+            }
+
             accountSubject.setId(null);
             accountSubjectMapper.insertSelective(accountSubject);
         } else {
