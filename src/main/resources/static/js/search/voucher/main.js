@@ -34,6 +34,9 @@ Search_Voucher = function () {
                         }}
                     ]
                 ],
+                onDblClickRow: function (index, row) {
+                    App.addVoucherTab('记账', 'voucher/main?voucherId=' + row.id, true);
+                },
                 view: groupview,
                 groupField: 'voucher',
                 groupFormatter: function (value, rows) {
