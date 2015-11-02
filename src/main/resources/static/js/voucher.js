@@ -737,7 +737,7 @@ Voucher=function(){
         footerDX:function(){
         	var row = $('#voucherDg').datagrid('getFooterRows')[0];
         	row['summary']='合计：';
-        	if(debit==crebit&&debit&&crebit){//借贷平衡
+        	if(debit==crebit){//借贷平衡
         		balanceFlag=true;
         		row['summary']+=Voucher.DX(debit/100);
         	}else{
@@ -835,6 +835,9 @@ Voucher=function(){
         },
         // 阿拉伯数字转中文大写
         DX:function(n){
+        	if(n==0){
+        		return '';
+        	}
         	if (!n||!Voucher.isRealNum(n))
 	            return "数据非法";
         	var flag=n<0;
