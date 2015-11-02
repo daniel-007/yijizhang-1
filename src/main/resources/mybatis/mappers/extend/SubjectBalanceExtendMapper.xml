@@ -53,7 +53,8 @@
 	  AND a.book_id = #{bookId,jdbcType=BIGINT}
 	  AND a.period_id = #{periodId,jdbcType=BIGINT}
 	  AND t.subject_code LIKE #{startCode,jdbcType=VARCHAR}"%"
-	  AND (a.terminal_credit_balance>0 OR a.terminal_debit_balance>0)
+	  AND ((a.terminal_credit_balance!=0 AND a.terminal_credit_balance IS NOT NULL)  OR 
+	  (a.terminal_debit_balance!=0 AND a.terminal_debit_balance IS NOT NULL )) 
 	  ORDER BY a.id
   </select>
 
