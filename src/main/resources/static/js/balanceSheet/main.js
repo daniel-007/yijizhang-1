@@ -232,13 +232,32 @@ Balance_Sheet = function () {
 
         },
 
+        tip_init: function () {
+            this.container.find('#tip').tooltip({
+                position: 'left',
+                content: this.container.find('#tip_content').html(),
+                showEvent: 'mouseenter',
+                onShow: function () {
+                    var t = $(this);
+                    t.tooltip('tip').css({
+                        'padding': '30px 15px 10px 15px',
+                        'font-size': '12px'
+                    }).unbind().bind('mouseenter',function () {
+                            t.tooltip('show');
+                        }).bind('mouseleave', function () {
+                            t.tooltip('hide');
+                        });
+                }
+            });
+        },
+
         init: function () {
             this.container = $("#balance_sheet_container");
             this.init_calculate_dropdow.isinit = 0;
 
             this.init_period();
+            this.tip_init();
             this.init_data_table();
-
         }
     }
 
