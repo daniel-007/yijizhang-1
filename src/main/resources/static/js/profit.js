@@ -10,7 +10,7 @@ Profit=function(){
 		init:function(searchtPeriod) {
 			$('#profitSave').click(function() {
 				if(Profit.endEdit()){
-					Voucher.add();
+					Profit.save();
 				}
 			});
 			$('#profitAppend').click(function() {
@@ -63,10 +63,11 @@ Profit=function(){
                 async: true,
                 success: function (data) {
                     if (data&&data.success) {
-                    	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
+                    	$.messager.alert('提示', "保存成功！", 'info',function(){
                     		if(reload){//新增
                     			$('#profitDg').datagrid('reload');
 	                        }
+                    		$('#profitDg').datagrid('acceptChanges');
                     	});
                     } else {
                     	$.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
@@ -129,7 +130,8 @@ Profit=function(){
 									if(row.cA&&row.fix){//原有行
 										return row.cA;
 									}else if(row.cA){//新增行
-										return row.cA.replace(/\s/g, '&nbsp;');
+										row.cAVal = row.cA.replace(/\s/g,'&nbsp;');
+										return '<div style="text-align: left;white-space:pre;">'+row.cA+'</div>';
 									} else {//无值
 										return '';
 									}

@@ -47,8 +47,8 @@ public interface ProfitService {
      * 
      * @param expList
      * @param currentPeriod
-     * @param periodId
+     * @param bookId
      */
-    void save(List<ReportRow> expList, Integer currentPeriod, Long periodId);
+    void save(List<ReportRow> expList, Integer currentPeriod, Long bookId);
 
 }

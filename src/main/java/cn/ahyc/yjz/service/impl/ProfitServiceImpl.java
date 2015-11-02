@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 
+import cn.ahyc.yjz.dto.ProfitPeriod;
 import cn.ahyc.yjz.dto.ReportRow;
+import cn.ahyc.yjz.mapper.base.ProfitPeriodMapper;
 import cn.ahyc.yjz.mapper.extend.ProfitExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
-import cn.ahyc.yjz.model.ProfitPeriod;
+import cn.ahyc.yjz.model.ProfitPeriodExample;
 import cn.ahyc.yjz.service.ProfitService;
 import cn.ahyc.yjz.util.CellValueFunction;
 import cn.ahyc.yjz.util.MyAviator;
@@ -36,6 +38,9 @@ public class ProfitServiceImpl implements ProfitService {
 
     @Autowired
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
+
+    @Autowired
+    private ProfitPeriodMapper profitPeriodMapper;
 
     /*
      * (non-Javadoc)
@@ -109,7 +114,7 @@ public class ProfitServiceImpl implements ProfitService {
         Map<String, Object> envMap = new HashMap<String, Object>();
         MyAviator.compile(compileList, MyAviator.getEnvAndExpression(envMap, expStr));
         envMap = MyAviator.getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
-        return compileList.get(0).execute(envMap);
+        return MyAviator.execute(compileList.get(0), envMap);
     }
 
     /*
@@ -132,18 +137,28 @@ public class ProfitServiceImpl implements ProfitService {
      * java.lang.Integer, java.lang.Long)
      */
     @Override
-    public void save(List<ReportRow> expList, Integer currentPeriod, Long periodId) {
+    public void save(List<ReportRow> expList, Integer currentPeriod, Long bookId) {
+        // 删除
+        ProfitPeriodExample example = new ProfitPeriodExample();
+        ProfitPeriodExample.Criteria criteria = example.createCriteria();
+        criteria.andBookIdEqualTo(bookId);
+        criteria.andCurrentPeriodEqualTo(currentPeriod);
+        profitPeriodMapper.deleteByExample(example);
+        // 新增
         ProfitPeriod entry;
         for (ReportRow rr : expList) {
             entry = new ProfitPeriod();
             entry.setFix(StringUtils.isNotBlank(rr.getFix()) ? 1 : null);
-            entry.setName(rr.getcA());
+            entry.setName(StringUtils.isNotBlank(rr.getcAVal()) ? rr.getcAVal().replaceAll("&nbsp;", " ") : rr.getcA());
             entry.setMonthExp(rr.getcB());
             entry.setMonthMoney(
                     StringUtils.isNotBlank(rr.getcBVal()) ? new BigDecimal(rr.getcBVal()) : BigDecimal.ZERO);
             entry.setLastMonthExp(rr.getcC());
             entry.setLastMonthMoney(
                     StringUtils.isNotBlank(rr.getcCVal()) ? new BigDecimal(rr.getcCVal()) : BigDecimal.ZERO);
+            entry.setBookId(bookId);
+            entry.setCurrentPeriod(currentPeriod);
+            profitExtendMapper.insertSelective(entry);
         }
     }
 }

@@ -130,4 +130,15 @@ public class MyAviator {
         executor.shutdown();
         return map;
     }
+
+    /**
+     * 执行表达式
+     * 
+     * @param expression
+     * @param envMap
+     * @return
+     */
+    public static Object execute(Expression expression, Map<String, Object> envMap) {
+        return expression.execute(envMap);
+    }
 }

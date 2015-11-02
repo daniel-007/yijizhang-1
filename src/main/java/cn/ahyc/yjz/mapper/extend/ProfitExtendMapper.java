@@ -3,6 +3,7 @@ package cn.ahyc.yjz.mapper.extend;
 import java.util.List;
 import java.util.Map;
 
+import cn.ahyc.yjz.dto.ProfitPeriod;
 import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.base.ProfitTemplateMapper;
 
@@ -29,5 +30,12 @@ public interface ProfitExtendMapper extends ProfitTemplateMapper {
      * @return
      */
     List<Map<String, Object>> selectProfitWithPeriod(Map<String, Object> map);
+
+    /**
+     * 保存、不过滤name中的空格
+     * 
+     * @param entry
+     */
+    void insertSelective(ProfitPeriod entry);
 
 }
