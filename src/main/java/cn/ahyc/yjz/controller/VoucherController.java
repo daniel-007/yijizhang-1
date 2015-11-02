@@ -158,7 +158,7 @@ public class VoucherController extends BaseController{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("message", "系统异常！");
+            map.put("message", e.getMessage());
         }
         return map;
     }
@@ -243,7 +243,7 @@ public class VoucherController extends BaseController{
             map.put("result", voucherService.save(voucher, details));
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("message", "系统异常！");
+            map.put("message", e.getMessage());
         }
         return map;
     }
@@ -496,7 +496,7 @@ public class VoucherController extends BaseController{
             map.put("result", "保存成功");
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("message", "系统异常！");
+            map.put("message", e.getMessage());
         }
         return map;
     }

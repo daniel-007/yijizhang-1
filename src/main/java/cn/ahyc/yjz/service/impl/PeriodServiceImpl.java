@@ -33,6 +33,11 @@ public class PeriodServiceImpl implements PeriodService {
 				return periodExtendMapper.selectCurrentPeriod(bookId);
 		}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.PeriodService#queryPeriod(java.lang.Long)
+     */
     @Override
     public Period queryPeriod(Long periodId) {
         return periodExtendMapper.selectByPrimaryKey(periodId);
