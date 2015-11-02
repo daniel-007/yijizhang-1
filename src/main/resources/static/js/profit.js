@@ -51,6 +51,7 @@ Profit=function(){
 			Profit.datainit(1);
 		},
 		save:function(reload){
+			$('#profitSave').linkbutton('mydisable');
 			var rows=$('#profitDg').datagrid('getRows');
 			var searchtPeriod=$('#searchtPeriod').numberspinner('getValue');
 			 //$('#profitDg').datagrid('reload');
@@ -68,9 +69,11 @@ Profit=function(){
                     			$('#profitDg').datagrid('reload');
 	                        }
                     		$('#profitDg').datagrid('acceptChanges');
+                    		$('#profitSave').linkbutton('myenable');
                     	});
                     } else {
                     	$.messager.alert('警告', "操作失败，请联系管理员!", 'warning');
+                    	$('#profitSave').linkbutton('myenable');
                     }
                 }
             });
