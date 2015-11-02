@@ -11,6 +11,57 @@ body, html {
     height: 100%;
 }
 
+
+/** Welcome  */
+#canvas {
+    width: 100%;
+    height: 68%;
+    text-align: center;
+    margin: 0px auto;
+}
+
+#flowchartWindow1 {
+    top: 10%;
+    left: 15%;
+}
+
+#flowchartWindow2 {
+    top: 45%;
+    left: 45%;
+}
+
+#flowchartWindow3 {
+    top: 10%;
+    right: 15%;
+}
+
+#flowchartWindow4 {
+    bottom: 0%;
+    left: 15%;
+}
+
+#flowchartWindow5 {
+    bottom: 0%;
+    right: 15%;
+}
+
+.window._jsPlumb_connected {
+    border: 2px solid green;
+}
+
+.jsplumb-drag {
+    border: 4px solid pink !important;
+}
+
+path, ._jsPlumb_endpoint {
+    cursor: default;
+}
+
+._jsPlumb_overlay {
+    background-color: transparent;
+}
+
+
 /* 底部CSS */
 .foot {
     text-align: center;
@@ -110,13 +161,13 @@ body, html {
 }
 
 .chartBtnDiv {
-    height: 10% !important;
-    overflow: hidden;
-    margin-left: 8%;
+    width: 100%;
+    padding-top: 2%;
+    text-align: center;
 }
 
 .welcome-panel .chartBtnDiv button {
-    margin: 4% 6%;
+    margin: 4%;
 }
 
 /** 错误页面 */
