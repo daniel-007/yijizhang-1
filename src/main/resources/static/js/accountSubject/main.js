@@ -93,6 +93,19 @@ Account_Subject = function () {
             });
             //新增会计科目.
             container.find(".add").click(function () {
+                if (Account_Subject.account_subject_selected_row) {
+                    if (Account_Subject.account_subject_selected_row.isLeaf) {
+                        var msg = '如果您在该科目下添加明细科目，它将升级为非明细科目，这样该科目本年内发生的所有业务都将转移到新增加的明细科目中，是否继续？';
+
+                        $.messager.confirm('确认', msg, function (r) {
+                            if (r) {
+                                Account_Subject.openEditWin("add", "新增会计科目", "icon-add");
+                            }
+                        });
+                        return;
+                    }
+                }
+                //
                 Account_Subject.openEditWin("add", "新增会计科目", "icon-add");
             });
             //修改会计科目.

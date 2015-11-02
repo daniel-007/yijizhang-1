@@ -37,7 +37,7 @@
   </select>
 
   <select id="selectDetailTotal" parameterType="java.util.Map" resultType="java.util.Map">
-    SELECT 	
+    SELECT
     	"合计：" as summary,
 		<if test="isreversal != null">
 		<![CDATA[
@@ -67,7 +67,7 @@
   </select>
 
   <select id="selectDetailList" parameterType="java.util.Map" resultType="java.util.Map">
-    SELECT 	
+    SELECT
    		t.summary,
    		t.subject_code AS subjectCode,
 		CONCAT(
@@ -245,6 +245,17 @@
     SET tt.voucher_no = (SELECT @rowNO := @rowNo + 1)
     WHERE
         tt.period_id = #{periodId}
+  </update>
+
+  <update id="updateToNewSubjectCode" parameterType="java.util.Map" >
+    UPDATE voucher_detail t, (SELECT t2.id
+        FROM voucher t1, voucher_detail t2
+        WHERE t1.id = t2.voucher_id
+            AND t1.period_id = #{periodId}
+            AND t2.subject_code = #{oldSubjectCode}
+        ) t3
+    SET t.subject_code = #{newSubjectCode}
+    WHERE t.id = t3.id
   </update>
 
 </mapper>

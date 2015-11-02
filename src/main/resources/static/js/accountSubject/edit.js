@@ -126,7 +126,15 @@ Account_Subject_Edit = function () {
                     var level = parseInt(node.level);
                     level = (opt == 'add') ? (level + 1) : level;
                     $subject_level_hidden.val(level);
-                    Account_Subject_Edit.checkCategoryDetail(node, true);
+                    if (node.isLeaf) {
+                        var msg = '如果您在该科目下添加明细科目，它将升级为非明细科目，这样该科目本年内发生的所有业务都将转移到新增加的明细科目中。';
+                        $.messager.alert('警告', msg, 'warning', function () {
+                            Account_Subject_Edit.checkCategoryDetail(node, true);
+                        });
+                    } else {
+                        Account_Subject_Edit.checkCategoryDetail(node, true);
+                    }
+
                 }
             });
         },
