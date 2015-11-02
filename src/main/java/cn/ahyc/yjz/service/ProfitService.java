@@ -42,4 +42,13 @@ public interface ProfitService {
      */
     List<Map<String, Object>> getListWithExpList(List<ReportRow> expList, Integer currentPeriod, Long bookId);
 
+    /**
+     * 保存
+     * 
+     * @param expList
+     * @param currentPeriod
+     * @param periodId
+     */
+    void save(List<ReportRow> expList, Integer currentPeriod, Long periodId);
+
 }

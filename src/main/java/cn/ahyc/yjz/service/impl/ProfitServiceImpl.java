@@ -1,20 +1,12 @@
 package cn.ahyc.yjz.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +16,10 @@ import com.googlecode.aviator.Expression;
 import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.extend.ProfitExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
+import cn.ahyc.yjz.model.ProfitPeriod;
 import cn.ahyc.yjz.service.ProfitService;
-import cn.ahyc.yjz.thread.ExpressionThread;
 import cn.ahyc.yjz.util.CellValueFunction;
+import cn.ahyc.yjz.util.MyAviator;
 
 /**
  * @ClassName: ProfitServiceImpl
@@ -38,101 +31,11 @@ import cn.ahyc.yjz.util.CellValueFunction;
 @Service
 public class ProfitServiceImpl implements ProfitService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfitServiceImpl.class);
-
     @Autowired
     private ProfitExtendMapper profitExtendMapper;
 
     @Autowired
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
-
-    /**
-     * 获取变量值
-     * 
-     * @param map
-     * @param currentPeriod
-     * @param bookId
-     * @param subjectBalanceExtendMapper
-     * @return
-     */
-    private static Map<String, Object> getEnvValue(Map<String, Object> map, Integer currentPeriod, Long bookId,
-            SubjectBalanceExtendMapper subjectBalanceExtendMapper) {
-        ExecutorService executor = Executors.newCachedThreadPool();
-        CountDownLatch latch = new CountDownLatch(map.size());
-        Iterator<Entry<String, Object>> it = map.entrySet().iterator();
-        Entry<String, Object> entry;
-        while (it.hasNext()) {
-            entry = it.next();
-            if (StringUtils.startsWith(entry.getKey(), "a")) { // 账上取数
-                executor.execute(new ExpressionThread(map, entry.getKey(), String.valueOf(entry.getValue()), latch,
-                        currentPeriod, bookId, subjectBalanceExtendMapper));
-            } else {
-                latch.countDown();
-            }
-        }
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        executor.shutdown();
-        return map;
-    }
-
-    /**
-     * 编译表达式
-     * 
-     * @param list
-     * @param expression
-     * @return
-     */
-    private static List<Expression> compile(List<Expression> list, String expression) {
-        if (StringUtils.isBlank(expression)) {
-            expression = "0";
-        }
-        LOGGER.info("expression compile：{}", expression);
-        Expression compiledExp = AviatorEvaluator.compile(expression, true);
-        list.add(compiledExp);
-        return list;
-    }
-
-    /**
-     * 设置变量
-     * 
-     * @param envMap
-     * @param expStr
-     * @return
-     */
-    private static String getEnvAndExpression(Map<String, Object> envMap, String expStr) {
-        if(StringUtils.isBlank(expStr)){
-            return null;
-        }
-        String result = expStr.replace("=", "");
-        String str = result.replaceAll("\\+|\\*|\\/", "&");// 替换加号、乘号、除号
-        str = str.replaceAll("\\-([A-Z]+)", "&$1");// 替换减号，排除@-1
-        String[] exps = str.split("&");
-        String param;
-        Pattern pattern = Pattern.compile("([A-Z]+)([0-9]+)");
-        Matcher matcher;
-        for (String exp : exps) {
-            param = "";
-            matcher = pattern.matcher(exp);
-            if (matcher.find()) { // 单元格取数 B2
-                param = "cell(list," + (Integer.valueOf(matcher.group(2)) - 1) + ",c" + matcher.group(1) + "Val)";
-                result = result.replace(exp, param);
-            } else if (exp.indexOf("<") >= 0) { // 账上取数
-                param = "a" + envMap.size();
-                envMap.put(param, exp);
-                result = result.replace(exp, param);
-            }
-        }
-        return result;
-    }
-
-    // TODO
-    private Object execute() {
-        return null;
-    }
 
     /*
      * (non-Javadoc)
@@ -142,12 +45,21 @@ public class ProfitServiceImpl implements ProfitService {
      */
     @Override
     public List<Map<String, Object>> getList(Integer currentPeriod, Long bookId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("currentPeriod", currentPeriod);
+        map.put("bookId", bookId);
+        List<Map<String, Object>> list = profitExtendMapper.selectProfitWithPeriod(map);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
         List<ReportRow> colList = profitExtendMapper.selectProfitExpressionColumn();
-        List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, colList);
+        list = exeExpression(currentPeriod, bookId, colList);
         return list;
     }
 
     /**
+     * 利润表：计算公式
+     * 
      * @param currentPeriod
      * @param bookId
      * @param colList
@@ -161,11 +73,11 @@ public class ProfitServiceImpl implements ProfitService {
         AviatorEvaluator.addFunction(new CellValueFunction());
         // 编译表达式、设置变量
         for (ReportRow col : colList) {
-            compile(compileList, getEnvAndExpression(envMap, col.getcB()));
-            compile(compileList, getEnvAndExpression(envMap, col.getcC()));
+            MyAviator.compile(compileList, MyAviator.getEnvAndExpression(envMap, col.getcB()));
+            MyAviator.compile(compileList, MyAviator.getEnvAndExpression(envMap, col.getcC()));
         }
         // 获取变量值
-        envMap = getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
+        envMap = MyAviator.getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map;
         // 执行表达式
@@ -195,8 +107,8 @@ public class ProfitServiceImpl implements ProfitService {
     public Object countExp(Integer currentPeriod, Long bookId, String expStr) {
         List<Expression> compileList = new ArrayList<Expression>();
         Map<String, Object> envMap = new HashMap<String, Object>();
-        compile(compileList, getEnvAndExpression(envMap, expStr));
-        envMap = getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
+        MyAviator.compile(compileList, MyAviator.getEnvAndExpression(envMap, expStr));
+        envMap = MyAviator.getEnvValue(envMap, currentPeriod, bookId, subjectBalanceExtendMapper);
         return compileList.get(0).execute(envMap);
     }
 
@@ -211,5 +123,27 @@ public class ProfitServiceImpl implements ProfitService {
             Long bookId) {
         List<Map<String, Object>> list = exeExpression(currentPeriod, bookId, expList);
         return list;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.ahyc.yjz.service.ProfitService#save(java.util.List,
+     * java.lang.Integer, java.lang.Long)
+     */
+    @Override
+    public void save(List<ReportRow> expList, Integer currentPeriod, Long periodId) {
+        ProfitPeriod entry;
+        for (ReportRow rr : expList) {
+            entry = new ProfitPeriod();
+            entry.setFix(StringUtils.isNotBlank(rr.getFix()) ? 1 : null);
+            entry.setName(rr.getcA());
+            entry.setMonthExp(rr.getcB());
+            entry.setMonthMoney(
+                    StringUtils.isNotBlank(rr.getcBVal()) ? new BigDecimal(rr.getcBVal()) : BigDecimal.ZERO);
+            entry.setLastMonthExp(rr.getcC());
+            entry.setLastMonthMoney(
+                    StringUtils.isNotBlank(rr.getcCVal()) ? new BigDecimal(rr.getcCVal()) : BigDecimal.ZERO);
+        }
     }
 }

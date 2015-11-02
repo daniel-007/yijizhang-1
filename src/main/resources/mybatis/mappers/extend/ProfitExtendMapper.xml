@@ -14,10 +14,25 @@
     select
     	'1' as fix,
     	t.name as cA,
-    	t.year_exp as cB,
-    	t.month_exp as cC
+    	t.month_exp as cB,
+    	t.last_month_exp as cC
     from
-    	profit t
+    	profit_template t
+   	order by t.id asc
+  </select>
+  
+  <select id="selectProfitWithPeriod" parameterType="java.util.Map" resultType="java.util.Map">
+    select
+    	t.fix as fix,
+    	t.name as cA,
+    	t.month_exp as cB,
+    	t.last_month_exp as cC,
+    	t.month_money as cBVal,
+    	t.last_month_money as cCVal
+    from
+    	profit_template t
+    where t.current_period = #{currentPeriod,jdbcType=BIGINT}
+    and t.book_id = #{bookId,jdbcType=BIGINT}
    	order by t.id asc
   </select>
 </mapper>

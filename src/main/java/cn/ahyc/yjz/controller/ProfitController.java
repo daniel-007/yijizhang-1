@@ -145,11 +145,7 @@ public class ProfitController extends BaseController {
             } else {
                 currentPeriod = period.getCurrentPeriod();
             }
-
-            for (ReportRow rr : expList) {
-
-            }
-            // profitService.save(expList, currentPeriod, bookId);
+            profitService.save(expList, currentPeriod, bookId);
             map.put("success", "success");
         } catch (Exception e) {
             e.printStackTrace();
