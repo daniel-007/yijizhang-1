@@ -1,7 +1,9 @@
 package cn.ahyc.yjz.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ import cn.ahyc.yjz.dto.SubjectBalanceDto;
 import cn.ahyc.yjz.mapper.base.AccountSubjectMapper;
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
+import cn.ahyc.yjz.model.AccountBook;
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.AccountSubjectExample;
 import cn.ahyc.yjz.model.Period;
@@ -48,6 +51,9 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		String result="";
 		//取出session 当前期与当前账套id
 		Period period=(Period) session.getAttribute(Constant.CURRENT_PERIOD);
+		AccountBook accountBook=(AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+		Integer initYear=accountBook.getInitYear();
+		Integer currentPeriod=period.getCurrentPeriod();
 		Long bookId=period.getBookId();
 		Long periodId=period.getId();
 		//查找损益其中一个会计科目代码
@@ -79,6 +85,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		voucher.setBillNum(0);
 		voucher.setPeriodId(periodId);
         voucher.setCarryOver(1);// 1:结账凭证
+        voucher.setVoucherTime(getLastDayOfMonth(initYear,currentPeriod));
 		//保存凭证
 		String reslutSuccess=voucherService.save(voucher, details);
 		result="已生成一张转账凭证，凭证字号为："+reslutSuccess;
@@ -114,13 +121,13 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		List<AccountSubject> accountSubject=accountSubjectMapper.selectByExample(example);
 		//设置本年利润计算
 		if(accountSubject.size()>0){
-			if(totalDebit.compareTo(new BigDecimal(0.00))==1){
+			if(totalDebit.compareTo(new BigDecimal(0.00))!=0){
 				VoucherDetail detailDebit=new VoucherDetail();
 				detailDebit.setSubjectCode(accountSubject.get(0).getSubjectCode());
 				detailDebit.setDebit(totalDebit);
 				details.add(detailDebit);
 			}
-			if(totalCredit.compareTo(new BigDecimal(0.00))==1){
+			if(totalCredit.compareTo(new BigDecimal(0.00))!=0){
 				VoucherDetail detailCredit=new VoucherDetail();
 				detailCredit.setSubjectCode(accountSubject.get(0).getSubjectCode());
 				detailCredit.setCredit(totalCredit);
@@ -131,6 +138,26 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		}
 		return details;
 	}
-	
-
+	 /**
+     * 获取某月的最后一天
+     * @Title:getLastDayOfMonth
+     * @Description:
+     * @param:@param year
+     * @param:@param month
+     * @param:@return
+     * @return:String
+     * @throws
+     */
+    public static Date getLastDayOfMonth(int year,int month){
+        Calendar cal = Calendar.getInstance();
+        //设置年份
+        cal.set(Calendar.YEAR,year);
+        //设置月份
+        cal.set(Calendar.MONTH, month-1);
+        //获取某月最大天数
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        //设置日历中月份的最大天数
+        cal.set(Calendar.DAY_OF_MONTH, lastDay);
+        return cal.getTime();
+    }
 }
