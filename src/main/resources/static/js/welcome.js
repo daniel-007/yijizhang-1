@@ -2,7 +2,7 @@
  * 欢迎页面的JS脚本文件。
  */
 
-var jsPlumbInstance;
+var jsPlumbInstance=null;
 
 Welcome=function(){
 
@@ -48,21 +48,11 @@ Welcome=function(){
             });
         },
 
+        //重画
         repaint:function(){
-
-            setTimeout(function(){
-
-                jsPlumbInstance.deleteEndpoint("Window1RightMiddle");
-                jsPlumbInstance.deleteEndpoint("Window2LeftMiddle");
-                jsPlumbInstance.deleteEndpoint("Window4RightMiddle");
-                jsPlumbInstance.deleteEndpoint("Window2RightMiddle");
-                jsPlumbInstance.deleteEndpoint("Window3LeftMiddle");
-                jsPlumbInstance.deleteEndpoint("Window3BottomCenter");
-                jsPlumbInstance.deleteEndpoint("Window5TopCenter");
-
-                Welcome.createJsPlumb();
-            },0);
-
+            if(jsPlumbInstance!=null){
+                jsPlumbInstance.repaintEverything();
+            }
         },
 
         //初始化欢迎页面的图标连线
