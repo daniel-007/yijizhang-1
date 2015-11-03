@@ -167,6 +167,26 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
             accountSubject.setId(null);
             accountSubjectMapper.insertSelective(accountSubject);
+
+            if (accountSubjectChildren.isEmpty()) {
+
+                //程家瑞让我调更新科目余额表.
+                final Long _periodId = period.getId();
+                new Thread() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            subjectBalanceExtendMapper.insertOrUpdateSubjectBalance(_periodId);
+                            subjectBalanceExtendMapper.collectSubjectBalance(_periodId);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }.start();
+            }
+
         } else {
             accountSubject.setCreateTime(now);
             accountSubjectMapper.updateByPrimaryKeySelective(accountSubject);

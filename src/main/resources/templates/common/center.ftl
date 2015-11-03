@@ -2,7 +2,7 @@
     <div title='<i class="fa fa-home"></i> <@spring.message code="welcome.text"/>'
          class="welcome-panel easyui-layout"
          style="width: 100%; height: 100%;">
-        <div style="width: 75%;" data-options="region:'center',border:false,
+        <div style="width: 75%;overflow-y: hidden;" data-options="region:'center',border:false,
             onResize:function(w,h){
                 Welcome.repaint();
             }" >

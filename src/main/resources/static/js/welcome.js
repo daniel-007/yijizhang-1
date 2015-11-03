@@ -49,7 +49,20 @@ Welcome=function(){
         },
 
         repaint:function(){
-            jsPlumb.repaintEverything();
+
+            setTimeout(function(){
+
+                jsPlumbInstance.deleteEndpoint("Window1RightMiddle");
+                jsPlumbInstance.deleteEndpoint("Window2LeftMiddle");
+                jsPlumbInstance.deleteEndpoint("Window4RightMiddle");
+                jsPlumbInstance.deleteEndpoint("Window2RightMiddle");
+                jsPlumbInstance.deleteEndpoint("Window3LeftMiddle");
+                jsPlumbInstance.deleteEndpoint("Window3BottomCenter");
+                jsPlumbInstance.deleteEndpoint("Window5TopCenter");
+
+                Welcome.createJsPlumb();
+            },0);
+
         },
 
         //初始化欢迎页面的图标连线
@@ -130,7 +143,6 @@ Welcome=function(){
                     }
                 };
 
-
                 // suspend drawing and initialise.
                 jsPlumbInstance.batch(function () {
 
@@ -141,10 +153,10 @@ Welcome=function(){
                     _addEndpoints("Window1", ["RightMiddle"], []);
 
                     // connect a few up
-                    jsPlumbInstance.connect({uuids: ["Window1RightMiddle", "Window2LeftMiddle"]});
-                    jsPlumbInstance.connect({uuids: ["Window4RightMiddle", "Window2LeftMiddle"], editable: false});
-                    jsPlumbInstance.connect({uuids: ["Window2RightMiddle", "Window3LeftMiddle"], editable: false});
-                    jsPlumbInstance.connect({uuids: ["Window3BottomCenter", "Window5TopCenter"], editable: false});
+                    con1 = jsPlumbInstance.connect({uuids: ["Window1RightMiddle", "Window2LeftMiddle"]});
+                    con2 = jsPlumbInstance.connect({uuids: ["Window4RightMiddle", "Window2LeftMiddle"], editable: false});
+                    con3 = jsPlumbInstance.connect({uuids: ["Window2RightMiddle", "Window3LeftMiddle"], editable: false});
+                    con4 = jsPlumbInstance.connect({uuids: ["Window3BottomCenter", "Window5TopCenter"], editable: false});
                 });
             });
         }
