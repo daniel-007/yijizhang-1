@@ -3,6 +3,7 @@ Balance_Sheet = function () {
     return {
         container: null,
         datagrid_tables: [],
+        num: 1,
         yearBegin_fmt: function (value, row, index) {
             if (row.level == 2) {
                 value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
@@ -27,6 +28,7 @@ Balance_Sheet = function () {
 
         refresh: function () {
             this.init_calculate_dropdow.isinit = 0;
+            this.num = 1;
             var periodId = this.container.find("#currentPeriod_hidden").val();
             var ts = Balance_Sheet.datagrid_tables;
             for (var i = 0; i < ts.length; i++) {
@@ -96,8 +98,6 @@ Balance_Sheet = function () {
             }
         },
         init_data_table: function () {
-
-            var num = 1;
 
             this.container.find("table").each(function (index) {
 
@@ -171,7 +171,7 @@ Balance_Sheet = function () {
                                 _yearBegin = need_num == 0 ? (_yearBegin + yearBegin) : need_num == 1 ? (_yearBegin - yearBegin) : _yearBegin;
 
 
-                                record["num"] = num++;
+                                record["num"] = Balance_Sheet.num++;
                                 //组装新的数据.
                                 new_data.push(record);
 
@@ -187,7 +187,7 @@ Balance_Sheet = function () {
                                     twoLev_yearBegin = need_num == 0 ? (twoLev_yearBegin + yearBegin) : need_num == 1 ? (twoLev_yearBegin - yearBegin) : twoLev_yearBegin;
 
                                     if ((i < (length - 1) && data[i + 1].level == 1) || ( i == (length - 1))) {
-                                        new_data.push({num: num++, level: -1, name: sum_name, periodEnd: twoLev_periodEnd, yearBegin: twoLev_yearBegin});
+                                        new_data.push({num: Balance_Sheet.num++, level: -1, name: sum_name, periodEnd: twoLev_periodEnd, yearBegin: twoLev_yearBegin});
                                     }
                                 }
 
@@ -198,7 +198,7 @@ Balance_Sheet = function () {
                             }
 
                             sum_name = data[0].name + "合计";
-                            var sum = {num: num++, level: -1, name: sum_name, periodEnd: _periodEnd, yearBegin: _yearBegin};
+                            var sum = {num: Balance_Sheet.num++, level: -1, name: sum_name, periodEnd: _periodEnd, yearBegin: _yearBegin};
                             new_data.push(sum);
                         }
 

@@ -75,7 +75,6 @@ Account_Subject_Init_Data = function () {
                 fitColumns: true,
                 rownumbers: true,
                 singleSelect: true,
-                toolbar: '#init_data_toolbar',
                 border: false,
                 columns: [
                     [

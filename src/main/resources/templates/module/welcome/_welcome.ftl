@@ -18,7 +18,7 @@
         </button>
     </div>
     <div class="jtk-node" id="flowchartWindow4">
-        <button id="btn_cssj" onClick="App.addTab('初始化数据','account/subject/initData/main',true);" class="button button-action button-box button-jumbo">
+        <button id="btn_cssj" onClick="javascript:App.addTab('初始化数据','account/subject/initData/main',true);" class="button button-action button-box button-jumbo">
             <div><i class="fa fa-laptop"></i></div>
             <div><small style="font-size:12px;"><@spring.message code="welcome.cssj"/></small></div>
         </button>
@@ -34,5 +34,5 @@
 <div class="chartBtnDiv">
     <button onclick="App.addTab('资产负债表','balance/sheet/main',true);" class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.zcfz"/></button>
     <button onclick="App.addTab('利润表','profit/main',true);" class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.lirb"/></button>
-    <button class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.xjll"/></button>
+    <button onclick="App.addTab('现金流量表','cash/flow/main',true);" class="button button-glow button-rounded button-primary"><i class="fa fa-table"></i>&#8194;<@spring.message code="welcome.xjll"/></button>
 </div>
