@@ -1,6 +1,7 @@
 /**
  * Application通用函数集合
  */
+
 App=function(){
 
 	return{
@@ -9,8 +10,8 @@ App=function(){
 		init:function(){
 			$TC = $('#tabContainer');
 			$TC.tabs({
-				border:false,
-				fit:true,
+				border: false,
+				fit: true,
 				tabWidth:150
 			})
 		},
@@ -59,8 +60,9 @@ App=function(){
 					tools:[{
 				        iconCls:'icon-mini-refresh',
 				        handler:function(){
-				        	var tab = $TC.tabs('getSelected');  // get selected panel
-				        	tab.panel('refresh', href);
+							$TC.tabs('select',title);
+							var tab = $TC.tabs('getSelected');  // get selected panel
+							tab.panel('refresh', href);
 				        }
 				    }]
 				});

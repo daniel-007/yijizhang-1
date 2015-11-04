@@ -38,10 +38,10 @@
 <#--资产负债表js-->
 <script type="text/javascript" src="/js/balanceSheet/main.js"></script>
 
+<#--利润表js-->
+<script type="text/javascript" src="/js/profit.js"></script>
 <!-- mergeJSBizTo -->
 
 
-<#--利润表js-->
-<script type="text/javascript" src="/js/profit.js"></script>
 
 
