@@ -19,7 +19,7 @@
             <li><a href="javascript:App.addTab('凭证查询','search/voucher/page/main',true)">凭证查询</a></li>
             <li><a href="javascript:App.addTab('总账','search/ledger/main',true)">总账</a></li>
             <li><a href="javascript:App.addTab('明细账','search/detail/main',true)">明细账</a></li>
-            <li><a href="#">多栏账</a></li>
+            <#--<li><a href="#">多栏账</a></li>-->
 			<li><a href="javascript:App.addTab('科目余额表','search/subjectbalance/main',true)">科目余额表</a></li>
             <li><a href="javascript:App.addTab('凭证汇总表','search/vouchercollect/main',true)">凭证汇总表</a></li>
             <li><a href="javascript:App.addTab('试算平衡表','search/trialbalance/main',true)">试算平衡表</a></li>
@@ -39,7 +39,7 @@
     <div id="bb_menu" style="display: none;">
         <ul class="fc_menu_ul">
             <li><a href="javascript:App.addTab('资产负债表','balance/sheet/main',true);">资产负债表</a></li>
-            <li><a href="#">利润表</a></li>
+            <li><a href="javascript:App.addTab('利润表','profit/main',true);">利润表</a></li>
             <li><a href="#">现金流量表</a></li>
         </ul>
     </div>
