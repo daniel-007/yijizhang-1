@@ -307,7 +307,7 @@ VoucherTemplate=function(){
         		return;
 			}
 			$.ajax({
-                url: "voucher/checktemplatename",
+                url: "voucher/template/checkname",
                 type:'get',
                 data:{name:voucherTemplateName,id:voucherTemplateId},
                 success: function(data){
@@ -373,7 +373,7 @@ VoucherTemplate=function(){
 		},
 		//模式凭证新增
 		onDblClickRow:function(index,row){
-			VoucherTemplate.close();
+			Voucher.theAddWin.window('close');
         	var tab = $TC.tabs('getSelected');  // get selected panel
         	tab.panel('refresh', 'voucher/main?voucherTemplateId='+row.id+'&time='+new Date().getTime());
 		}
