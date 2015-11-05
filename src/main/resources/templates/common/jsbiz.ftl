@@ -24,6 +24,7 @@
 
 <#--记账凭证相关js-->
 <script type="text/javascript" src="/js/voucher.js"></script>
+<script type="text/javascript" src="/js/voucherCash.js"></script>
 <script type="text/javascript"  src="/js/voucherTemplate.js"></script>
 <script type="text/javascript" src="/js/subjectBalance.js"></script>
 

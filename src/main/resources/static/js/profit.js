@@ -125,7 +125,7 @@ Profit=function(){
 				rownumbers:true,
 				clickToEdit: false,
 		        dblclickToEdit: true,
-				toolbar: '#profitMenu,#profitDgTd',
+				toolbar: '#profitMenu',
 				url:'profit/list',
 				columns:[[
 							{field:'cA',title:'A',width:260,align:'left',halign:'center',

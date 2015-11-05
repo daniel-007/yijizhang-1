@@ -5,31 +5,36 @@
 </div>
 
 <div id="profitMenu" style="padding:2px 5px;display: none;">
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" style="width:100%">
         <tr>
-            <td>
-                <a id="profitSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-save fa-lg"></i>&#8194;保存</a>
+        	<td>
+	        	<table cellpadding="0" cellspacing="0">
+		        	<tr>
+			            <td>
+			                <a id="profitSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-save fa-lg"></i>&#8194;保存</a>
+			            </td>
+			            <td>
+			                <div class="datagrid-btn-separator"></div>
+			            </td>
+			            <td>
+			                <a id="profitAppend" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-indent fa-lg"></i>&#8194;插入行</a>
+			                <a id="profitRemoveit" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-outdent fa-lg"></i>&#8194;删除行</a>
+			            </td>
+			            <td>
+			                <div class="datagrid-btn-separator"></div>
+			            </td>
+			            <td>
+			                <a id="profitCount" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-dollar fa-lg"></i>&#8194;计算</a>
+			            </td>
+		            </tr>
+	            </table>
             </td>
-            <td>
-                <div class="datagrid-btn-separator"></div>
-            </td>
-            <td>
-                <a id="profitAppend" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-indent fa-lg"></i>&#8194;插入行</a>
-                <a id="profitRemoveit" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-outdent fa-lg"></i>&#8194;删除行</a>
-            </td>
-            <td>
-                <div class="datagrid-btn-separator"></div>
-            </td>
-            <td>
-                <a id="profitCount" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-dollar fa-lg"></i>&#8194;计算</a>
+            <td align="right">
+				报表计算会计期间：<input id="searchtPeriod" style="width:80px;" value="${searchtPeriod?default(1)}">
+		    	<input id="cellContent" class="easyui-textbox" data-options="disabled:true" style="width:300px">
             </td>
         </tr>
     </table>
-</div>
-
-<div id="profitDgTd" style="padding:10px;">
-	报表计算会计期间：<input id="searchtPeriod" style="width:80px;" value="${searchtPeriod?default(1)}">
-	<input id="cellContent" class="easyui-textbox" data-options="disabled:true" style="width:300px">
 </div>
 
 <script type="text/javascript">
