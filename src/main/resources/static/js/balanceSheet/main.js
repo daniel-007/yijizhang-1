@@ -3,7 +3,7 @@ Balance_Sheet = function () {
     return {
         container: null,
         datagrid_tables: [],
-        num: 1,
+        num: 1, //编号
         yearBegin_fmt: function (value, row, index) {
             if (row.level == 2) {
                 value += '<a class="calculate" level="' + row.level + '" href="#"><i class="fa fa-calculator"></i></a>';
@@ -31,9 +31,10 @@ Balance_Sheet = function () {
             this.num = 1;
             var periodId = this.container.find("#currentPeriod_hidden").val();
             var ts = Balance_Sheet.datagrid_tables;
-            for (var i = 0; i < ts.length; i++) {
-                ts[i].unbind().datagrid("reload", {periodId: periodId});
-            }
+            ts[0].datagrid("reload", {periodId: periodId});
+            setTimeout(function () {
+                ts[1].datagrid("reload", {periodId: periodId});
+            }, 100);
         },
 
         toEdit: function (obj, field, id) {
@@ -254,6 +255,7 @@ Balance_Sheet = function () {
         init: function () {
             this.container = $("#balance_sheet_container");
             this.init_calculate_dropdow.isinit = 0;
+            this.num = 1;
 
             this.init_period();
             this.tip_init();

@@ -6,6 +6,17 @@
 </style>
 <div id="cashflow_container" class="easyui-panel" data-options="fit:true,border:false">
 
+    <div style="height: 32px;line-height: 32px;background: #F5F5F5;padding-left: 5px;">
+
+        本账套期间从
+        <input id="start_period" class="easyui-numberspinner" style="width: 30px;"
+               data-options="min:1,max:12,editable:false">
+        到
+        <input id="end_period" class="easyui-numberspinner" style="width: 30px;"
+               data-options="min:1,max:12,editable:false">
+
+    </div>
+
     <div style="float: left;width: 50%;height: 880px;">
         <table id="cashflow_table1"></table>
     </div>
