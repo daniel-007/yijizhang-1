@@ -10,8 +10,11 @@ Voucher=function(){
 	var balanceFlag = false;//借贷平衡标识符
 	var subjectData;//会计科目代码下来框数据
 	var cellFocusFlag;//金额编辑器是否第一次focus标志
-	var theAddWin=null;
-	var theSaveWin=null;
+	var theAddWin = undefined;
+	var theSaveWin = undefined;
+	var theCashWin = undefined;
+	var cashFalg=false;
+	var cashData = undefined;
 	
 	return {
 		//凭证页面初始化
@@ -33,7 +36,7 @@ Voucher=function(){
 					href : 'voucher/template',
 					onClose:function(){
 						$(this).panel('destroy');
-						Voucher.theAddWin=null;
+						Voucher.theAddWin=undefined;
 					}
 				});
 			});
@@ -69,7 +72,7 @@ Voucher=function(){
 					queryParams:{name:name,voucherWord:voucherWord},
 					onClose:function(){
 						$(this).panel('destroy');
-						Voucher.theSaveWin=null;
+						Voucher.theSaveWin=undefined;
 					}
 				});
 			});
@@ -84,6 +87,10 @@ Voucher=function(){
 			//删除行
 			$('#voucherRemoveit').click(function() {
 				Voucher.removeit();
+			});
+			//流量
+			$('#cashFlowData').click(function() {
+				//Voucher.cashFormData();
 			});
 			//明细
 			$('#voucherSubjectDetail').click(function() {
@@ -293,6 +300,25 @@ Voucher=function(){
 				}
 			});
         },
+        //流量
+        cashFormData:function(callSave){
+        	Voucher.theCashWin=$('<div></div>').window({
+				title : '<i class="fa fa-info-circle"></i>凭证编制说明',
+				width : 668,
+				height : 266,
+				modal : true,
+				collapsible : false,
+				shadow : true,
+				href : 'voucher/cashFlowData',
+				onClose:function(){
+					$(this).panel('destroy');
+					Voucher.theCashWin=undefined;
+					if(VoucherCash.saveFlag&&callSave){
+						callSave();
+					}
+				}
+			});
+        },
         //验证科目代码不合法
         validateSubjectCode:function(ed,subjectData){
         	return JSON.stringify(subjectData).indexOf('"subjectCode":'+$(ed.target).combobox('getValue')+',')<0;
@@ -441,64 +467,82 @@ Voucher=function(){
 					$.messager.alert('警告', "借贷不平衡!", 'warning',function(){$voucherSave.linkbutton('myenable');});
 					return;
 				}
-				// 检查凭证号
-				$voucherNo = $('#voucherNo');
-				var no = $voucherNo.numberspinner('getValue'); 
-	            $.ajax({
-	                url: "voucher/checkno",
-	                type:'get',
-	                data:{no:no,id:id},
-	                success: function(data){
-	                    if(data.result){
-	                    	$voucherSave.linkbutton('myenable');
-	                    	$voucherNo.numberspinner('setValue', data.result);
-	                    	$.messager.alert('警告', '凭证号'+no+'重复，凭证保存不成功。系统重新编号为'+data.result, 'warning');
-	                    	return;
-	                    }
-						// 提交保存
-			            $.ajax({
-			                url: "voucher/save",
-			                type:'post',
-			                data:$("#voucherFm").serialize()+params,
-			                success: function(data){
-			                    if(data.result){
-			                    	$voucherSave.linkbutton('myenable');
-			                        if(!$("#id").val()){
-			                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
-			                        		if(isAdd){//新增
-			    	                        	Voucher.add();
-			    	                        }
-			                        	});
-			                        }else{
-			                        	if(isAdd){//新增
-				                        	Voucher.add();
-				                        }
-			                        }
-			                    }else{
-			                    	$voucherSave.linkbutton('myenable');
-			                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
-			                        });
-			                    }
-			                },
-			                error: function(XMLHttpRequest, textStatus, errorThrown) {
-			                	$voucherSave.linkbutton('myenable');
-		                    }
-			            });
-	                },
-	                error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                	$voucherSave.linkbutton('myenable');
-                    }
-	            });
+//				if(cashFalg){
+//					Voucher.cashFormData(function(){
+//						params+=VoucherCash.cashData;
+//						submit(isAdd,id,params);
+//					});
+//				} else {
+					submit(isAdd,id,params);
+//				}
 		    }else{
 		    	$voucherSave.linkbutton('myenable');
 		    }
 		},
-		//表格修改数据
-		getChanges:function(){
+		submit:function(isAdd,id,params){
+			// 检查凭证号
+			$voucherNo = $('#voucherNo');
+			var no = $voucherNo.numberspinner('getValue'); 
+            $.ajax({
+                url: "voucher/checkno",
+                type:'get',
+                data:{no:no,id:id},
+                success: function(data){
+                    if(data.result){
+                    	$voucherSave.linkbutton('myenable');
+                    	$voucherNo.numberspinner('setValue', data.result);
+                    	$.messager.alert('警告', '凭证号'+no+'重复，凭证保存不成功。系统重新编号为'+data.result, 'warning');
+                    	return;
+                    }
+					// 提交保存
+		            $.ajax({
+		                url: "voucher/save",
+		                type:'post',
+		                data:$("#voucherFm").serialize()+params,
+		                dataType:"json",      
+		                contentType:"application/json",
+		                success: function(data){
+		                    if(data.result){
+		                    	$voucherSave.linkbutton('myenable');
+		                        if(!$("#id").val()){
+		                        	$.messager.alert('提示', "已生成了一张记账凭证，凭证字号为："+data.result, 'info',function(){
+		                        		if(isAdd){//新增
+		    	                        	Voucher.add();
+		    	                        }
+		                        	});
+		                        }else{
+		                        	if(isAdd){//新增
+			                        	Voucher.add();
+			                        }
+		                        }
+		                    }else{
+		                    	$voucherSave.linkbutton('myenable');
+		                        $.messager.alert('警告', "操作失败，请联系管理员!", 'warning',function(){
+		                        });
+		                    }
+		                },
+		                error: function(XMLHttpRequest, textStatus, errorThrown) {
+		                	$voucherSave.linkbutton('myenable');
+	                    }
+		            });
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                	$voucherSave.linkbutton('myenable');
+                }
+            });
+		},
+		//表格数据
+		getChanges:function(haveCash){
 			var params='';
 			var rows = $('#voucherDg').datagrid('getRows');
+			cashFlag=false;
+			var isCashSubject;
 			for(i=0;i<rows.length;++i){
 				if(rows[i].subjectCode){
+					isCashSubject=Voucher.isCashSubject(rows[i].subjectCode);
+					if(!cashFlag&&isCashSubject){//存在现金流量
+						cashFlag=true;
+					}
 					if((!rows[i].newdebit&&!rows[i].newcrebit)||(rows[i].newdebit==0&&rows[i].newcrebit==0)){
 						return "moneyNoneError";
 					}
@@ -520,6 +564,10 @@ Voucher=function(){
 			params=params.replace(/{/g,'').replace(/}/g,'').replace(/","/g,'&').replace(/"/g,'').replace(/:/g,'=');
 			params=params.replace(/,/g,'&').replace(/undefined/g,'');
 			return params;
+		},
+		//判断是否是现金流量相关科目
+		isCashSubject:function(subjectCode){
+			return Voucher.startWith(subjectCode,'1001')||Voucher.startWith(subjectCode,'1002');
 		},
 		//时间格式化
 		myformatter:function(date){
@@ -874,6 +922,7 @@ Voucher=function(){
         isRealNum:function(value){
         	return /^(\-)?\d+($|\.\d+$)/.test(value);
         },
+        //结尾判断
         endWith:function(s,str){
         	if(str==null||str==""||!s||s.length==0||str.length>s.length)
         	  return false;
@@ -883,6 +932,7 @@ Voucher=function(){
         	  return false;
         	return true;
     	},
+    	//开始判断
     	startWith:function(s,str){
     		if(str==null||str==""||s.length==0||str.length>s.length)
     		  return false;
