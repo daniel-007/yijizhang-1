@@ -4,6 +4,7 @@
 VoucherTemplate=function(){
 	var templateEditIndex = undefined;//编辑行索引
 	var templateSubjectData;//会计科目代码下来框数据
+	var voucherTemWin;
 	
 	return {
 		//模式凭证列表页面初始化
@@ -130,7 +131,7 @@ VoucherTemplate=function(){
 			});
 			//取消修改
 			$('#templateReject').click(function(){
-				$('#voucherTem_win').panel('refresh');
+				VoucherTemplate.voucherTemWin.panel('refresh');
 			});
 			//插入行
 			$('#templateAppend').click(function() {
@@ -199,7 +200,7 @@ VoucherTemplate=function(){
 		},
 		//模式凭证新增
 		templateAdd:function(id,name){
-			$("#voucherTem_win").window({
+			voucherTemWin=$("<div></div>").window({
 				title : '<i class="fa fa-info-circle"></i>'+(name?'模式凭证 - '+name:'新增凭证模式'),
 				width : 768,
 				height : 483,
@@ -210,6 +211,7 @@ VoucherTemplate=function(){
 				queryParams:{voucherTemplateId:id},
 				onClose:function(){
 					$(this).panel('destroy');
+					voucherTemWin=undefined;
 				}
 			});
 		},

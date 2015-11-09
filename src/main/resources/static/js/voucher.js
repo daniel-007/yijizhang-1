@@ -926,7 +926,8 @@ Voucher=function(){
         endWith:function(s,str){
         	if(str==null||str==""||!s||s.length==0||str.length>s.length)
         	  return false;
-        	if(s.substring(s.length-str.length)==str)
+        	var sStr=s+'';
+        	if(sStr.substring(s.length-str.length)==str)
         	  return true;
         	else
         	  return false;
@@ -936,7 +937,8 @@ Voucher=function(){
     	startWith:function(s,str){
     		if(str==null||str==""||s.length==0||str.length>s.length)
     		  return false;
-    		if(s.substr(0,str.length)==str)
+    		var sStr=s+'';
+    		if(sStr.substr(0,str.length)==str)
     		  return true;
     		else
     		  return false;

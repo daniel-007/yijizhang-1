@@ -24,8 +24,6 @@
 	
 </div>
 
-<div id="voucherTem_win"></div>
-
 <script type="text/javascript">
     $(function () {
         VoucherTemplate.init();

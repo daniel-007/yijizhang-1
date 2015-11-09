@@ -4,11 +4,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorDecimal;
 import com.googlecode.aviator.runtime.type.AviatorFunction;
 import com.googlecode.aviator.runtime.type.AviatorJavaType;
 import com.googlecode.aviator.runtime.type.AviatorObject;
+
+import cn.ahyc.yjz.thread.ExpressionThread;
 
 /**
  * 自定义函数:单元格取值
@@ -21,6 +26,8 @@ import com.googlecode.aviator.runtime.type.AviatorObject;
  */
 public class CellValueFunction implements AviatorFunction {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExpressionThread.class);
+
     @SuppressWarnings("unchecked")
     @Override
     public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2, AviatorObject arg3) {
@@ -28,9 +35,9 @@ public class CellValueFunction implements AviatorFunction {
         int index = FunctionUtils.getNumberValue(arg2, env).intValue();
         String name = ((AviatorJavaType) arg3).getName();
         Object listvalue = list.get(index).get(name);
-        System.out.println("cell list name " + name + " value " + listvalue);
+        LOGGER.debug("cell list name {} value {}", name, listvalue);
         BigDecimal value;
-        System.out.println("cell list" + list.get(index).get("cA"));
+        LOGGER.debug("cell list {}", list.get(index).get("cA"));
         if (listvalue != null) {
             value = new BigDecimal(String.valueOf(listvalue));
         } else {
