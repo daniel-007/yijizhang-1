@@ -94,6 +94,22 @@ Book=function(){
 					$.messager.alert("提示信息", "请选择科目体系!");
 					return;
 				}
+				if($('#init_year').val()==undefined||$('#init_year').val()==""){
+					$.messager.alert("提示信息", "请选择启用年数!");
+					return;
+				}
+				if($('#init_period').val()==undefined||$('#init_period').val()==""){
+					$.messager.alert("提示信息", "请选择启用期数!");
+					return;
+				}
+				if(parseInt($('#init_year').val())<2014||parseInt($('#init_year').val())>3000){
+					$.messager.alert("提示信息", "启用期间年数不合法!");
+					return;
+				}
+				if(parseInt($('#init_period').val())<1||parseInt($('#init_period').val())>12){
+					$.messager.alert("提示信息", "启用期间期数不合法!");
+					return;
+				}
 				//显示对应页面与按钮
 				$('#firstJsp').css('display', 'none');
 				$('#sencondJsp').css('display', 'none');
