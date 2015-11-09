@@ -35,6 +35,9 @@ Ledger=function(){
         	$('#ledgerRefresh').bind('click', function(){
         		Ledger.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	});
+        	//$('#ledgerPrint').click(function(){
+        	//	Print.myPrintArea($('#ledger'));
+        	//});
         },
         //过滤页面-确定
         submit:function(){
@@ -75,14 +78,14 @@ Ledger=function(){
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
-        			          {field:'subject_code_text',title:'科目代码',width:30,align:'left',halign:'center'},
-        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
-        			          {field:'wordNo',title:'凭证字号',width:30,align:'center',halign:'center'},
-        			          {field:'summary',title:'摘要',width:30,align:'center',halign:'center'},
-        			          {field:'debit',title:'借方',width:30,align:'right',halign:'center'},
-        			          {field:'credit',title:'贷方',width:30,align:'right',halign:'center'},
-        			          {field:'direction',width:5,align:'center',halign:'center'},
-        			          {field:'balance',title:'余额',width:30,align:'right',halign:'center'}
+        			          {field:'subject_code_text',title:'科目代码',width:130,align:'left',halign:'center'},
+        			          {field:'subject_name',title:'科目名称',width:230,align:'left',halign:'center'},
+        			          {field:'wordNo',title:'凭证字号',width:100,align:'center',halign:'center'},
+        			          {field:'summary',title:'摘要',width:100,align:'center',halign:'center'},
+        			          {field:'debit',title:'借方',width:130,align:'right',halign:'center'},
+        			          {field:'credit',title:'贷方',width:130,align:'right',halign:'center'},
+        			          {field:'direction',width:30,align:'center',halign:'center'},
+        			          {field:'balance',title:'余额',width:110,align:'right',halign:'center'}
     			          ]]
         		});
         	} else {
@@ -96,17 +99,17 @@ Ledger=function(){
         			queryParams:{periodFrom:periodFrom,periodTo:periodTo,level:level,subjectCodeFrom:subjectCodeFrom,subjectCodeTo:subjectCodeTo,valueNotNull:valueNotNull},
         			method:'get',
         			columns:[[
-        			          {field:'subject_code_text',title:'科目代码',width:30,align:'left',halign:'center'},
-        			          {field:'subject_name',title:'科目名称',width:60,align:'left',halign:'center'},
-        			          {field:'init_year',title:'年',width:10,align:'center',halign:'center'},
-        			          {field:'current_period',title:'月',width:5,align:'center',halign:'center'},
-        			          {field:'daynum',title:'日',width:5,align:'center',halign:'center'},
-        			          {field:'wordNo',title:'凭证字号',width:30,align:'center',halign:'center'},
-        			          {field:'summary',title:'摘要',width:30,align:'center',halign:'center'},
-        			          {field:'debit',title:'借方',width:30,align:'right',halign:'center'},
-        			          {field:'credit',title:'贷方',width:30,align:'right',halign:'center'},
-        			          {field:'direction',width:5,align:'center',halign:'center'},
-        			          {field:'balance',title:'余额',width:30,align:'right',halign:'center'}
+        			          {field:'subject_code_text',title:'科目代码',width:130,align:'left',halign:'center'},
+        			          {field:'subject_name',title:'科目名称',width:200,align:'left',halign:'center'},
+        			          {field:'init_year',title:'年',width:40,align:'center',halign:'center'},
+        			          {field:'current_period',title:'月',width:30,align:'center',halign:'center'},
+        			          {field:'daynum',title:'日',width:30,align:'center',halign:'center'},
+        			          {field:'wordNo',title:'凭证字号',width:100,align:'center',halign:'center'},
+        			          {field:'summary',title:'摘要',width:100,align:'center',halign:'center'},
+        			          {field:'debit',title:'借方',width:100,align:'right',halign:'center'},
+        			          {field:'credit',title:'贷方',width:100,align:'right',halign:'center'},
+        			          {field:'direction',width:30,align:'center',halign:'center'},
+        			          {field:'balance',title:'余额',width:100,align:'right',halign:'center'}
     			          ]]
         		});
         	}

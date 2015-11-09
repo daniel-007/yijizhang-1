@@ -249,3 +249,29 @@ ul.aboutUl li{
 #latestVoucherTB td a:hover{
     color: #00438a;
 }
+
+/**打印**/
+@media print { 
+	body {
+		width: 20in;
+        /*padding: 0.25in;
+        border: 1pt solid black;
+        text-align: justify;*/
+	}
+	.datagrid-view {
+		width: 20in;
+		font-size: 20in;
+        /*padding: 0.25in;
+        border: 1pt solid black;
+        text-align: justify;*/
+	}
+	/* 打印时去除选中行样式 */
+	.datagrid-row-selected {
+	    background: #fff;
+	    color: #333;
+	}
+	/* 打印页面边距 */
+	@page {
+		margin: 2cm;
+	}
+}

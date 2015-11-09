@@ -23,6 +23,11 @@ Profit=function(){
 					Profit.deleteRow();
 				}
 			});
+			$('#profitPrint').click(function() {
+				if(Profit.endEdit()){
+					window.print();
+				}
+			});
 			$('#profitCount').click(function() {
 				if(Profit.endEdit()){
 					Profit.count();

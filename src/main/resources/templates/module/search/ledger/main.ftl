@@ -1,4 +1,4 @@
-<div class="easyui-layout" data-options="fit:true">
+<div id="ledger" class="easyui-layout" data-options="fit:true">
 	<div data-options="region:'center'">
 		<table id="ledgerDg"></table>
 	</div>

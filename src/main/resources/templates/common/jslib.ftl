@@ -7,6 +7,7 @@
 
 <script type="text/javascript" src="/public/js/sockjs.min.js"></script>
 <script src="/public/js/jquery.min.js"></script>
+<script src="/public/jqueryPlugin/jquery.PrintArea.js"></script>
 <script type="text/javascript" src="/public/easyui/jquery.easyui.min.js"></script>
 
 <!-- mergeJSLibTo:/app/app.lib.pack -->

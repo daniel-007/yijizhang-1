@@ -41,6 +41,8 @@
 
 <#--利润表js-->
 <script type="text/javascript" src="/js/profit.js"></script>
+<#--打印js-->
+<script type="text/javascript" src="/js/print.js"></script>
 <!-- mergeJSBizTo -->
 
 
