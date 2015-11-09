@@ -470,10 +470,10 @@ Voucher=function(){
 //				if(cashFalg){
 //					Voucher.cashFormData(function(){
 //						params+=VoucherCash.cashData;
-//						submit(isAdd,id,params);
+//						Voucher.submit(isAdd,id,params);
 //					});
 //				} else {
-					submit(isAdd,id,params);
+				Voucher.submit(isAdd,id,params);
 //				}
 		    }else{
 		    	$voucherSave.linkbutton('myenable');
@@ -499,8 +499,8 @@ Voucher=function(){
 		                url: "voucher/save",
 		                type:'post',
 		                data:$("#voucherFm").serialize()+params,
-		                dataType:"json",      
-		                contentType:"application/json",
+		                //dataType:"json",      
+		                //contentType:"application/json",
 		                success: function(data){
 		                    if(data.result){
 		                    	$voucherSave.linkbutton('myenable');
