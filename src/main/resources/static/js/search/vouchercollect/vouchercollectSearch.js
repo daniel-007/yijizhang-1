@@ -3,6 +3,7 @@
  */
 VouchercollectSearch=function(){
 	return {
+		datatable: null,
 		//页面初始化
         init:function(startTime,endTime,voucherWord,voucherStartNo,voucherEndNo){
         	VouchercollectSearch.dgInit(startTime,endTime,voucherWord,voucherStartNo,voucherEndNo);
@@ -18,6 +19,10 @@ VouchercollectSearch=function(){
 					queryParams:{startTime:startTime,endTime:endTime,voucherWord:voucherWord,voucherStartNo:voucherStartNo,voucherEndNo:voucherEndNo},
 				});
         	});
+    	  $("#coollectListMenu").find("#exportToExcel").click(function () {
+    		  alert();
+              App.exportToExcel("凭证汇总表", VouchercollectSearch.datatable);
+          });
         },
         searchInit:function(){
         	//凭证字
@@ -76,7 +81,7 @@ VouchercollectSearch=function(){
          	tab.panel('refresh');
         },
         dgInit:function(startTime,endTime,voucherWord,voucherStartNo,voucherEndNo){
-    		$('#coollectListDg').datagrid({
+        	VouchercollectSearch.datatable = $('#coollectListDg').datagrid({
     			heigth:400,
     			singleSelect:true,
     			fitColumns: true,
