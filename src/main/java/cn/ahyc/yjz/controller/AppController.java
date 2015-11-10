@@ -24,6 +24,9 @@ import cn.ahyc.yjz.service.LoginHistoryService;
 import cn.ahyc.yjz.service.PeriodService;
 import cn.ahyc.yjz.service.UserService;
 import cn.ahyc.yjz.util.Constant;
+import cn.ahyc.yjz.util.POIUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,8 +39,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * AppController
@@ -45,136 +50,141 @@ import java.util.Map;
  * @author sanlai_lee@qq.com
  */
 @Controller
-public class AppController extends BaseController{
+public class AppController extends BaseController {
 
 
-      @Autowired
-      LoginHistoryService loginHistoryService;
+    @Autowired
+    LoginHistoryService loginHistoryService;
 
-      @Autowired
-      AccountBookService accountBookService;
+    @Autowired
+    AccountBookService accountBookService;
 
-      @Autowired
-      PeriodService periodService;
+    @Autowired
+    PeriodService periodService;
 
-      @Autowired
-      UserService userService;
+    @Autowired
+    UserService userService;
 
-      @Autowired
-      BuildInfo buildInfo;
+    @Autowired
+    BuildInfo buildInfo;
 
-      public AppController() {
-            this.pathPrefix = "/";
-      }
+    public AppController() {
+        this.pathPrefix = "/";
+    }
 
-      /**
-       * 跳转到Dashboard视图.
-       *
-       * @param model
-       * @return
-       */
-      @RequestMapping("/")
-      @Secured({"ROLE_ADMIN","ROLE_USER"})
-      public String dashboard(Map<String, Object> model) {
-            return view("dashboard");
-      }
+    /**
+     * 跳转到Dashboard视图.
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    public String dashboard(Map<String, Object> model) {
+        return view("dashboard");
+    }
 
-      /**
-       * 跳转到登录页面.
-       * @param model
-       * @return
-       */
-      @RequestMapping("/login")
-      @PermitAll
-      public String login(Map<String, Object> model,HttpServletRequest request) {
+    /**
+     * 跳转到登录页面.
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/login")
+    @PermitAll
+    public String login(Map<String, Object> model, HttpServletRequest request) {
 
-            if(request.getSession().getAttribute(Constant.SPRING_SECURITY_CONTEXT)!=null){
-                  return "redirect:/";
+        if (request.getSession().getAttribute(Constant.SPRING_SECURITY_CONTEXT) != null) {
+            return "redirect:/";
+        }
+
+        Object o = request.getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION);
+        o = o == null ? request.getSession().getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION) : o;
+        if (o != null) {
+            if (o instanceof BadCredentialsException || o instanceof UsernameNotFoundException) {
+                model.put("failureMsg", "用户名或者密码错误，请重试！");
+            } else if (o instanceof CredentialsExpiredException) {
+                model.put("failureMsg", "登录会话过期,请重新登录！");
             }
+        } else {
+            model.remove("failureMsg");
+        }
+        return view("login");
+    }
 
-            Object o = request.getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION);
-            o = o==null?request.getSession().getAttribute(Constant.SPRING_SECURITY_LAST_EXCEPTION):o;
-            if (o!=null){
-                  if(o instanceof BadCredentialsException || o instanceof UsernameNotFoundException){
-                        model.put("failureMsg", "用户名或者密码错误，请重试！");
-                  }else if (o instanceof CredentialsExpiredException) {
-                        model.put("failureMsg", "登录会话过期,请重新登录！");
-                  }
-            }else{
-                  model.remove("failureMsg");
+    /**
+     * 关于页面.
+     *
+     * @return
+     */
+    @RequestMapping("/about")
+    @PermitAll
+    public String about(Map<String, Object> model) {
+        model.put("buildInfo", buildInfo);
+        return view("common/about");
+    }
+
+    /**
+     * 修改保存密码.
+     *
+     * @return
+     */
+    @RequestMapping(value = "/password/save", method = RequestMethod.POST)
+    @ResponseBody
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    public Map<String, Object> savePassWd(@RequestParam String oldPasswd,
+                                          @RequestParam String newPasswd) {
+        Map<String, Object> map = new HashMap();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!userService.isPassWdMatch(user.getUsername(), oldPasswd)) {
+            map.put("success", false);
+            map.put("msg", "原始密码不正确!");
+        } else {
+            if (!userService.modifyPasswd(user.getUsername(), newPasswd)) {
+                map.put("success", false);
+                map.put("msg", "修改密码失败，请稍候重试!");
+            } else {
+                map.put("success", true);
+                map.put("msg", "密码修改成功！");
             }
-            return view("login");
-      }
+        }
+        return map;
+    }
 
-      /**
-       * 关于页面.
-       * @return
-       */
-      @RequestMapping("/about")
-      @PermitAll
-      public String about(Map<String, Object> model){
-            model.put("buildInfo",buildInfo);
-            return view("common/about");
-      }
+    /**
+     * 注销.
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/logout")
+    public String logout(Map<String, Object> model) {
+        SecurityContextHolder.clearContext();
+        return "redirect:/login";
+    }
 
-      /**
-       * 修改保存密码.
-       * @return
-       */
-      @RequestMapping(value = "/password/save",method = RequestMethod.POST)
-      @ResponseBody
-      @Secured({"ROLE_ADMIN","ROLE_USER"})
-      public Map<String,Object> savePassWd(@RequestParam String oldPasswd,
-                                           @RequestParam String newPasswd){
-            Map<String,Object> map = new HashMap();
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if(!userService.isPassWdMatch(user.getUsername(),oldPasswd)){
-                  map.put("success",false);
-                  map.put("msg","原始密码不正确!");
-            }else{
-                  if(!userService.modifyPasswd(user.getUsername(),newPasswd)){
-                        map.put("success",false);
-                        map.put("msg","修改密码失败，请稍候重试!");
-                  }else {
-                        map.put("success",true);
-                        map.put("msg","密码修改成功！");
-                  }
-            }
-            return map;
-      }
-
-      /**
-       * 注销.
-       * @param model
-       * @return
-       */
-      @RequestMapping("/logout")
-      public String logout(Map<String, Object> model) {
-            SecurityContextHolder.clearContext();
-            return "redirect:/login";
-      }
-
-      /**
-       * 切换账套.
-       * @param id
-       * @return
-       */
-      @RequestMapping("/switch/to/book/{id}")
-      @ResponseBody
-      @Secured({"ROLE_ADMIN","ROLE_USER"})
-      public boolean switchAccoutBook(@PathVariable("id") Long id,HttpServletRequest request){
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            LoginHistory loginHistory = loginHistoryService.selectLastSuccessLoginHistory(user.getUsername());
-            loginHistory.setAccountBookId(id);
-            int result = loginHistoryService.updateLoginHistory(loginHistory);
-            if(result<=0){
-                  return false;
-            }else{
-                  AccountBook accountBook = accountBookService.selectAccountBookById(id);
-                  request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK,accountBook);
-                  request.getSession().setAttribute(Constant.CURRENT_YEAR, accountBook.getInitYear()+"年");
-                  request.getSession().setAttribute(Constant.CURRENT_PERIOD, periodService.selectCurrentPeriod(id));
-                  return true;
-            }
-      }
+    /**
+     * 切换账套.
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("/switch/to/book/{id}")
+    @ResponseBody
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    public boolean switchAccoutBook(@PathVariable("id") Long id, HttpServletRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LoginHistory loginHistory = loginHistoryService.selectLastSuccessLoginHistory(user.getUsername());
+        loginHistory.setAccountBookId(id);
+        int result = loginHistoryService.updateLoginHistory(loginHistory);
+        if (result <= 0) {
+            return false;
+        } else {
+            AccountBook accountBook = accountBookService.selectAccountBookById(id);
+            request.getSession().setAttribute(Constant.CURRENT_ACCOUNT_BOOK, accountBook);
+            request.getSession().setAttribute(Constant.CURRENT_YEAR, accountBook.getInitYear() + "年");
+            request.getSession().setAttribute(Constant.CURRENT_PERIOD, periodService.selectCurrentPeriod(id));
+            return true;
+        }
+    }
 }

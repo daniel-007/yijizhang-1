@@ -41,6 +41,10 @@
                     >
         </div>
 
+        <#--<div class="datagrid-btn-separator"></div>-->
+
+        <a id="exportToExcel" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-file-excel-o fa-lg"></i> 导出</a>
+
         <div style="float: right;color: #ff0000;font-weight: 700;">
             <i class="fa fa-hand-o-right fa-lg"></i> 当前页面会计期间：
             <input id="period" name="period" style="width: 60px;">

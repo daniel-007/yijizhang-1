@@ -1,9 +1,10 @@
 Search_Voucher = function () {
 
     return {
+        datatable: null,
         init_data_table: function () {
 
-            $("#search_voucher_container").find("#data_table").datagrid({
+            Search_Voucher.datatable = $("#search_voucher_container").find("#data_table").datagrid({
                 url: 'search/voucher/vouchers',
                 border: false,
                 fit: true,
@@ -13,9 +14,7 @@ Search_Voucher = function () {
                 toolbar: '#search_voucher_container #tb',
                 columns: [
                     [
-                        {field: 'current_period', title: '期间', hidden: true},
-                        {field: 'voucher_time', title: '日期', hidden: true},
-                        {field: 'voucher_word', title: '凭证字号', hidden: true},
+                        {field: 'voucher', title: '凭证字号', hidden: true},
                         {field: 'summary', title: '摘要', width: 100, formatter: function (value) {
                             var keyword = $("#search_voucher_container").find("#keyword_input").textbox("getValue");
                             if (value) {
@@ -221,12 +220,19 @@ Search_Voucher = function () {
             });
         },
 
+        init_export_button: function () {
+            $("#search_voucher_container").find("#exportToExcel").click(function () {
+                App.exportToExcel("凭证查询", Search_Voucher.datatable);
+            });
+        },
+
         init: function () {
 
             this.init_button_event();
             this.init_search();
             this.init_period_select();
             this.init_data_table();
+            this.init_export_button();
 
         }
     }
