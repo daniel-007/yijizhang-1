@@ -6,6 +6,7 @@ Account_Subject_Init_Data = function () {
     return {
         _editor_: {type: 'numberbox', options: {precision: 2, prompt: '0.00'}},
         _keyword_val_: '',
+        datagrid_table: null,
         search: function () {
             var keyword = $("#init_data_table_container").find("#search_subject_code").val().toString();
             this._keyword_val_ = keyword;
@@ -70,7 +71,7 @@ Account_Subject_Init_Data = function () {
 
         init_data_table: function () {
 
-            $("#init_data_table_container").find("#init_data_table").datagrid({
+            this.datagrid_table = $("#init_data_table_container").find("#init_data_table").datagrid({
                 url: 'account/subject/initData/alldata',
                 fitColumns: true,
                 rownumbers: true,
@@ -146,6 +147,13 @@ Account_Subject_Init_Data = function () {
                                 ]
                             });
 
+                        }
+                    },
+                    '-',
+                    {
+                        text: '<i class="fa fa-file-excel-o fa-lg"></i> 导出',
+                        handler: function () {
+                            App.exportToExcel("初始化数据", Account_Subject_Init_Data.datagrid_table);
                         }
                     }
                 ],
