@@ -20,7 +20,6 @@ VouchercollectSearch=function(){
 				});
         	});
     	  $("#coollectListMenu").find("#exportToExcel").click(function () {
-    		  alert();
               App.exportToExcel("凭证汇总表", VouchercollectSearch.datatable);
           });
         },
