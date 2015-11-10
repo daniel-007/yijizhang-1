@@ -9,6 +9,8 @@
 		<tr>
 		    <td>
 			    <a id="coollectListSearch" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-filter fa-lg"></i>&#8194;过滤</a>
+			    <a id="exportToExcel" href="#" class="easyui-linkbutton" plain="true"><i
+                    class="fa fa-file-excel-o fa-lg"></i> 导出</a>
 		    </td>
 		</tr>
 	</table>    
