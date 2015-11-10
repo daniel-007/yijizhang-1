@@ -97,7 +97,7 @@ VouchercollectSearch=function(){
 	                            return "font-weight:700;color:green;";
 	                      }},
 	                      {field:'credit',title:'贷方金额',align:'left', width: 100, styler: function () {
-	                            return "font-weight:700;color:red;";
+	                            return "font-weight:700;color:blue;";
 	                      }}
   				      ]],
   				      rowStyler: function(index,row){
