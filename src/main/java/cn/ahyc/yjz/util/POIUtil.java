@@ -45,6 +45,7 @@ public class POIUtil {
         String[] fields = new String[]{};
         String filename = "test";
         JSONArray data = null;
+        JSONArray footer = null;
 
         try {
             jsonObject = JSONArray.parseObject(dataJsonStr);
@@ -53,6 +54,7 @@ public class POIUtil {
             filename = jsonObject.getObject("filename", String.class);
             JSONObject dataObj = JSONArray.parseObject(jsonObject.getObject("data", String.class));
             data = dataObj.getObject("rows", JSONArray.class);
+            footer = dataObj.getObject("footer", JSONArray.class);
         } catch (Exception e) {
             throw new Exception("解析成json出现异常。");
         }
@@ -60,24 +62,43 @@ public class POIUtil {
         //POI 填充数值
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(filename);
+        int rownum = 0;
 //        sheet.setDefaultColumnWidth(100 * 250);
 
-        Row headerRow = sheet.createRow(0);
-        Cell cell = null;
-        for (int i = 0; i < titles.length; i++) {
-            cell = headerRow.createCell(i);
-            cell.setCellStyle(getCellStyle(wb));
-            cell.setCellValue(titles[i]);
-            sheet.autoSizeColumn(i, true);
+        if (titles.length != 0) {
+            Row headerRow = sheet.createRow(rownum++);
+            Cell cell = null;
+            for (int i = 0; i < titles.length; i++) {
+                String tit = titles[i];
+                cell = headerRow.createCell(i);
+                cell.setCellStyle(getCellStyle(wb));
+                cell.setCellValue(tit);
+                sheet.autoSizeColumn(i, true); //
+            }
         }
 
         for (int j = 0; j < data.size(); j++) {
             JSONObject jo = data.getJSONObject(j);
-            Row row = sheet.createRow(j + 1);
+            Row row = sheet.createRow(rownum++);
 
             for (int i = 0; i < fields.length; i++) {
                 String val = jo.get(fields[i]) == null ? "" : jo.get(fields[i]).toString();
                 row.createCell(i).setCellValue(val);
+                sheet.autoSizeColumn(i, true); //
+            }
+        }
+
+        //footer
+        if (footer != null) {
+            for (int j = 0; j < footer.size(); j++) {
+                JSONObject jo = footer.getJSONObject(j);
+                Row row = sheet.createRow(rownum++);
+
+                for (int i = 0; i < fields.length; i++) {
+                    String val = jo.get(fields[i]) == null ? "" : jo.get(fields[i]).toString();
+                    row.createCell(i).setCellValue(val);
+                    sheet.autoSizeColumn(i, true); //
+                }
             }
         }
 
@@ -112,8 +133,8 @@ public class POIUtil {
         cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 居中
 
         Font font = (HSSFFont) wb.createFont();
-        font.setFontName("黑体");
-        font.setFontHeightInPoints((short) 16);//设置字体大小
+        font.setFontName("微软雅黑");
+        font.setFontHeightInPoints((short) 14);//设置字体大小
         cellStyle.setFont(font);
 
         return cellStyle;

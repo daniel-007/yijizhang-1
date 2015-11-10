@@ -5,7 +5,6 @@ Profit=function(){
 	var selectIndex = undefined;
 
 	return {
-		
 		//初始化
 		init:function(searchtPeriod) {
 			$('#profitSave').click(function() {
@@ -218,6 +217,14 @@ Profit=function(){
 					$('#cellContent').textbox('setText',value);
 				}
 			});
+
+
+            //导出
+            $('#profitExportToExcel').click(function() {
+                if(Profit.endEdit()){
+                    App.profitExportToExcel("利润表", dg);
+                }
+            });
 		},
 		isChanged:function(){
 			var rows = $('#profitDg').datagrid('getChanges');

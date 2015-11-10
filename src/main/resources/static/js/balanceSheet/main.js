@@ -210,8 +210,11 @@ Balance_Sheet = function () {
                 });
 
                 Balance_Sheet.datagrid_tables.push(datagrid_table);
+
             })
 
+            //导出
+            this.init_export_button();
 
         },
         //期间可选.
@@ -249,6 +252,51 @@ Balance_Sheet = function () {
                             t.tooltip('hide');
                         });
                 }
+            });
+        },
+
+        init_export_button: function () {
+            this.container.find("#exportToExcel").click(function () {
+
+                var tbs = Balance_Sheet.datagrid_tables;
+
+                var titles = ['编号', '名称', '年初数', '期末数', '编号', '名称', '年初数', '期末数'];
+                var fields = ['num', 'name', 'yearBegin', 'periodEnd', 'num1', 'name1', 'yearBegin1', 'periodEnd1'];
+                var datarows = $(tbs[0]).datagrid("getData")["rows"];
+                var datarows1 = $(tbs[1]).datagrid("getData")["rows"];
+
+                var ds = [];
+
+                var len = datarows.length;
+                if (datarows1.length < datarows.length) {
+                    len = datarows.length;
+                }
+                for (var i = 0; i < len; i++) {
+                    var _d = {};
+                    var d = datarows[i];
+                    var d1 = datarows1[i];
+                    if (d) {
+                        _d['num'] = d['num'];
+                        _d['name'] = d['name'];
+                        _d['yearBegin'] = d['yearBegin'];
+                        _d['periodEnd'] = d['periodEnd'];
+                    }
+                    if (d1) {
+                        _d['num1'] = d1['num'];
+                        _d['name1'] = d1['name'];
+                        _d['yearBegin1'] = d1['yearBegin'];
+                        _d['periodEnd1'] = d1['periodEnd'];
+                    }
+                    ds.push(_d);
+                }
+
+                var data = {rows: ds};
+                var dataJsonStr = {filename: "资产负债表", titles: titles, fields: fields, data: JSON.stringify(data)};
+
+                var $form = $("<form action='export/to/excel' method='POST'></form>");
+                $form.html($("<input name='dataJsonStr'>").val(JSON.stringify(dataJsonStr)));
+                $form.submit();
+
             });
         },
 

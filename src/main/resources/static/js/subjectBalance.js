@@ -3,7 +3,16 @@
  */
 SubjectBalance=function(){
 	return {
-		//记账科目余额页面初始化
+
+        datatable:null,
+
+        init_export_button:function(){
+            $("#balanceListMenu #exportToExcel").click(function(){
+                App.exportToExcel("科目余额", SubjectBalance.datatable);
+            });
+        },
+
+        //记账科目余额页面初始化
 		voucherInit:function(id) {
 			$('#voucherBalanceDg').datagrid({
 				heigth:400,
@@ -58,6 +67,10 @@ SubjectBalance=function(){
         	$('#balanceListRefresh').bind('click', function(){
         		SubjectBalance.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	});
+
+            //导出
+            SubjectBalance.init_export_button();
+
         },
         //过滤页面-确定
         submit:function(){
@@ -88,7 +101,7 @@ SubjectBalance=function(){
         //查询-科目余额表 表格初始化
         dgInit:function(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull){
         	if(periodFrom&&periodTo&&periodFrom==periodTo){
-        		$('#balanceListDg').datagrid({
+                SubjectBalance.datatable = $('#balanceListDg').datagrid({
         			singleSelect:true,
         			fitColumns: true,
         			fit:true,
@@ -121,7 +134,7 @@ SubjectBalance=function(){
 			      	}
         		});
         	} else {
-        		$('#balanceListDg').datagrid({
+                SubjectBalance.datatable = $('#balanceListDg').datagrid({
         			singleSelect:true,
         			fitColumns: true,
         			fit:true,

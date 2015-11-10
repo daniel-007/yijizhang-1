@@ -79,6 +79,7 @@ Account_Subject_Init_Data = function () {
                 border: false,
                 columns: [
                     [
+                        {field: 'id', title: 'id', hidden: true},
                         {field: 'subjectCode', title: '科目代码', width: 100, formatter: this.subjectCodeFormatter},
                         {field: 'subjectName', title: '科目名称', width: 180, formatter: this.subjectNameFormatter},
                         {field: 'totalDebit', title: '累计借方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {

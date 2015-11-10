@@ -26,6 +26,9 @@
 			            <td>
 			                <a id="profitCount" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-dollar fa-lg"></i>&#8194;计算</a>
 			            </td>
+			            <td>
+                            <a id="profitExportToExcel" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-file-excel-o fa-lg"></i> 导出</a>
+			            </td>
 		            </tr>
 	            </table>
             </td>

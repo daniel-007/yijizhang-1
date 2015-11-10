@@ -12,6 +12,7 @@
         <i class="fa fa-hand-o-right fa-lg"></i> 当前页面会计期间：
         <input id="period" name="period" style="width: 60px;">
 
+        <a id="exportToExcel" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-file-excel-o fa-lg"></i> 导出</a>
 
         <div style="float: right;"><a id="tip" href="#"><i class="fa fa-info-circle"></i> 公式说明 </a></div>
     </div>

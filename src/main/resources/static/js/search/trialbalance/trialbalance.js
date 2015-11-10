@@ -4,6 +4,7 @@
 TrialBalance=function(){
 	return {
 		theWin: null,
+        datatable:null,
 		//查询-试算平衡表页面初始化
 		init:function(currentPeriod,level){
 			TrialBalance.dgInit(currentPeriod,level);
@@ -26,6 +27,11 @@ TrialBalance=function(){
 			$('#trialbalanceListRefresh').bind('click', function(){
 				TrialBalance.refresh(currentPeriod,level);
 			});
+
+            //导出
+            $("#trialbalanceListMenu").find("#exportToExcel").click(function(){
+                App.exportToExcel("试算平衡表", TrialBalance.datatable);
+            });
 		},
         //查询-试算平衡表过滤页面初始化
         searchInit:function(currentPeriod,level){
@@ -60,7 +66,7 @@ TrialBalance=function(){
         },
         //表格初始化
         dgInit:function(currentPeriod,level){
-    		$('#trialbalanceListDg').datagrid({
+            TrialBalance.datatable = $('#trialbalanceListDg').datagrid({
     			singleSelect:true,
     			fitColumns: true,
     			fit:true,

@@ -14,7 +14,7 @@ Search_Voucher = function () {
                 toolbar: '#search_voucher_container #tb',
                 columns: [
                     [
-                        {field: 'voucher', title: '凭证字号', hidden: true},
+                        {field: 'voucher', title: '凭证字号', hidden: true, show: true},
                         {field: 'summary', title: '摘要', width: 100, formatter: function (value) {
                             var keyword = $("#search_voucher_container").find("#keyword_input").textbox("getValue");
                             if (value) {

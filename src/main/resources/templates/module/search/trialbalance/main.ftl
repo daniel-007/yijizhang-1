@@ -13,6 +13,9 @@
 		    <td>
 			    <a id="trialbalanceListRefresh" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-refresh fa-lg"></i>&#8194;刷新</a>
 		    </td>
+		    <td>
+                <a id="exportToExcel" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-file-excel-o fa-lg"></i> 导出</a>
+		    </td>
 		    <td><div class="datagrid-btn-separator"></div></td>
 		    <td><div id="balanceResult" style="padding:0px 100px"></div></td>
 		</tr>

@@ -93,6 +93,21 @@ App = function () {
             $TC.tabs('select', title);
         },
 
+        /**
+         * 利润表导出excel.
+         * @param filename
+         * @param datatable
+         */
+        profitExportToExcel: function (filename, datatable) {
+            var data = $(datatable).datagrid("getData");
+            var columns = [], titles = ["项目", "本期金额", "上期金额"], fields = ["cA", "cBVal", "cCVal"], dataJsonStr = JSON.stringify(data);
+
+            dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};
+
+            var $form = $("<form action='export/to/excel' method='POST'></form>");
+            $form.html($("<input name='dataJsonStr'>").val(JSON.stringify(dataJsonStr)));
+            $form.submit();
+        },
 
         /**
          * 导出excel公用方法， 把当前展示表datatable数据导出。
@@ -102,12 +117,39 @@ App = function () {
         exportToExcel: function (filename, datatable) {
 
             var data = $(datatable).datagrid("getData");
-            var columns = $(datatable).datagrid("options")['columns'][0];
-            var titles = [], fields = [], dataJsonStr = JSON.stringify(data);
-            for (var i = 0; i < columns.length; i++) {
-                var column = columns[i];
-                titles.push(column['title']);
-                fields.push(column['field']);
+            var cs = $(datatable).datagrid("options")['columns'];
+            var columns = [], titles = [], fields = [], dataJsonStr = JSON.stringify(data);
+
+            //合并column
+            var first_column = cs[0];
+
+            for (var i = 0; i < first_column.length; i++) {
+                var fc = first_column[i];
+                //去除hidden列，有特殊需求可在该列加show=true.
+                if (fc.hidden) {
+                    if (fc.show) {
+                    } else {
+                        continue;
+                    }
+                }
+                //解析title,field
+                if (fc["field"]) {
+                    titles.push(fc["title"]);
+                    fields.push(fc["field"]);
+                } else {
+                    if (fc["colspan"]) {
+                        var cols_num = parseInt(fc["colspan"]);
+                        var title = fc["title"];
+                        if (cs[1]) {
+                            for (var j = 0; j < cols_num; j++) {
+                                var fie = cs[1][j]["field"];
+                                var tit = title + "/" + cs[1][j]["title"];
+                                titles.push(tit);
+                                fields.push(fie);
+                            }
+                        }
+                    }
+                }
             }
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};

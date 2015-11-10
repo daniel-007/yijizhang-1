@@ -40,6 +40,7 @@
 			<#if !(currentPeriod??&&currentPeriod!=sessionPeriod)>
                 <a id="voucherSubjectBalance" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-table fa-lg"></i>&#8194;科目余额</a>
 			</#if>
+                <a id="voucherexportToExcel" href="#" class="easyui-linkbutton" plain="true"><i class="fa fa-file-excel-o fa-lg"></i> 导出</a>
                 <a id="voucherHelp" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-question-circle fa-lg"></i>&#8194;凭证制作说明</a>
             </td>
         </tr>
@@ -60,7 +61,7 @@
     <a id="voucherWordEdit" href="javascript:void(0)" class="button button-glow button-square button-tiny"><i class="fa fa-book fa-lg"></i></a>
     <select id="voucherWord" name="voucherWord" style="width:100px;"></select>字
     <input class="easyui-numberspinner" id="voucherNo" name="voucherNo" style="width:80px;" value="${voucher.voucherNo?default(voucherNo)}" data-options="required:true,min:1">号
-    日期：<input type="text" id="voucherTime" name="voucherTime" value="${(voucher.voucherTime?string("yyyy-MM-dd"))?default(voucherTime)}"></input>
+    日期：<input type="text" id="voucherTime" name="voucherTime" value="${(voucher.voucherTime?string("yyyy-MM-dd"))?default(voucherTime)}" />
     第${currentPeriod?default(sessionPeriod)}期
     附单据<input class="easyui-numberspinner" name="billNum" style="width:80px;" value="${voucher.billNum?default('0')}" data-options="required:true,min:0">张
 </div>
