@@ -1,7 +1,6 @@
 /**
  * @Title: MyAviator.java 
  * @Package cn.ahyc.yjz.util 
- * @Description: TODO
  * @author chengjiarui 1256064203@qq.com
  * @date 2015年11月2日 上午9:51:57 
  * @version V1.0   
@@ -57,7 +56,7 @@ public class MyAviator {
         if (StringUtils.isBlank(expression)) {
             expression = "0";
         }
-        LOGGER.info("expression compile：{}", expression);
+        LOGGER.debug("expression compile：{}", expression);
         Expression compiledExp = AviatorEvaluator.compile(expression, true);// 编译表达式缓存
         list.add(compiledExp);
         return list;
