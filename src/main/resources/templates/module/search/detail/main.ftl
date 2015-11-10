@@ -17,10 +17,10 @@
             <div style="float: left;font-weight: 700;">
                 <i class="fa fa-hand-o-right fa-lg"></i> 会计期间：
                 <input id="startPeriod" name="startPeriod" class="easyui-numberspinner"
-                       data-options="onChange: function(value){$('#vv').text(value);}" style="width: 50px;"/>
+                       data-options="min:1,max:12,onChange: function(value){$('#vv').text(value);}" style="width: 50px;"/>
                 至
                 <input id="endPeriod" name="endPeriod" class="easyui-numberspinner"
-                       data-options="onChange: function(value){$('#vv').text(value);}" style="width: 50px;"/>
+                       data-options="min:1,max:12,onChange: function(value){$('#vv').text(value);}" style="width: 50px;"/>
             </div>
             <div style="float: left;font-weight: 700;">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-hand-o-right fa-lg"></i>科目代码：

@@ -8,7 +8,7 @@
 			<table cellpadding="5">
 				<tr>
 					<td>会计期间：</td>
-					<td colspan="3"><input class="easyui-numberspinner" id="trialcurrentPeriod" name="currentPeriod" style="width:80px;" value="${currentPeriod?default('1')}" data-options="required:true,min:1"></input></td>
+					<td colspan="3"><input class="easyui-numberspinner" id="trialcurrentPeriod" name="currentPeriod" style="width:80px;" value="${currentPeriod?default('1')}" data-options="required:true,min:1,max:12"></input></td>
 				</tr>
 				<tr>	
 					<td>科目级别：</td>

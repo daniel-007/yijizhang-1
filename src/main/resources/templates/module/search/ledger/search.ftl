@@ -8,7 +8,7 @@
 			<table cellpadding="5">
 				<tr>
 					<td>会计期间：</td>
-					<td><input class="easyui-numberspinner" id="ledgerperiodFrom" name="periodFrom" style="width:80px;" value="${periodFrom?default('1')}" data-options="min:1"></input></td>
+					<td><input class="easyui-numberspinner" id="ledgerperiodFrom" name="periodFrom" style="width:80px;" value="${periodFrom?default('1')}" data-options="min:1,max:12"></input></td>
 					<td>至：</td>
 					<td><input class="easyui-numberspinner" id="ledgerperiodTo" name="periodTo" style="width:80px;" value="${periodTo?default('1')}" data-options="min:1,max:12"></input></td>
 				</tr>
