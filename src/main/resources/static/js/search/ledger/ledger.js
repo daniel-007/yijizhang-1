@@ -35,9 +35,9 @@ Ledger=function(){
         	$('#ledgerRefresh').bind('click', function(){
         		Ledger.refresh(periodFrom,periodTo,level,subjectCodeFrom,subjectCodeTo,valueNotNull);
         	});
-        	//$('#ledgerPrint').click(function(){
-        	//	Print.myPrintArea($('#ledger'));
-        	//});
+        	$("#ledger").find("#exportToExcel").click(function () {
+                App.exportToExcel("总账", $('#ledgerDg'));
+            });
         },
         //过滤页面-确定
         submit:function(){

@@ -13,6 +13,9 @@
 		    <td>
 			    <a id="ledgerRefresh" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-refresh fa-lg"></i>&#8194;刷新</a>
 		    </td>
+		    <td>
+			    <a id="exportToExcel" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true"><i class="fa fa-file-excel-o fa-lg"></i>&#8194;导出</a>
+		    </td>
 		</tr>
 	</table>    
 </div>
