@@ -11,10 +11,16 @@
             <br/>
             <a href="javascript:void(0)" class="easyui-linkbutton add" data-options="iconCls:'icon-add'"
                style="width: 80%">新增</a>
+
+            <div style="height: 10px;"></div>
             <a href="javascript:void(0)" class="easyui-linkbutton edit" data-options="iconCls:'icon-edit'"
                style="width: 80%">修改</a>
+
+            <div style="height: 10px;"></div>
             <a href="javascript:void(0)" class="easyui-linkbutton remove" data-options="iconCls:'icon-remove'"
                style="width: 80%">删除</a>
+
+            <div style="height: 10px;"></div>
             <a href="javascript:void(0)" class="easyui-linkbutton tip" data-options="iconCls:'icon-tip'"
                style="width: 80%">科目说明</a>
         </div>

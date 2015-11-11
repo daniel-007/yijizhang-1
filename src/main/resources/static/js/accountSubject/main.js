@@ -155,7 +155,7 @@ Account_Subject = function () {
                      * 以下内容加载树形数据.
                      */
                     var table_id = category_id + "_table";
-                    $accountSubject_tabs.tabs('getSelected').html("<table id='" + table_id + "' style='width: 100%;'></table>");
+                    $accountSubject_tabs.tabs('getSelected').html('<table id="' + table_id + '" style="width:100%;"></table>');
                     Account_Subject.account_subject_current_table = $("#" + table_id).treegrid({
                         url: 'account/subject/category/' + category_id + '/subjects',
                         idField: 'subject_code',

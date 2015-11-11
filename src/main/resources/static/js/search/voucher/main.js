@@ -26,10 +26,10 @@ Search_Voucher = function () {
                         {field: 'subject_code', title: '科目代码', formatter: this.keywordHighlight, width: 100},
                         {field: 'subject_name', title: '科目名称', formatter: this.keywordHighlight, width: 100},
                         {field: 'debit', title: '借方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
-                            return "font-weight:700;color:red;";
+                            return "font-weight:700;color:green;";
                         }},
                         {field: 'credit', title: '贷方金额', align: 'right', formatter: this.moneyFormatter, width: 100, styler: function () {
-                            return "font-weight:700;color:green;";
+                            return "font-weight:700;color:blue;";
                         }}
                     ]
                 ],

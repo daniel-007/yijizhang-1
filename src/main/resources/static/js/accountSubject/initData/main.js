@@ -83,10 +83,10 @@ Account_Subject_Init_Data = function () {
                         {field: 'subjectCode', title: '科目代码', width: 100, formatter: this.subjectCodeFormatter},
                         {field: 'subjectName', title: '科目名称', width: 180, formatter: this.subjectNameFormatter},
                         {field: 'totalDebit', title: '累计借方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
-                            return 'font-weight: 700;color:red;';
+                            return 'font-weight: 700;color:green;';
                         }},
                         {field: 'totalCredit', title: '累计贷方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
-                            return 'font-weight: 700;color:green;';
+                            return 'font-weight: 700;color:blue;';
                         }},
                         {field: 'direction', title: '方向', width: 30, align: 'center', formatter: this.directionFormatter},
                         {field: 'initialLeft', title: '期初余额', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
