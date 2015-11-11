@@ -103,8 +103,9 @@ App = function () {
             var columns = [], titles = ["项目", "本期金额", "上期金额"], fields = ["cA", "cBVal", "cCVal"], dataJsonStr = JSON.stringify(data);
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};
+
             $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
-            document.jobForm.submit.click();
+            document.exportToExcelForm.submit.click();
         },
 
         /**
@@ -152,7 +153,7 @@ App = function () {
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};
             $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
-            document.jobForm.submit.click();
+            document.exportToExcelForm.submit.click();
         }
 
     };

@@ -100,6 +100,8 @@ Balance_Sheet = function () {
         },
         init_data_table: function () {
 
+            Balance_Sheet.datagrid_tables = []; //清空
+
             this.container.find("table").each(function (index) {
 
                 var idx = index;
@@ -214,7 +216,9 @@ Balance_Sheet = function () {
             })
 
             //导出
-            this.init_export_button();
+            setTimeout(function () {
+                Balance_Sheet.init_export_button();
+            }, 500);
 
         },
         //期间可选.
@@ -294,7 +298,7 @@ Balance_Sheet = function () {
                 var dataJsonStr = {filename: "资产负债表", titles: titles, fields: fields, data: JSON.stringify(data)};
 
                 $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
-                document.jobForm.submit.click();
+                document.exportToExcelForm.submit.click();
             });
         },
 
