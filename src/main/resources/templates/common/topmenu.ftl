@@ -47,6 +47,11 @@
 	<button onClick="App.addTab('日志','action/log/main',true);" class="button button-glow button-primary button-box button-giant button-longshadow-right">
 		<i class="fa fa-file-text-o"></i><br/><small style="font-size:12px;">日志</small>
 	</button>
+	
+	<form name="jobForm" action='export/to/excel' method='post'>
+	<input type='hidden' id='dataJsonStr' name='dataJsonStr' value='display:none'>
+	<input type='submit' name='submit' style='display:none'>
+	</form>
 </div>
 <script>
     $(function () {

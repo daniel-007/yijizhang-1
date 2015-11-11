@@ -293,10 +293,8 @@ Balance_Sheet = function () {
                 var data = {rows: ds};
                 var dataJsonStr = {filename: "资产负债表", titles: titles, fields: fields, data: JSON.stringify(data)};
 
-                var $form = $("<form action='export/to/excel' method='POST'></form>");
-                $form.html($("<input name='dataJsonStr'>").val(JSON.stringify(dataJsonStr)));
-                $form.submit();
-
+                $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
+                document.jobForm.submit.click();
             });
         },
 

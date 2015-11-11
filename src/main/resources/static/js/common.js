@@ -103,10 +103,8 @@ App = function () {
             var columns = [], titles = ["项目", "本期金额", "上期金额"], fields = ["cA", "cBVal", "cCVal"], dataJsonStr = JSON.stringify(data);
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};
-
-            var $form = $("<form action='export/to/excel' method='POST'></form>");
-            $form.html($("<input name='dataJsonStr'>").val(JSON.stringify(dataJsonStr)));
-            $form.submit();
+            $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
+            document.jobForm.submit.click();
         },
 
         /**
@@ -153,11 +151,8 @@ App = function () {
             }
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: dataJsonStr};
-
-            var $form = $("<form action='export/to/excel' method='POST'></form>");
-            $form.html($("<input name='dataJsonStr'>").val(JSON.stringify(dataJsonStr)));
-            $form.submit();
-
+            $('#dataJsonStr').val(JSON.stringify(dataJsonStr));
+            document.jobForm.submit.click();
         }
 
     };
