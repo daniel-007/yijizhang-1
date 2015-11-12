@@ -280,16 +280,20 @@ Balance_Sheet = function () {
                     var d = datarows[i];
                     var d1 = datarows1[i];
                     if (d) {
-                        _d['num'] = d['num'];
-                        _d['name'] = d['name'];
-                        _d['yearBegin'] = d['yearBegin'];
-                        _d['periodEnd'] = d['periodEnd'];
+                        if (d['num']) {
+                            _d['num'] = d['num'];
+                            _d['name'] = d['name'];
+                            _d['yearBegin'] = d['yearBegin'];
+                            _d['periodEnd'] = d['periodEnd'];
+                        }
                     }
                     if (d1) {
-                        _d['num1'] = d1['num'];
-                        _d['name1'] = d1['name'];
-                        _d['yearBegin1'] = d1['yearBegin'];
-                        _d['periodEnd1'] = d1['periodEnd'];
+                        if (d1['num']) {
+                            _d['num1'] = d1['num'];
+                            _d['name1'] = d1['name'];
+                            _d['yearBegin1'] = d1['yearBegin'];
+                            _d['periodEnd1'] = d1['periodEnd'];
+                        }
                     }
                     ds.push(_d);
                 }

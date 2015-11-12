@@ -38,22 +38,42 @@ Account_Subject_Edit = function () {
 
             $("#subject_form_submit_button").click(function () {
 
-                $.ajax({
-                    url: "account/subject/edit",
-                    data: $("#accountSubject_edit").find("form").serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            Account_Subject_Edit.closeAndRefreshCurTab();
-                            Account_Subject.account_subject_current_table.treegrid("reload");
-                            Account_Subject.account_subject_current_table.treegrid("unselectAll");
-                        } else {
-                            $.messager.alert("操作失败", data.msg, "error");
-                        }
+                //验证会计科目.
+                var sl = Account_Subject_Edit.subject_code_total_len;
+                var sl_val = $("#accountSubject_edit").find("#subject_code").val();
+                if (sl_val) {
+                    if (sl_val.length != sl) {
+                        $("#accountSubject_edit").find("#subject_code").focus();
+                        return;
                     }
-                });
+                } else {
+                    $("#accountSubject_edit").find("#subject_code").focus();
+                    return;
+                }
+
+                //保存操作
+                if ($("#accountSubject_edit").find("form").form('validate')) {
+
+                    $.ajax({
+                        url: "account/subject/edit",
+                        data: $("#accountSubject_edit").find("form").serialize(),
+                        success: function (data) {
+                            if (data.success) {
+                                Account_Subject_Edit.closeAndRefreshCurTab();
+                                Account_Subject.account_subject_current_table.treegrid("reload");
+                                Account_Subject.account_subject_current_table.treegrid("unselectAll");
+                            } else {
+                                $.messager.alert("操作失败", data.msg, "error");
+                            }
+                        }
+                    });
+                }
 
             })
         },
+
+        subject_code_total_len: 0,
+
         checkCategoryDetail: function (record, fromParent) {
 
             var $subject_code = $("#accountSubject_edit #subject_code");
@@ -83,6 +103,8 @@ Account_Subject_Edit = function () {
                 //父级科目不许修改.
                 $("#accountSubject_edit").find("#parent_subject").combotree('readonly', true);
             }
+
+            this.subject_code_total_len = total_len;
 
             $category_detail.combobox({
                     url: '/account/subject/category/detail?category_id=' + category_id,
@@ -140,10 +162,10 @@ Account_Subject_Edit = function () {
         },
         init: function () {
 
-            this.button_event_bind();
-            this.form_submit_bind();
             this.initFormEle();
             this.checkCategoryDetail(Account_Subject.account_subject_selected_row, false);
+            this.button_event_bind();
+            this.form_submit_bind();
         }
 
     }
