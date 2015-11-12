@@ -96,6 +96,9 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             String periodEndExp = balanceSheet.getPeriodEndExp();
             String yearBeginExp = balanceSheet.getYearBeginExp();
 
+            logger.info("subjectBalanceMap={}", subjectBalanceMap.toString());
+            logger.info("firstPeriodSubjectBalanceMap={}", firstPeriodSubjectBalanceMap.toString());
+
             Object periodEnd = StringUtils.isEmpty(periodEndExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, periodEndExp, period.getId(), firstPeriodId);
             Object yearBegin = StringUtils.isEmpty(yearBeginExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, yearBeginExp, period.getId(), firstPeriodId);
             map = new HashMap();
@@ -202,7 +205,7 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
      */
     private void parseMultiCode(Map storeMap, String exp, String replaceStr, Long periodId) {
         Map paramMap = new HashMap();
-        String codeStr = exp.replaceAll("\\w*<|>\\w*", ""); //1001:1009
+        String codeStr = exp.substring(exp.indexOf("<") + 1, exp.indexOf(">")); //1001:1009
         String type = exp.substring(exp.indexOf(">") + 1); //.JC
         String[] codes = codeStr.split(":");  //["1001", "1009"]
 
