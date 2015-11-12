@@ -154,7 +154,7 @@ Account_Subject_Init_Data = function () {
                     {
                         text: '<i class="fa fa-file-excel-o fa-lg"></i> 导出',
                         handler: function () {
-                            App.exportToExcel("初始化数据", Account_Subject_Init_Data.datagrid_table);
+                            App.initDataExportToExcel("初始化数据", Account_Subject_Init_Data.datagrid_table);
                         }
                     }
                 ],
