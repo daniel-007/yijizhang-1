@@ -115,20 +115,9 @@ App = function () {
          */
         initDataExportToExcel: function (filename, datatable) {
 
-            var data = $(datatable).datagrid("getData")["rows"];
+            var data = $(datatable).datagrid("getData");
             var titles = ["科目代码", "科目名称", "累计借方", "累计贷方", "方向", "期初余额", "本年累计损益实际发生额" ];
             var fields = ["subjectCode", "subjectName", "totalDebit", "totalCredit", "directionname", "initialLeft", "yearOccurAmount"];
-
-            for (var i = 0; i < data.length; i++) {
-                var d = data[i];
-                if (d["direction"] == 1) {
-                    data[i]["directionname"] = '借';
-                } else {
-                    data[i]["directionname"] = '贷';
-                }
-            }
-
-            data = {rows: data};
 
             dataJsonStr = {filename: filename, titles: titles, fields: fields, data: JSON.stringify(data)};
             $('#dataJsonStr').val(JSON.stringify(dataJsonStr));

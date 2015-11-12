@@ -40,7 +40,7 @@ Account_Subject_Init_Data = function () {
             }
         },
         directionFormatter: function (value, row, index) {
-            if (row.direction == 1) {
+            if (row.direction == "借") {
                 return "<span style='color: green;'>借</span>";
             } else {
                 return "<span style='color: red;'>贷</span>";
@@ -186,6 +186,14 @@ Account_Subject_Init_Data = function () {
                         } else {
                             accountSubjects[i].isCrease = false;
                         }
+
+                        //重新定义方向.
+                        if (accountSubjects[i].direction == 1) {
+                            accountSubjects[i]['direction'] = '借';
+                        } else {
+                            accountSubjects[i]['direction'] = '贷';
+                        }
+
                     }
 
                     return {total: len, rows: accountSubjects, isFirstPeriod: isFirstPeriod};
