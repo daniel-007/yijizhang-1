@@ -3,17 +3,12 @@
  */
 package cn.ahyc.yjz.controller;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import cn.ahyc.yjz.model.*;
+import cn.ahyc.yjz.service.PeriodService;
+import cn.ahyc.yjz.service.VoucherService;
+import cn.ahyc.yjz.service.VoucherTemplateService;
+import cn.ahyc.yjz.service.impl.CarryOverServiceImpl;
+import cn.ahyc.yjz.util.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.ahyc.yjz.model.AccountBook;
-import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.Period;
-import cn.ahyc.yjz.model.Voucher;
-import cn.ahyc.yjz.model.VoucherDetail;
-import cn.ahyc.yjz.model.VoucherTemplate;
-import cn.ahyc.yjz.service.PeriodService;
-import cn.ahyc.yjz.service.VoucherService;
-import cn.ahyc.yjz.service.VoucherTemplateService;
-import cn.ahyc.yjz.util.Constant;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 记账凭证
@@ -42,7 +32,7 @@ import cn.ahyc.yjz.util.Constant;
  */
 @Controller
 @RequestMapping("/voucher")
-public class VoucherController extends BaseController{
+public class VoucherController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherController.class);
 
@@ -55,21 +45,21 @@ public class VoucherController extends BaseController{
     @Autowired
     private VoucherTemplateService voucherTemplateService;
 
-	public VoucherController() {
-	    this.pathPrefix="module/voucher/";
-	}
+    public VoucherController() {
+        this.pathPrefix = "module/voucher/";
+    }
 
     /**
      * 凭证页面
-     * 
+     *
      * @param model
      * @param voucherId
      * @param voucherTemplateId
      * @param session
      * @return
      */
-	@RequestMapping("/main")
-    public String voucher(Model model, Long voucherId, Long voucherTemplateId,Long isreversal, HttpSession session) {
+    @RequestMapping("/main")
+    public String voucher(Model model, Long voucherId, Long voucherTemplateId, Long isreversal, HttpSession session) {
         if (voucherTemplateId != null) {// 从模式凭证新增
             VoucherTemplate template = voucherTemplateService.queryVoucherTemplate(voucherTemplateId);
             model.addAttribute("templateId", template.getId());
@@ -100,13 +90,15 @@ public class VoucherController extends BaseController{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String sessiontime = accountBook.getInitYear() + "-" + String.format("%02d", period.getCurrentPeriod());
         String systemtime = dateFormat.format(new Date());
-        model.addAttribute("voucherTime", systemtime.startsWith(sessiontime) ? systemtime : sessiontime + "-01");
-	    return view("voucher");
-	}
-	
+        String lastTime = dateFormat.format(CarryOverServiceImpl.getLastDayOfMonth(accountBook.getInitYear(), period.getCurrentPeriod()));
+        model.addAttribute("voucherTime", systemtime.startsWith(sessiontime) ? systemtime :
+                (systemtime.compareTo(sessiontime) < 0 ? sessiontime + "-01" : lastTime));
+        return view("voucher");
+    }
+
     /**
      * 凭证明细列表
-     * 
+     *
      * @param voucherId
      * @param voucherTemplateId
      * @param session
@@ -115,7 +107,7 @@ public class VoucherController extends BaseController{
     @RequestMapping("/detail/list")
     @ResponseBody
     public Map<String, Object> voucherDetailList(Long voucherId, Long voucherTemplateId, Long isreversal,
-            HttpSession session) {
+                                                 HttpSession session) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> footerlist = new ArrayList<Map<String, Object>>();
         if (voucherTemplateId != null) {// 从模式凭证新增
@@ -139,7 +131,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 凭证号检查
-     * 
+     *
      * @param session
      * @param no
      * @param id
@@ -164,7 +156,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 凭证保存
-     * 
+     *
      * @param session
      * @param model
      * @param request
@@ -189,7 +181,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 验证凭证以及凭证分录，返回组织好的凭证分录
-     * 
+     *
      * @param session
      * @param request
      * @param voucher
@@ -220,7 +212,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 验证凭证分录，返回组织好的凭证分录
-     * 
+     *
      * @param request
      * @return
      */
@@ -272,7 +264,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 会计科目叶子节点列表
-     * 
+     *
      * @param session
      * @return
      */
@@ -286,7 +278,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 凭证制作说明页面
-     * 
+     *
      * @return
      */
     @RequestMapping("/help")
@@ -296,7 +288,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 凭证-科目余额页面
-     * 
+     *
      * @param model
      * @param subjectCode
      * @param voucherId
@@ -322,7 +314,7 @@ public class VoucherController extends BaseController{
 
     /**
      * 模式凭证列表页面
-     * 
+     *
      * @param model
      * @return
      */

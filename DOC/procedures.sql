@@ -1,6 +1,7 @@
 -- ----------------------------
 --  Procedure structure for `collectSubjectBalance`
 -- ----------------------------
+use yjz_prod;
 DROP PROCEDURE IF EXISTS `collectSubjectBalance`;
 delimiter ;;
 CREATE DEFINER=`root`@`%` PROCEDURE `collectSubjectBalance`(IN periodId BIGINT)

@@ -6,13 +6,13 @@
 			<div data-options="region:'west'"
 				style="width: 180px; background-image: url('/public/img/jianzhang.png')">
 				<div style="width:100%;height:300px;"></div>
-				
+
 				</div>
 			<div data-options="region:'center'" style="display: none; padding: 15px;display: none;">
 				<form id="create_book" action="#" method="post">
 					<div id="firstJsp" >
 						<br /> <label size="3"><b>请在建账向导的指引下，建立一个最合适你公司实际情况的账套。</b></label>
-						<br /> <br /> <label style="color: #ff0000;">*</label><label size="2">请输入账套名称:</label> 
+						<br /> <br /> <label style="color: #ff0000;">*</label><label size="2">请输入账套名称:</label>
 						<input type="text"	id="book_name" name="bookName" class="easyui-textbox" data-options="required:true" style="width: 80%;" /> <br /> <br />
 						<br /> <label style="color: #ff0000;">*</label><label size="2">请输入公司名称:</label>
 						<input type="text"	id="company_name" name="companyName" class="easyui-textbox" data-options="required:true"style="width: 80%;" />
@@ -60,16 +60,16 @@
 							data-options="onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" disabled="disabled" /> <br /> <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>二级科目代码长度：</label><input
 							id="level2" name="level2" class="easyui-numberspinner" value="2"
-							data-options="onChange: function(value){$('#vv').text(value);}"
+							data-options="min:2,max:4,onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" /> <br /> <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>三级科目代码长度：</label><input
 							id="level3" name="level3" class="easyui-numberspinner" value="2"
-							data-options="onChange: function(value){$('#vv').text(value);}"
+							data-options="min:2,max:4,onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" /> <br /> <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>四级科目代码长度：</label><input
 							id="level4" name="level4" class="easyui-numberspinner" value="2"
-							data-options="onChange: function(value){$('#vv').text(value);}"
+							data-options="min:2,max:4,onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" /> <br /> <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>五级科目代码长度：</label><input
 							id="level5" name="level5" class="easyui-numberspinner" value="2"
-							data-options="onChange: function(value){$('#vv').text(value);}"
+							data-options="min:2,max:4,onChange: function(value){$('#vv').text(value);}"
 							style="width: 45px;" />
 					</div>
 				</form>
