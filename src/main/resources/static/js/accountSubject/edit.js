@@ -102,6 +102,11 @@ Account_Subject_Edit = function () {
 
                 //父级科目不许修改.
                 $("#accountSubject_edit").find("#parent_subject").combotree('readonly', true);
+                //已关联凭证不允许修改科目代码.
+                var haveVoucher = Account_Subject.account_subject_selected_row.haveVoucher;
+                if (haveVoucher > 0) {
+                    $subject_code.numberbox("readonly", true);
+                }
             }
 
             this.subject_code_total_len = total_len;
