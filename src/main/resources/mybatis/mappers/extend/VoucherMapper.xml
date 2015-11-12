@@ -116,7 +116,7 @@
     GROUP BY
         b.voucher_id
     ORDER BY
-        a.voucher_time DESC
+       voucher_time DESC, a.voucher_no DESC
     LIMIT 6;
   </select>
 </mapper>
