@@ -330,4 +330,27 @@ public class VoucherController extends BaseController {
         model.addAttribute("moneyName", accountBook.getMoneyName());
         return view("cashFlowData");
     }
+
+    /**
+     * 检查是否为明细科目代码
+     *
+     * @param session
+     * @param request
+     * @param subjectCode
+     * @return
+     */
+    @RequestMapping(value = "/checkSubjectCode", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> checkSubjectCode(HttpSession session, HttpServletRequest request, String subjectCode) {
+
+        AccountBook accountBook = (AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            map.put("result", voucherService.checkSubjectCode(subjectCode, accountBook.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("message", e.getMessage());
+        }
+        return map;
+    }
 }
