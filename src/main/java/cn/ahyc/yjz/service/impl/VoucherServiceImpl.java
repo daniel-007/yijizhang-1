@@ -1,38 +1,24 @@
 package cn.ahyc.yjz.service.impl;
 
-import java.util.HashMap;
-
-/**
- * AccountBookServiceImpl
- *
- * @author:sanlai_lee@qq.com
- * @date: 15/9/23
- */
-
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.ahyc.yjz.mapper.extend.AccountSubjectExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
 import cn.ahyc.yjz.mapper.extend.VoucherExtendMapper;
-import cn.ahyc.yjz.model.AccountSubject;
-import cn.ahyc.yjz.model.Voucher;
-import cn.ahyc.yjz.model.VoucherDetail;
-import cn.ahyc.yjz.model.VoucherDetailExample;
-import cn.ahyc.yjz.model.VoucherExample;
+import cn.ahyc.yjz.model.*;
 import cn.ahyc.yjz.service.VoucherService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
+ * @author chengjiarui 1256064203@qq.com
  * @ClassName: VoucherServiceImpl
  * @Description: TODO
- * @author chengjiarui 1256064203@qq.com
  * @date 2015年10月18日 上午10:08:41
- * 
  */
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -134,7 +120,7 @@ public class VoucherServiceImpl implements VoucherService {
      */
     @Override
     public List<AccountSubject> queryAccountSubjectList(Long bookId) {
-        return accountSubjectExtendMapper.selectLastChildSubject(bookId);
+        return accountSubjectExtendMapper.selectLastChildSubject(null, bookId);
     }
 
     /*
@@ -197,5 +183,11 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public List<Map> latestVouchers(Map map) {
         return voucherExtendMapper.latestVouchers(map);
+    }
+
+    @Override
+    public boolean checkSubjectCode(String subjectCode, Long id) {
+        List<AccountSubject> list = accountSubjectExtendMapper.selectLastChildSubject(subjectCode, id);
+        return list != null & list.size() > 0;
     }
 }

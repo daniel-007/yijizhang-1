@@ -28,10 +28,11 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
     /**
      * 查询所有末节点
      *
+     * @param subjectCode
      * @param bookId
      * @return
      */
-    List<AccountSubject> selectLastChildSubject(Long bookId);
+    List<AccountSubject> selectLastChildSubject(@Param("subjectCode") String subjectCode, @Param("bookId") Long bookId);
 
     /**
      * 根据账套id查询出损益类其中之一会计科目代码
@@ -73,6 +74,7 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @return
      */
     Map getTotalBalance(@Param("bookId") Long bookId);
+
     /**
      * copy上一年度会计科目数据为本年会计科目数据.
      *
@@ -80,15 +82,17 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @return
      */
     void copyAccountSubject(Map<String, Object> param);
+
     /**
-	 * 查询凭证汇总
-	 * @param startTime
+     * 查询凭证汇总
+     *
+     * @param startTime
      * @param endTime
      * @param voucherWord
      * @param voucherStartNo
      * @param voucherEndNo
      * @param session
-	 * @return
-	 */
-    List<Map<String,Object>> searchVoucherCollect(Map<String, Object> param);
+     * @return
+     */
+    List<Map<String, Object>> searchVoucherCollect(Map<String, Object> param);
 }

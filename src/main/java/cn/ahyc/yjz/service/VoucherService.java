@@ -1,10 +1,10 @@
 package cn.ahyc.yjz.service;
-import java.util.List;
-import java.util.Map;
-
 import cn.ahyc.yjz.model.AccountSubject;
 import cn.ahyc.yjz.model.Voucher;
 import cn.ahyc.yjz.model.VoucherDetail;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: VoucherService
@@ -91,4 +91,12 @@ public interface VoucherService {
      * @return
      */
     List<Map> latestVouchers(Map map);
+
+    /**
+     * 检查是否是明细科目
+     * @param subjectCode
+     * @param id
+     * @return
+     */
+    boolean checkSubjectCode(String subjectCode, Long id);
 }
