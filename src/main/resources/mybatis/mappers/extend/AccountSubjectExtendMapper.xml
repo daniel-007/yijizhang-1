@@ -160,7 +160,7 @@
         AND LEVEL > 0
         AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code AND b.book_id = #{bookId})
         <if test="subjectCode != null">
-			AND t.subject_code = #{subjectCode}
+			AND cast(t.subject_code AS CHAR) = #{subjectCode}
 		</if>
         ORDER BY
             CONCAT(t.subject_code,'')
