@@ -96,8 +96,8 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
             String periodEndExp = balanceSheet.getPeriodEndExp();
             String yearBeginExp = balanceSheet.getYearBeginExp();
 
-            logger.info("subjectBalanceMap={}", subjectBalanceMap.toString());
-            logger.info("firstPeriodSubjectBalanceMap={}", firstPeriodSubjectBalanceMap.toString());
+//            logger.info("subjectBalanceMap={}", subjectBalanceMap.toString());
+//            logger.info("firstPeriodSubjectBalanceMap={}", firstPeriodSubjectBalanceMap.toString());
 
             Object periodEnd = StringUtils.isEmpty(periodEndExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, periodEndExp, period.getId(), firstPeriodId);
             Object yearBegin = StringUtils.isEmpty(yearBeginExp) ? 0 : parseAndCalcu(subjectBalanceMap, firstPeriodSubjectBalanceMap, yearBeginExp, period.getId(), firstPeriodId);

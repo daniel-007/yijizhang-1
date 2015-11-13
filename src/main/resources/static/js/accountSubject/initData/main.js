@@ -40,7 +40,7 @@ Account_Subject_Init_Data = function () {
             }
         },
         directionFormatter: function (value, row, index) {
-            if (row.direction == "借") {
+            if (row.direction == 1) {
                 return "<span style='color: green;'>借</span>";
             } else {
                 return "<span style='color: red;'>贷</span>";
@@ -88,7 +88,7 @@ Account_Subject_Init_Data = function () {
                         {field: 'totalCredit', title: '累计贷方', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
                             return 'font-weight: 700;color:blue;';
                         }},
-                        {field: 'direction', title: '方向', width: 30, align: 'center', formatter: this.directionFormatter},
+                        {field: 'directionname', title: '方向', width: 30, align: 'center', formatter: this.directionFormatter},
                         {field: 'initialLeft', title: '期初余额', width: 100, align: 'right', editor: this._editor_, formatter: this.moneyFormatter, styler: function () {
                             return 'font-weight: 700';
                         }},
@@ -189,9 +189,9 @@ Account_Subject_Init_Data = function () {
 
                         //重新定义方向.
                         if (accountSubjects[i].direction == 1) {
-                            accountSubjects[i]['direction'] = '借';
+                            accountSubjects[i]['directionname'] = '借';
                         } else {
-                            accountSubjects[i]['direction'] = '贷';
+                            accountSubjects[i]['directionname'] = '贷';
                         }
 
                     }
