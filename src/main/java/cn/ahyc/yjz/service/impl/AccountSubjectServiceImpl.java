@@ -12,6 +12,8 @@ import java.util.Set;
 import cn.ahyc.yjz.mapper.extend.VoucherDetailExtendMapper;
 import cn.ahyc.yjz.model.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,8 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     private VoucherDetailExtendMapper voucherDetailExtendMapper;
 
     private final int first_level_subject_len = 4;
+
+    private Logger logger = LoggerFactory.getLogger(AccountSubjectServiceImpl.class);
 
     @Override
     public List<AccountSubject> getCategoriesByCode(Long subjectCode, Long bookId) {
@@ -216,6 +220,14 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     public Map allSubjectTreeData(Period period, String keyword) {
 
         Long bookId = period.getBookId();
+
+        //每次取数据之前做汇总。
+        try {
+            calculate(bookId, null);
+        } catch (Exception e) {
+            logger.error("汇总报错");
+            e.printStackTrace();
+        }
 
         AccountSubjectExtExample example = new AccountSubjectExtExample();
         AccountSubjectExtExample.Criteria criteria = example.createCriteria();

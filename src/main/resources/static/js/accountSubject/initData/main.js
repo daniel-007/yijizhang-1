@@ -229,19 +229,24 @@ Account_Subject_Init_Data = function () {
                     $(this).datagrid("enableCellEditing", function (cur_idx, pre_idx, field) {
                         var rows = data.rows;
 
-                        //异步保存数据.
-                        if (pre_idx != -1 && (rows[pre_idx][field] == null || rows[pre_idx][field])) {
-                            $.ajax({
-                                url: 'account/subject/initData/edit',
-                                data: rows[pre_idx],
-                                type: 'POST',
-                                async: true,
-                                success: function (data) {
-                                    if (!data.success) {
-                                        $.messager.alert("错误", data.msg, "error");
+                        if (pre_idx != -1) {
+                            var _r = rows[pre_idx];
+
+                            //异步保存数据.
+                            setTimeout(function () {
+                                $.ajax({
+                                    url: 'account/subject/initData/edit',
+                                    data: _r,
+                                    type: 'POST',
+                                    async: true,
+                                    success: function (data) {
+                                        if (!data.success) {
+                                            $.messager.alert("错误", data.msg, "error");
+                                        }
                                     }
-                                }
-                            })
+                                })
+                            }, 0);
+
                         }
 
                         //校验是否可以修改.
@@ -270,9 +275,6 @@ Account_Subject_Init_Data = function () {
         init: function () {
             this.init_data_table();
             this.keyword_search_bind_event();
-
-            //汇总
-            Account_Subject_Init_Data.calu();
         }
     }
 
