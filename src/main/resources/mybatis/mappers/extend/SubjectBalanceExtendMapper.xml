@@ -722,8 +722,8 @@
 		WHERE
 			1=1
 		<![CDATA[
-		AND CAST(a.subject_code AS CHAR) >= #{subjectCodeStart}
-		AND CAST(a.subject_code AS CHAR) < #{subjectCodeEnd}
+		AND a.subject_code >= #{subjectCodeStart}
+		AND a.subject_code < #{subjectCodeEnd}
 		]]>
 		<if test="year == null">
 		AND a.book_id = b.id
