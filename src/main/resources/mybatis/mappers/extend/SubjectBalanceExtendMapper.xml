@@ -89,8 +89,8 @@
 			NULLIF(IF(t2.direction=1,IFNULL(t2.initial_left,0)+IFNULL(sby.ydebit,0)-IFNULL(sby.ycredit,0)-IFNULL(sb.debit,0)+IFNULL(sb.credit,0),NULL),0) AS initial_debit_balance,
 			NULLIF(IF(t2.direction=2,IFNULL(t2.initial_left,0)-IFNULL(sby.ydebit,0)+IFNULL(sby.ycredit,0)+IFNULL(sb.debit,0)-IFNULL(sb.credit,0),NULL),0) AS initial_credit_balance,
 			CASE t2.direction 
-				WHEN 1 THEN NULLIF(IFNULL(t4.ydebit, 0) - IFNULL(t4.ycredit, 0),0)
-				WHEN 2 THEN NULLIF(IFNULL(t4.ycredit, 0) - IFNULL(t4.ydebit, 0),0)
+				WHEN 1 THEN NULLIF(IFNULL(t5.debit, 0) - IFNULL(t5.credit, 0),0)
+				WHEN 2 THEN NULLIF(IFNULL(t5.credit, 0) - IFNULL(t5.debit, 0),0)
 				END AS profit_loss_occur_amount,
 			CASE t2.direction WHEN 1 THEN NULLIF(IFNULL(t2.year_occur_amount, 0) + IFNULL(t4.ydebit, 0) - IFNULL(t4.ycredit, 0),0)
 				WHEN 2 THEN NULLIF(IFNULL(t2.year_occur_amount, 0) - IFNULL(t4.ydebit, 0) + IFNULL(t4.ycredit, 0),0)
@@ -141,6 +141,27 @@
 					t.subject_code,
 					p.book_id
 			) AS sby ON t2.subject_code = sby.subject_code AND t2.book_id = sby.book_id
+				LEFT JOIN (
+				SELECT
+					t.subject_code,
+					p.book_id,
+					v.period_id,
+					sum(t.debit) AS debit,
+					sum(t.credit) AS credit
+				FROM
+					voucher_detail t,
+					voucher v,
+					period p
+				WHERE
+					t.voucher_id = v.id
+				AND p.id = v.period_id
+				AND v.period_id = #{periodId,jdbcType=BIGINT}
+				AND v.carry_over is null
+				GROUP BY
+					t.subject_code,
+					p.book_id,
+					v.period_id
+			) AS t5 ON t5.subject_code = sby.subject_code and  t5.book_id = sby.book_id
 			LEFT JOIN (
 				SELECT
 					t.subject_code,
@@ -196,7 +217,8 @@
 			initial_credit_balance
 			<if test="isYearEnd == null">
 				,year_debit_occur,
-				year_credit_occur
+				year_credit_occur,
+				profit_loss_total_occur_amount
 			</if>
 		) SELECT
 			subject_code,
@@ -208,7 +230,8 @@
 			terminal_credit_balance
 			<if test="isYearEnd == null">
 				,year_debit_occur,
-				year_credit_occur
+				year_credit_occur,
+				profit_loss_total_occur_amount
 			</if>
 		FROM
 			subject_balance
