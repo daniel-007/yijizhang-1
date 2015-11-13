@@ -115,7 +115,7 @@
                     AND tt1.period_id = tt.id
                     AND tt1.id = tt2.voucher_id
                     AND tt2.subject_code = t2.subject_code
-                ), 0) AS haveVoucher
+                ), 0) AS haveVoucher, IFNULL(t2.total_credit, 0) + IFNULL(t2.total_debit, 0) + IFNULL(t2.initial_left, 0) + IFNULL(t2.year_occur_amount, 0) AS haveInitData
         FROM account_subject t1, account_subject t2, account_subject t3, subject_length t4
         WHERE t1.book_id = #{bookId}
             AND t1.book_id = t2.book_id
@@ -143,7 +143,7 @@
                     AND tt1.period_id = tt.id
                     AND tt1.id = tt2.voucher_id
                     AND tt2.subject_code = t1.subject_code
-                ), 0) AS haveVoucher
+                ), 0) AS haveVoucher, IFNULL(t1.total_credit, 0) + IFNULL(t1.total_debit, 0) + IFNULL(t1.initial_left, 0) + IFNULL(t1.year_occur_amount, 0) AS haveInitData
         FROM account_subject t1, subject_length t4
         WHERE t1.book_id = #{bookId}
             AND t1.book_id = t4.book_id
@@ -156,14 +156,15 @@
         SELECT t.*, CONCAT(t.subject_code,' ',t.subject_name) as subject_textname
         FROM account_subject t
         WHERE
-            t.book_id = #{bookId}
+        t.book_id = #{bookId}
         AND LEVEL > 0
-        AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code AND b.book_id = #{bookId})
+        AND NOT EXISTS (SELECT parent_subject_code FROM account_subject b WHERE t.subject_code = b.parent_subject_code
+        AND b.book_id = #{bookId})
         <if test="subjectCode != null">
-			AND cast(t.subject_code AS CHAR) = #{subjectCode}
-		</if>
+            AND cast(t.subject_code AS CHAR) = #{subjectCode}
+        </if>
         ORDER BY
-            CONCAT(t.subject_code,'')
+        CONCAT(t.subject_code,'')
     </select>
     <select id="getSubjectCodeByRoot" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT 
@@ -181,61 +182,61 @@
 		LIMIT 1 
     </select>
     <select id="searchVoucherCollect" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT 
-		  IFNULL(f.`subject_code`, '') AS subject_code,
-		  IF(
-		    ISNULL(f.`subject_code`),
-		    '合计',
-		    f.`subject_name`
-		  ) AS subject_name,
-		  FORMAT(f.debit,2) as debit,
-		  FORMAT(f.credit,2)  as credit
-		FROM
-		  (SELECT 
-		    e.subject_code,
-		    e.`subject_name`,
-		    SUM(d.debit) AS debit,
-		    SUM(d.credit) AS credit 
-		  FROM
-		    `account_subject` e,
-		    (SELECT 
-		      b.`debit`,
-		      b.`credit`,
-		      LEFT(b.`subject_code`, 4) AS subject_code,
-		      c.`book_id` 
-		    FROM
-		      `voucher` a,
-		      `voucher_detail` b,
-		      `period` c 
-		    WHERE a.`id` = b.`voucher_id` 
-		      AND a.`period_id` = c.`id` 
-		      AND c.`book_id` = #{bookId,jdbcType=BIGINT} 
-		      <if test="startTime != null and startTime !=''">
-		      AND a.`voucher_time` BETWEEN #{startTime,jdbcType=VARCHAR} 
-		      </if>
-		      <if test="endTime != null and endTime !=''">
-		      AND #{endTime,jdbcType=VARCHAR} 
-		      </if>
-		      <if test="voucherWord != null and voucherWord !=''">
-		      AND a.`voucher_word` = #{voucherWord,jdbcType=VARCHAR} 
-		      </if>
-		      <if test="voucherStartNo != null and voucherStartNo !=''">
-		      AND a.`voucher_no` BETWEEN #{voucherStartNo,jdbcType=INTEGER} 
-		      </if>
-		      <if test="voucherEndNo != null and voucherEndNo !=''">
-		      AND #{voucherEndNo,jdbcType=INTEGER}
-		      </if>
-		      ) d 
-		    WHERE d.subject_code = e.`subject_code` 
-		      AND d.book_id = e.`book_id` 
-		    GROUP BY e.`subject_code` WITH ROLLUP) f 
-		  ORDER BY 
-		    CASE
-		      WHEN f.subject_code IS NULL 
-		      THEN 1 
-		      ELSE 0 
-		    END,
-		    f.subject_code ASC 
+        SELECT
+        IFNULL(f.`subject_code`, '') AS subject_code,
+        IF(
+        ISNULL(f.`subject_code`),
+        '合计',
+        f.`subject_name`
+        ) AS subject_name,
+        FORMAT(f.debit,2) as debit,
+        FORMAT(f.credit,2) as credit
+        FROM
+        (SELECT
+        e.subject_code,
+        e.`subject_name`,
+        SUM(d.debit) AS debit,
+        SUM(d.credit) AS credit
+        FROM
+        `account_subject` e,
+        (SELECT
+        b.`debit`,
+        b.`credit`,
+        LEFT(b.`subject_code`, 4) AS subject_code,
+        c.`book_id`
+        FROM
+        `voucher` a,
+        `voucher_detail` b,
+        `period` c
+        WHERE a.`id` = b.`voucher_id`
+        AND a.`period_id` = c.`id`
+        AND c.`book_id` = #{bookId,jdbcType=BIGINT}
+        <if test="startTime != null and startTime !=''">
+            AND a.`voucher_time` BETWEEN #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND #{endTime,jdbcType=VARCHAR}
+        </if>
+        <if test="voucherWord != null and voucherWord !=''">
+            AND a.`voucher_word` = #{voucherWord,jdbcType=VARCHAR}
+        </if>
+        <if test="voucherStartNo != null and voucherStartNo !=''">
+            AND a.`voucher_no` BETWEEN #{voucherStartNo,jdbcType=INTEGER}
+        </if>
+        <if test="voucherEndNo != null and voucherEndNo !=''">
+            AND #{voucherEndNo,jdbcType=INTEGER}
+        </if>
+        ) d
+        WHERE d.subject_code = e.`subject_code`
+        AND d.book_id = e.`book_id`
+        GROUP BY e.`subject_code` WITH ROLLUP) f
+        ORDER BY
+        CASE
+        WHEN f.subject_code IS NULL
+        THEN 1
+        ELSE 0
+        END,
+        f.subject_code ASC
     </select>
     <insert id="copyAccountSubject" parameterType="java.util.Map">
 		INSERT INTO account_subject (

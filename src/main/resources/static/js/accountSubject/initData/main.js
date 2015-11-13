@@ -16,6 +16,23 @@ Account_Subject_Init_Data = function () {
                 keyword: keyword
             });
         },
+
+        //汇总
+        calu: function () {
+            $.ajax({
+                url: 'account/subject/initData/calculate',
+                success: function (data) {
+                    if (data.success) {
+                        $("#init_data_table_container").find("#init_data_table").datagrid("disableCellEditing");
+                        $("#init_data_table_container").find("#init_data_table").datagrid('reload', {});
+                    } else {
+                        $.messager.alert("错误", data.msg, "error");
+                    }
+                }
+            })
+        },
+
+
         keyword_search_bind_event: function () {
             $("#init_data_toolbar").keypress(function (e) {
                 if (e.which == 13) {
@@ -244,6 +261,7 @@ Account_Subject_Init_Data = function () {
 
                         return true;
                     });
+
                 }
             });
         },
@@ -252,6 +270,9 @@ Account_Subject_Init_Data = function () {
         init: function () {
             this.init_data_table();
             this.keyword_search_bind_event();
+
+            //汇总
+            Account_Subject_Init_Data.calu();
         }
     }
 

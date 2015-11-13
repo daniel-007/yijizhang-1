@@ -55,8 +55,9 @@ Account_Subject = function () {
 
             //判断是否已经挂件记账凭证
             var haveVoucher = Account_Subject.account_subject_selected_row.haveVoucher;
-            if (haveVoucher > 0) {
-                $.messager.alert('警告', '您选择的会计科目已经关联凭证，不允许删除。', 'warning');
+            var haveInitData = Account_Subject.account_subject_selected_row.haveInitData;
+            if (haveVoucher > 0 || haveInitData > 0) {
+                $.messager.alert('警告', '您选择的会计科目已经有业务关联，不允许删除。', 'warning');
                 return false;
             }
 
