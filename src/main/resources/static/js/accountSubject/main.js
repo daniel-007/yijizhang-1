@@ -26,7 +26,11 @@ Account_Subject = function () {
                 modal: true,
                 collapsible: false,
                 shadow: true,
-                href: href
+                href: href,
+                onClose: function () {
+                    $(this).panel('destroy');
+                    Account_Subject.editWin = null;
+                }
             });
         },
         checkNullAndBaseData: function () {
@@ -82,7 +86,15 @@ Account_Subject = function () {
             if (!Account_Subject.checkNullAndBaseData()) {
                 return false;
             }
-            Account_Subject.openEditWin("edit", "修改会计科目", "icon-edit");
+            //修改是否关联凭证验证.
+            var haveVoucher = Account_Subject.account_subject_selected_row.haveVoucher;
+            if (haveVoucher > 0) {
+                $.messager.alert('警告', '此科目关联凭证，若想修改科目代码，请先删除凭证。', 'warning', function () {
+                    Account_Subject.openEditWin("edit", "修改会计科目", "icon-edit");
+                });
+            } else {
+                Account_Subject.openEditWin("edit", "修改会计科目", "icon-edit");
+            }
         },
         button_bind_event: function () {
 
