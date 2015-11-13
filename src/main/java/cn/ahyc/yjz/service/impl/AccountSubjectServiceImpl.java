@@ -151,7 +151,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                         AccountSubject as = accountSubjectParent.get(0);
                         //父级初始数据移给子级
                         accountSubject.setInitialLeft(as.getInitialLeft());
-                        accountSubject.setTotalCredit(as.getTotalDebit());
+                        accountSubject.setTotalCredit(as.getTotalCredit());
                         accountSubject.setTotalDebit(as.getTotalDebit());
                         accountSubject.setYearOccurAmount(as.getYearOccurAmount());
                         //父级关联的凭证移到子级
