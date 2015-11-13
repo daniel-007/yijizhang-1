@@ -574,6 +574,11 @@ Voucher = function () {
                 var ed = $('#voucherDg').datagrid('getEditor', {index: editIndex, field: 'subjectCode'});
                 var debitMoney = $('#voucherDg').datagrid('getRows')[editIndex]['newdebit'];
                 var crditMoney = $('#voucherDg').datagrid('getRows')[editIndex]['newcrebit'];
+                if (Voucher.checkNum($(ed.target).combobox('getText'))) {
+                    $(ed.target).combobox('setValue', $(ed.target).combobox('getText'));
+                } else {
+                    $(ed.target).combobox('setValue', $(ed.target).combobox('getValue'));
+                }
                 if ((summary || (debitMoney && debitMoney != 0) || (crditMoney && crditMoney != 0)) && !$(ed.target).combobox('getValue')) {
                     $.messager.alert('警告', "科目代码不能为空!", 'warning', function () {
                         $('#voucherDg').datagrid('selectRow', editIndex);
@@ -586,11 +591,7 @@ Voucher = function () {
                     });
                     return false;
                 }
-                if (Voucher.checkNum($(ed.target).combobox('getText'))) {
-                    $(ed.target).combobox('setValue', $(ed.target).combobox('getText'));
-                } else {
-                    $(ed.target).combobox('setValue', $(ed.target).combobox('getValue'));
-                }
+
                 var subjectCode = $(ed.target).combobox('getText');
                 $('#voucherDg').datagrid('getRows')[editIndex]['subjectTextName'] = subjectCode;
                 if (!(debitMoney && debitMoney != 0) && !(crditMoney && crditMoney != 0) && $(ed.target).combobox('getValue')) {
