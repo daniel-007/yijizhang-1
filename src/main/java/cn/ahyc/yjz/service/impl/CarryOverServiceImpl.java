@@ -71,7 +71,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 			result="各损益类科目期末余额已经不需要结转,没有生成转账凭证。";
 			return result;
 		}
-		List<VoucherDetail> details=generateDetails(datas,period);
+		List<VoucherDetail> details=generateDetails(datas,period,summary);
 		//记账凭证组织数据
 		if(details.size()==0){
 			result="各损益类科目期末余额已经不需要结转,没有生成转账凭证。";
@@ -91,7 +91,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		result="已生成一张转账凭证，凭证字号为："+reslutSuccess;
 		return result;
 	}
-	public List<VoucherDetail> generateDetails(List<SubjectBalanceDto> datas,Period period){
+	public List<VoucherDetail> generateDetails(List<SubjectBalanceDto> datas,Period period,String summary){
 		List<VoucherDetail> details=new ArrayList<VoucherDetail>();
 		int i=0;
 		BigDecimal totalDebit=new BigDecimal(0.00);
@@ -99,7 +99,7 @@ public class CarryOverServiceImpl implements  CarryOverService{
 		for(SubjectBalanceDto data:datas){
 			VoucherDetail detail=new VoucherDetail();
 			if(i==0){
-				detail.setSummary("结转本期损益");
+				detail.setSummary(summary);
 				i++;
 			}
 			detail.setSubjectCode(data.getSubjectCode());

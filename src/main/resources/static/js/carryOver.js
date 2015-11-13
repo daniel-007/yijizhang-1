@@ -7,7 +7,7 @@ CarryOver=function(){
 		init:function(){
 			$('#category_detail').combobox({
 			    url:'/account/carryOver/category/detail',
-			    valueField: 'id',
+			    valueField: 'showValue',
 			    textField: 'showValue',
 			    required:true,
 			    method:'get',
