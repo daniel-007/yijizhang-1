@@ -1,19 +1,18 @@
 /**
- * @Title: ExpressionColumn.java 
- * @Package cn.ahyc.yjz.dto 
+ * @Title: ExpressionColumn.java
+ * @Package cn.ahyc.yjz.dto
  * @Description: TODO
  * @author chengjiarui 1256064203@qq.com
- * @date 2015年10月27日 下午6:49:27 
- * @version V1.0   
+ * @date 2015年10月27日 下午6:49:27
+ * @version V1.0
  */
 package cn.ahyc.yjz.dto;
 
 /**
+ * @author chengjiarui 1256064203@qq.com
  * @ClassName: ReportRow
  * @Description: 报表行
- * @author chengjiarui 1256064203@qq.com
  * @date 2015年10月27日 下午6:49:27
- * 
  */
 public class ReportRow {
 
@@ -44,9 +43,21 @@ public class ReportRow {
     }
 
     /**
-     * 
+     *
      */
     public ReportRow() {
+    }
+
+    /**
+     * @param cA
+     * @param cB
+     * @param cC
+     */
+    public ReportRow(String cA, String cB, String cC) {
+        super();
+        this.cA = cA;
+        this.cB = cB;
+        this.cC = cC;
     }
 
     /**

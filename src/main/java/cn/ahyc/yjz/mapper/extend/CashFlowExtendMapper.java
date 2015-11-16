@@ -1,5 +1,6 @@
 package cn.ahyc.yjz.mapper.extend;
 
+import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.base.CashFlowMapper;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface CashFlowExtendMapper extends CashFlowMapper {
      * @return
      */
     List<Map> cashFlowsByPeriod(Map param);
+
+    /**
+     * 查询现金流量公式
+     * @return
+     */
+    List<ReportRow> selectCashFlowExpressionColumn();
 }

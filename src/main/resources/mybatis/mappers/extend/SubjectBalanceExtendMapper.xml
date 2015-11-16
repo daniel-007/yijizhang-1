@@ -755,7 +755,14 @@
 		AND a.subject_code = c.subject_code
 		AND a.book_id = c.book_id
 		AND b.id = #{bookId}
-		AND p.current_period = #{period}
+			<if test="period != null">
+				AND p.current_period = #{period}
+			</if><if test="periodStart != null">
+				AND p.current_period &gt;= #{periodStart}
+			</if>
+		    <if test="periodEnd != null">
+				AND p.current_period &lt;= #{periodEnd}
+			</if>
 		</if>
 		<if test="year == '-1'.toString()">
 		AND a.book_id = b.last_year_id
@@ -764,7 +771,14 @@
 		AND a.subject_code = c.subject_code
 		AND a.book_id = c.book_id
 		AND b.id = #{bookId}
-		AND p.current_period = #{period}
+			<if test="period != null">
+				AND p.current_period = #{period}
+			</if><if test="periodStart != null">
+				AND p.current_period &gt;= #{periodStart}
+			</if>
+		    <if test="periodEnd != null">
+				AND p.current_period &lt;= #{periodEnd}
+			</if>
 		</if>
     </select>
 </mapper>
