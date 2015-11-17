@@ -757,7 +757,8 @@
 		AND b.id = #{bookId}
 			<if test="period != null">
 				AND p.current_period = #{period}
-			</if><if test="periodStart != null">
+			</if>
+			<if test="periodStart != null">
 				AND p.current_period &gt;= #{periodStart}
 			</if>
 		    <if test="periodEnd != null">
@@ -773,7 +774,8 @@
 		AND b.id = #{bookId}
 			<if test="period != null">
 				AND p.current_period = #{period}
-			</if><if test="periodStart != null">
+			</if>
+			<if test="periodStart != null">
 				AND p.current_period &gt;= #{periodStart}
 			</if>
 		    <if test="periodEnd != null">
