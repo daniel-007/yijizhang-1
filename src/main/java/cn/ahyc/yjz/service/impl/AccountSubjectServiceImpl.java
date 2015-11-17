@@ -135,6 +135,17 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         if (accountSubject.getId() == -1) {
 
+            //检查新增科目代码是否有重复
+            AccountSubjectExample example2 = new AccountSubjectExample();
+            AccountSubjectExample.Criteria criteria2 = example2.createCriteria();
+            criteria2.andSubjectCodeEqualTo(accountSubject.getSubjectCode());
+            criteria2.andBookIdEqualTo(period.getBookId());
+            List<AccountSubject> accountSubjects_exists = accountSubjectMapper.selectByExample(example2);
+            if (!accountSubjects_exists.isEmpty()) {
+                throw new Exception("科目代码重复，请检查后重新保存.");
+            }
+
+
             //子级添加子级需把该子级关联凭证移到子级，初始化数据重新计算。
             AccountSubjectExample example = new AccountSubjectExample();
             AccountSubjectExample.Criteria criteria = example.createCriteria();
@@ -192,6 +203,18 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
             }
 
         } else {
+
+            //检查修改科目代码是否有重复
+            AccountSubjectExample example2 = new AccountSubjectExample();
+            AccountSubjectExample.Criteria criteria2 = example2.createCriteria();
+            criteria2.andSubjectCodeEqualTo(accountSubject.getSubjectCode());
+            criteria2.andBookIdEqualTo(period.getBookId());
+            criteria2.andIdNotEqualTo(accountSubject.getId());
+            List<AccountSubject> accountSubjects_exists = accountSubjectMapper.selectByExample(example2);
+            if (!accountSubjects_exists.isEmpty()) {
+                throw new Exception("科目代码重复，请检查后重新保存.");
+            }
+
             accountSubject.setCreateTime(now);
             accountSubjectMapper.updateByPrimaryKeySelective(accountSubject);
         }
