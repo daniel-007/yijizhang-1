@@ -9,5 +9,5 @@ import java.util.Map;
  * Created by Joey Yan on 15-11-3.
  */
 public interface CashFlowService {
-    List<Map> cashflows(Period period, Integer startPeriod, Integer endPeriod);
+    List<Map> cashflows(Period period, Integer currentPeriod);
 }

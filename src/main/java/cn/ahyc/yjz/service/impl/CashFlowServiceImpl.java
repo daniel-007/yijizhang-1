@@ -1,7 +1,5 @@
 package cn.ahyc.yjz.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import cn.ahyc.yjz.dto.ReportRow;
 import cn.ahyc.yjz.mapper.extend.CashFlowExtendMapper;
 import cn.ahyc.yjz.mapper.extend.SubjectBalanceExtendMapper;
@@ -10,6 +8,7 @@ import cn.ahyc.yjz.service.CashFlowService;
 import cn.ahyc.yjz.util.MyAviator;
 import com.googlecode.aviator.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class CashFlowServiceImpl implements CashFlowService {
     private SubjectBalanceExtendMapper subjectBalanceExtendMapper;
 
     @Override
-    public List<Map> cashflows(Period period, Integer startPeriod, Integer endPeriod) {
+    public List<Map> cashflows(Period period, Integer currentPeriod) {
 
         List<ReportRow> colList = cashFlowExtendMapper.selectCashFlowExpressionColumn();
         List<Expression> compileList = new ArrayList();

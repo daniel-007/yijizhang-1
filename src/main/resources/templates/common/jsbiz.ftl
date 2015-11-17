@@ -25,7 +25,7 @@
 <#--记账凭证相关js-->
 <script type="text/javascript" src="/js/voucher.js"></script>
 <script type="text/javascript" src="/js/voucherCash.js"></script>
-<script type="text/javascript"  src="/js/voucherTemplate.js"></script>
+<script type="text/javascript" src="/js/voucherTemplate.js"></script>
 <script type="text/javascript" src="/js/subjectBalance.js"></script>
 
 <#--企业通用配置值相关js-->
@@ -43,6 +43,10 @@
 <script type="text/javascript" src="/js/profit.js"></script>
 <#--打印js-->
 <script type="text/javascript" src="/js/print.js"></script>
+
+<#--现金流量-->
+<script type="text/javascript" src="/js/cashFlow/main.js"></script>
+
 <!-- mergeJSBizTo -->
 
 

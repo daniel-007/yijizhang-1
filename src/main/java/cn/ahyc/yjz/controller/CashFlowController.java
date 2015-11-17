@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,7 +30,11 @@ public class CashFlowController extends BaseController {
     private CashFlowService cashFlowService;
 
     @RequestMapping("/main")
-    public String main() {
+    public String main(HttpSession session,Model model) {
+
+        Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
+        model.addAttribute("period", period);
+
         return view("cashFlow/main");
     }
 
@@ -38,18 +43,17 @@ public class CashFlowController extends BaseController {
      * 获取现金流转数据.
      *
      * @param session
-     * @param startPeriod
-     * @param endPeriod
+     * @param currentPeriod
      * @return
      */
     @RequestMapping("/cashflows")
     @ResponseBody
-    public List<Map> cashflows(HttpSession session, Integer startPeriod, Integer endPeriod) {
+    public List<Map> cashflows(HttpSession session, Integer currentPeriod) {
 
-        logger.info("获取现金流转数据，startPeriod={}, endPeriod={}", startPeriod, endPeriod);
+        logger.info("获取现金流转数据，currentPeriod={}", currentPeriod);
         Period period = (Period) session.getAttribute(Constant.CURRENT_PERIOD);
 
-        return cashFlowService.cashflows(period, startPeriod, endPeriod);
+        return cashFlowService.cashflows(period, currentPeriod);
     }
 
 }
