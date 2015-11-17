@@ -103,7 +103,8 @@ public class MyAviator {
      * @param colList
      * @return
      */
-    public static String getEnvAndExpression(Map<String, Object> envMap, String expStr, List<ReportRow> colList)
+    public static String getEnvAndExpression(Map<String, Object> envMap, String expStr, List<ReportRow> colList,
+                                             Map<String, Object> expMap)
             throws RuntimeException {
         if (StringUtils.isBlank(expStr)) {
             return "0";
@@ -127,18 +128,24 @@ public class MyAviator {
                     LOGGER.error("cell type {} is wrong!", matcher.group(1));
                     throw new RuntimeException("cell type" + matcher.group(1) + " is wrong!");
                 }
-                result = result.replaceFirst(exp, "(" + getEnvAndExpression(envMap, param, colList) + ")");
+                result = result.replaceFirst(exp, "(" + getEnvAndExpression(envMap, param, colList, expMap) + ")");
             } else if (exp.contains("ACCT")) { // 账上取数：ACCT("4001","Y","",0,0,0,"")
-                param = BOOK_DATA_FLAG + envMap.size();
-                envMap.put(param, exp);
+                if (expMap.containsKey(exp)) {
+                    param = String.valueOf(expMap.get(exp));
+                } else {
+                    param = BOOK_DATA_FLAG + envMap.size();
+                    envMap.put(param, exp);
+                    expMap.put(exp, param);
+                }
                 result = result.replace(exp, param);
             } else if (sumMatcher.find()) { // SUM函数：SUM(E23:E26)
                 param = getSumExp(sumMatcher.group(1), sumMatcher.group(2), sumMatcher.group(4));
-                result = result.replace(exp, "(" + getEnvAndExpression(envMap, param, colList) + ")");
+                result = result.replace(exp, "(" + getEnvAndExpression(envMap, param, colList, expMap) + ")");
             } else if (ifMatcher.find()) {  // IF函数：IF("D13>0",D13,0)
-                param = "((" + getEnvAndExpression(envMap, ifMatcher.group(1), colList) + ifMatcher.group(2) + ")?";
-                param += getEnvAndExpression(envMap, ifMatcher.group(3), colList);
-                param += ":" + getEnvAndExpression(envMap, ifMatcher.group(4), colList) + ")";
+                param = "((" + getEnvAndExpression(envMap, ifMatcher.group(1), colList, expMap) + ifMatcher.group(2) +
+                        ")?";
+                param += getEnvAndExpression(envMap, ifMatcher.group(3), colList, expMap);
+                param += ":" + getEnvAndExpression(envMap, ifMatcher.group(4), colList, expMap) + ")";
                 result = result.replace(exp, param);
             }
         }
@@ -200,12 +207,12 @@ public class MyAviator {
                 latch.countDown();
             }
         }
+        executor.shutdown();
         try {
             latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        executor.shutdown();
         return map;
     }
 
