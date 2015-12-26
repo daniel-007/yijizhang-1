@@ -2,10 +2,7 @@ package cn.ahyc.yjz.mapper.extend;
 
 import cn.ahyc.yjz.mapper.base.PeriodMapper;
 import cn.ahyc.yjz.model.Period;
-import cn.ahyc.yjz.model.PeriodExample;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
 
 public interface PeriodExtendMapper extends PeriodMapper{
 
@@ -15,5 +12,10 @@ public interface PeriodExtendMapper extends PeriodMapper{
      * @return
      */
     Period selectCurrentPeriod(Long bookId);
-
+    /**
+     * 插入当前期返回ID.
+     * @param Period
+     * @return Id
+     */
+    Long insertSelectiveReturnId(Period period);
 }

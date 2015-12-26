@@ -154,4 +154,45 @@
 		  AND a.book_id = #{bookId,jdbcType=BIGINT} 
 		LIMIT 1 
     </select>
+    <insert id="copySubjectLength" parameterType="java.util.Map">
+		INSERT INTO account_subject (
+		  subject_code,
+		  subject_name,
+		  parent_subject_code,
+		  LEVEL,
+		  tip_info,
+		  direction,
+		  book_id,
+		  initial_left,
+		  end_flag,
+		  base_flag,
+		  company_id
+		) 
+		SELECT 
+		  a.subject_code,
+		  a.subject_name,
+		  a.parent_subject_code,
+		  a.LEVEL,
+		  a.tip_info,
+		  a.direction,
+		  #{newBookId,jdbcType=BIGINT},
+		  CASE
+		    WHEN a.direction = 1 
+		    THEN b.terminal_debit_balance 
+		    WHEN a.direction = 2 
+		    THEN b.terminal_credit_balance 
+		    ELSE 0 
+		  END,
+		  0,
+		  a.base_flag,
+		  a.company_id 
+		FROM
+		  account_subject a 
+		  LEFT JOIN subject_balance b 
+		    ON a.subject_code = b.subject_code 
+		    AND a.book_id = b.book_id 
+		    AND b.period_id = #{periodId,jdbcType=BIGINT}
+		    AND b.book_id = #{oldBookId,jdbcType=BIGINT}
+		WHERE a.book_id = #{oldBookId,jdbcType=BIGINT}
+</insert>
 </mapper>

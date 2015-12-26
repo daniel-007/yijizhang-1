@@ -163,7 +163,6 @@
   </insert>
   
   <insert id="insertNextPeriodSubjectBalance" parameterType="java.util.Map">
-  	<![CDATA[
 		INSERT INTO subject_balance (
 			subject_code,
 			book_id,
@@ -171,23 +170,26 @@
 			terminal_debit_balance,
 			terminal_credit_balance,
 			initial_debit_balance,
-			initial_credit_balance,
-			year_debit_occur,
-			year_credit_occur
+			initial_credit_balance
+			<if test="isYearEnd == null">
+				,year_debit_occur,
+				year_credit_occur
+			</if>
 		) SELECT
 			subject_code,
-			book_id,
+			#{bookId,jdbcType=BIGINT},
 			#{newPeriodId,jdbcType=BIGINT},
 			terminal_debit_balance,
 			terminal_credit_balance,
 			terminal_debit_balance,
-			terminal_credit_balance,
-			year_debit_occur,
-			year_credit_occur
+			terminal_credit_balance
+			<if test="isYearEnd == null">
+				,year_debit_occur,
+				year_credit_occur
+			</if>
 		FROM
 			subject_balance
 		WHERE
 			period_id = #{periodId,jdbcType=BIGINT}
-	]]>
   </insert>
 </mapper>

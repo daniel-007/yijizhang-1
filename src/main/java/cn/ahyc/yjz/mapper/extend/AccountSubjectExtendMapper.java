@@ -73,6 +73,11 @@ public interface AccountSubjectExtendMapper extends AccountSubjectMapper {
      * @return
      */
     Map getTotalBalance(@Param("bookId") Long bookId);
-
-
+    /**
+     * copy上一年度会计科目数据为本年会计科目数据.
+     *
+     * @param bookId
+     * @return
+     */
+    void copyAccountSubject(Map<String, Object> param);
 }
