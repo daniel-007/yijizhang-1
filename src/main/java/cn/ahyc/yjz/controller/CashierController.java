@@ -40,7 +40,13 @@ public class CashierController  extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = ("/main"))
-	public String main(Model model) {
+	public String main(Model model,HttpSession session) {
+		Period period=(Period) session.getAttribute(Constant.CURRENT_PERIOD);
+		AccountBook accountBook=(AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
+		int overFlag =accountBook.getOverFlag();
+		int currentPeriod=period.getCurrentPeriod();
+		model.addAttribute("overFlag", overFlag);
+		model.addAttribute("currentPeriod", currentPeriod);
 		return view("main");
 	}
 

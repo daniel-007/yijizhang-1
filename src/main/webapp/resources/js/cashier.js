@@ -18,6 +18,12 @@ Cashier=function(){
             });
 		},
 		cashier:function(){
+			//先判断当前账套是否已经锁定
+			if($('#overFlag').val()=="1"){
+				 $.messager.alert("提示信息", "这个账套是年结账套，不能进行期末结账!","info");
+				 return;
+			}
+			
 			//先判断本期是否平衡，再进行弹出提示操作
 			$.ajax({
                 url: "account/cashier/is/balance",
