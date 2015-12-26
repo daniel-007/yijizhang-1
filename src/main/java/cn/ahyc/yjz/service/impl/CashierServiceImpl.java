@@ -49,10 +49,11 @@ public class CashierServiceImpl implements CashierService{
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public Boolean cashierSubmit(Period period,AccountBook accountBook) {
+	public Long cashierSubmit(Period period,AccountBook accountBook) {
 		Long bookId=period.getBookId();
 		Long periodId=period.getId();
 		int currentPeriod=period.getCurrentPeriod();
+		Long resultId=bookId;
 		//结账先锁定表数据(会计科目表)
 		AccountSubject accountSubject = new AccountSubject();
 		accountSubject.setEndFlag(1);
@@ -68,8 +69,9 @@ public class CashierServiceImpl implements CashierService{
 			accountBook1.setOverFlag(1);
 			accountBook1.setBookName(accountBook.getBookName()+"_"+period.getStartTime().toString().substring(2, 4)+"年结");
 			accountBookMapper.updateByPrimaryKeySelective(accountBook1);
-			//新生成账套数据
+			//新生成账套数据并设置返回id为新建账套id
 			Long newBookId=createNewAccountBook(period,accountBook);
+			resultId=newBookId;
 			//锁定年末结账期表数据并新生成一条数据
 			Long newPeriodId=operateYearPeriod(period,accountBook,newBookId);
 			//更新科目余额表数据
@@ -80,7 +82,7 @@ public class CashierServiceImpl implements CashierService{
 			//更新科目余额表数据
 			operateSubjectBalance(bookId,newPeriodId,periodId,false);
 		}
-		return true;
+		return resultId;
 	}
 	//科目余额表数据处理
 	public void operateSubjectBalance(Long bookId,Long newPeriodId,Long periodId,Boolean isYearEnd){

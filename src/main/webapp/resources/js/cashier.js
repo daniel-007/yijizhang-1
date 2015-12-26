@@ -51,10 +51,30 @@ Cashier=function(){
         	                        	url: 'account/cashier/submit',
         	            				context: document.body,
         	            				success:function(data){
-        	            					if(data==1){
-        	            					    $.messager.alert("提示信息", "操作成功!","info",function(){
-        	            					    	$('#newDialog').dialog('close');
-        	                               		 });
+        	            					if(data.resultId){
+        	            						if($('#currentPeriod').val()!="12"){
+	        	            					    $.messager.alert("提示信息", "期末结账成功!","info",function(){
+	        	            					    	$('#newDialog').dialog('close');
+	        	                               		 });
+        	            						}else{
+	        	            					    $.ajax({ 
+	        	        	                        	url: "switch/to/book/" + data.resultId,
+	        	        	            				context: document.body,
+	        	        	            				success:function(data){
+	        	        	            					if(data){
+	        	        	            					    $.messager.alert("提示信息", "年末结账成功并生成新账套!","info",function(){
+	        	        	            					    	$('#newDialog').dialog('close');
+	        	        	                               		 	document.location.reload();
+	        	        	                               		 });
+	        	        	            					}else{
+	        	        	            						$('#busyIcon').hide();
+	        	        	            						$(this).show();
+	        	        	            						$('#cancelSwitchBtn').show();
+	        	        	            						$.messager.alert("提示信息", "切换账套失败，请稍候重试！","error");
+	        	        	            					}
+	        	        	            				}
+	        	        	                        });
+        	            						}
         	            					}else{
         	            						$.messager.alert("提示信息", "操作失败！","error");
         	            					}
