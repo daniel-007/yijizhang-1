@@ -1,6 +1,7 @@
 package cn.ahyc.yjz.service.impl;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class CashierServiceImpl implements CashierService{
 			AccountBook accountBook1=new AccountBook();
 			accountBook1.setId(bookId);
 			accountBook1.setOverFlag(1);
-			accountBook1.setBookName(accountBook.getBookName()+"_"+period.getStartTime().toString().substring(2, 4)+"年结");
+			accountBook1.setBookName(accountBook.getBookName()+"_"+dateToString(period.getStartTime()).substring(2, 4)+"年结");
 			accountBookMapper.updateByPrimaryKeySelective(accountBook1);
 			//新生成账套数据并设置返回id为新建账套id
 			Long newBookId=createNewAccountBook(period,accountBook);
@@ -104,7 +105,7 @@ public class CashierServiceImpl implements CashierService{
 		period1.setId(period.getId());
 		periodMapper.updateByPrimaryKeySelective(period1);
 		//再生成新一期表数据
-		String  InitYear=String.valueOf(Integer.parseInt(accountBook.getStartTime().toString().substring(0, 4))+1);
+		String  InitYear=String.valueOf(Integer.parseInt(dateToString(period.getStartTime()).substring(0, 4))+1);
 		Date startTime = generateStartTime(InitYear,"01");
 		Period period2 = new Period();
 		period2.setStartTime(startTime);
@@ -112,7 +113,7 @@ public class CashierServiceImpl implements CashierService{
 		period2.setFlag(1);
 		period2.setBookId(newBookId);
 		period2.setEndFlag(0);
-		periodExtendMapper.insertSelectiveReturnId(period2);
+		periodExtendMapper.insertReturnId(period2);
 		return period2.getId();
 	}
 	//创建新的账套,copy对应的所有数据
@@ -121,7 +122,7 @@ public class CashierServiceImpl implements CashierService{
 		accountBook1.setBookName(accountBook.getBookName());
 		accountBook1.setMoneyCode(accountBook.getMoneyCode());
 		accountBook1.setMoneyName(accountBook.getMoneyName());
-		String  InitYear=String.valueOf(Integer.parseInt(accountBook.getStartTime().toString().substring(0, 4))+1);
+		String  InitYear=String.valueOf(Integer.parseInt(dateToString(period.getStartTime()).substring(0, 4))+1);
 		accountBook1.setStartTime(generateStartTime(InitYear,"01"));
 		accountBook1.setInitYear(Integer.parseInt(InitYear));
 		accountBook1.setInitPeriod(1);
@@ -161,14 +162,14 @@ public class CashierServiceImpl implements CashierService{
 		period1.setId(period.getId());
 		periodMapper.updateByPrimaryKeySelective(period1);
 		//再生成新一期表数据
-		Date startTime = generateStartTime(period.getStartTime().toString().substring(0, 4),String.valueOf(period.getCurrentPeriod()+1));
+		Date startTime = generateStartTime(dateToString(period.getStartTime()).substring(0, 4),String.valueOf(period.getCurrentPeriod()+1));
 		Period period2 = new Period();
 		period2.setStartTime(startTime);
 		period2.setCurrentPeriod(period.getCurrentPeriod()+1);
 		period2.setFlag(1);
 		period2.setBookId(period.getBookId());
 		period2.setEndFlag(0);
-		periodExtendMapper.insertSelectiveReturnId(period2);
+		periodExtendMapper.insertReturnId(period2);
 		return period2.getId();
 	}
 	//生成日期,字符串转化成日期
@@ -182,5 +183,9 @@ public class CashierServiceImpl implements CashierService{
 		}
 		return date;
 	}
-
+    //日期转换成字符串处理
+	public String dateToString(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        return  sdf.format(date);  
+	}
 }
