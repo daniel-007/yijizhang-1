@@ -39,7 +39,7 @@
       flag=1
 
   </select>
-  <insert id="insertSelectiveReturnId" parameterType="cn.ahyc.yjz.model.Period" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertReturnId" parameterType="cn.ahyc.yjz.model.Period" useGeneratedKeys="true" keyProperty="id">
    	insert into period
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

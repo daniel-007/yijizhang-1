@@ -15,5 +15,5 @@ public interface CashierService {
      * @param voucher
      * @param details
      */
-	Boolean cashierSubmit(Period period,AccountBook accountBook); 
+	Long cashierSubmit(Period period,AccountBook accountBook); 
 }

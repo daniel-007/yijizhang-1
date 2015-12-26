@@ -17,5 +17,5 @@ public interface PeriodExtendMapper extends PeriodMapper{
      * @param Period
      * @return Id
      */
-    Long insertSelectiveReturnId(Period period);
+    Long insertReturnId(Period period);
 }

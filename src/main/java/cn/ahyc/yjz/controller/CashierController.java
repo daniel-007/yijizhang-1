@@ -76,10 +76,12 @@ public class CashierController  extends BaseController{
 	 */
 	@RequestMapping("/submit")
 	@ResponseBody
-	public Boolean cashierSubmit(HttpSession session) {
+	public Map<String,Object> cashierSubmit(HttpSession session) {
+		Map<String,Object> map = new HashMap<String,Object>();
 		Period period=(Period) session.getAttribute(Constant.CURRENT_PERIOD);
 		AccountBook accountBook=(AccountBook) session.getAttribute(Constant.CURRENT_ACCOUNT_BOOK);
-		Boolean result=cashierService.cashierSubmit(period,accountBook);
-		return result;
+		Long resultId=cashierService.cashierSubmit(period,accountBook);
+		map.put("resultId", resultId);
+		return map;
 	}
 }
